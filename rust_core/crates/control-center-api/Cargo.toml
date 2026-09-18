@@ -1,0 +1,16 @@
+[package]
+name = "control-center-api"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+monitoring-service = { path = "../monitoring-service" }
+orchestration-service = { path = "../orchestration-service" }
+shared-types = { path = "../shared-types" }
+
+[[bin]]
+name = "control_center"
+path = "src/bin/control_center.rs"

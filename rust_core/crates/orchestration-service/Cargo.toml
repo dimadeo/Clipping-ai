@@ -1,0 +1,19 @@
+[package]
+name = "orchestration-service"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+core-logic = { path = "../core-logic" }
+shared-types = { path = "../shared-types" }
+
+[[bin]]
+name = "orchestration_exec"
+path = "src/bin/orchestration_exec.rs"
+
+[[bin]]
+name = "production_exec"
+path = "src/bin/production_exec.rs"

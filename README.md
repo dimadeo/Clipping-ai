@@ -46,3 +46,8 @@ This demo uses the QVAC SDK exactly as intended for on-device AI: no server-side
 ## License
 
 MIT
+
+## Rust migration workspace
+
+The repository now includes a multi-crate Rust migration workspace at `rust_core` with orchestration, monitoring, control-center, and shared contract crates. See `rust_core/README.md` for entrypoints and validation commands.
+
