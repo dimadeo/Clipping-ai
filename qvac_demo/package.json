@@ -1,0 +1,23 @@
+{
+  "name": "qvac_demo",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@qvac/inference": "^0.19.1",
+    "@qvac/sdk": "^0.19.1",
+    "bare-process": "^4.5.1"
+  },
+  "devDependencies": {
+    "bare": "^1.33.4",
+    "bare-runtime": "^1.33.4"
+  }
+}

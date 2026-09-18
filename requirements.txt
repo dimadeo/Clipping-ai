@@ -1,0 +1,9 @@
+deep-translator==1.11.4
+edge-tts==7.2.8
+python-dotenv==1.1.1
+langchain-core==1.6.3
+langchain==1.4.1
+langchain-anthropic
+langchain-openai
+langsmith==0.12.6
+langgraph==1.2.11

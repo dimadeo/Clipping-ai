@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+  <rect width="1200" height="680" fill="#0d1117"/>
+  <rect x="28" y="24" width="1144" height="632" rx="10" fill="#161b22" stroke="#30363d"/>
+  <circle cx="58" cy="52" r="7" fill="#ff5f56"/>
+  <circle cx="82" cy="52" r="7" fill="#ffbd2e"/>
+  <circle cx="106" cy="52" r="7" fill="#27c93f"/>
+  <text x="138" y="58" fill="#8b949e" font-family="Consolas, monospace" font-size="18">QVAC On-Device Assistant</text>
+  <text x="58" y="108" fill="#79c0ff" font-family="Consolas, monospace" font-size="19">PS C:\Users\andre\Clipping-Ai\qvac_demo&gt; npm start -- &quot;Explain why on-device AI is useful in one sentence.&quot;</text>
+  <text x="58" y="154" fill="#f0f6fc" font-family="Consolas, monospace" font-size="20">&gt; qvac_demo@1.0.0 start</text>
+  <text x="58" y="188" fill="#8b949e" font-family="Consolas, monospace" font-size="20">Starting QVAC local model demo...</text>
+  <text x="58" y="222" fill="#8b949e" font-family="Consolas, monospace" font-size="20">Loading model: 100% (737.2 / 737.2 MB)</text>
+  <text x="58" y="256" fill="#7ee787" font-family="Consolas, monospace" font-size="20">Model loaded locally: bd4db59fb4120b52</text>
+  <text x="58" y="316" fill="#d2a8ff" font-family="Consolas, monospace" font-size="20">Prompt: Explain why on-device AI is useful in one sentence.</text>
+  <text x="58" y="378" fill="#ffa657" font-family="Consolas, monospace" font-size="20">Response:</text>
+  <text x="58" y="426" fill="#f0f6fc" font-family="Consolas, monospace" font-size="21">On-device AI is useful because it allows users to perform complex tasks</text>
+  <text x="58" y="462" fill="#f0f6fc" font-family="Consolas, monospace" font-size="21">without relying on cloud-based services, freeing up device battery life</text>
+  <text x="58" y="498" fill="#f0f6fc" font-family="Consolas, monospace" font-size="21">and enabling more secure and efficient interactions.</text>
+  <text x="58" y="602" fill="#8b949e" font-family="Consolas, monospace" font-size="17">Local inference | No API key | No hosted inference service</text>
+</svg>

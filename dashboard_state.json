@@ -1,0 +1,37 @@
+{
+  "status": "error",
+  "message": "Orchestrator run failed",
+  "last_run": "completed",
+  "result": {},
+  "returncode": 1,
+  "queue_depth": 0,
+  "metrics": {
+    "runs_total": 4,
+    "runs_completed": 2,
+    "runs_failed": 2,
+    "render_retries": 4,
+    "last_duration_seconds": 52.85
+  },
+  "command": [
+    "C:\\Users\\andre\\Clipping Ai Business\\.venv\\Scripts\\python.exe",
+    "C:\\Users\\andre\\Clipping Ai Business\\viral_master_agent.py",
+    "--topic",
+    "AI for founders",
+    "--audience",
+    "startup founders",
+    "--angle",
+    "counterintuitive business leverage",
+    "--cta",
+    "Follow for more",
+    "--count",
+    "3",
+    "--render",
+    "--production",
+    "--max-iterations",
+    "2"
+  ],
+  "retry_count": 2,
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\andre\\Clipping Ai Business\\viral_master_agent.py\", line 284, in <module>\n    main()\n    ~~~~^^\n  File \"C:\\Users\\andre\\Clipping Ai Business\\viral_master_agent.py\", line 267, in main\n    print(json.dumps(dict(result), indent=2))\n          ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\andre\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\json\\__init__.py\", line 242, in dumps\n    **kw).encode(obj)\n          ~~~~~~^^^^^\n  File \"C:\\Users\\andre\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\json\\encoder.py\", line 202, in encode\n    chunks = self.iterencode(o, _one_shot=True)\n  File \"C:\\Users\\andre\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\json\\encoder.py\", line 263, in iterencode\n    return _iterencode(o, 0)\n  File \"C:\\Users\\andre\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\json\\encoder.py\", line 182, in default\n    raise TypeError(f'Object of type {o.__class__.__name__} '\n                    f'is not JSON serializable')\nTypeError: Object of type SystemMessage is not JSON serializable\nwhen serializing list item 0\nwhen serializing dict item 'messages'\n",
+  "duration_seconds": 52.85
+}

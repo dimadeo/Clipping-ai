@@ -1,0 +1,366 @@
+{
+  "viral_master_prod_prompt": {
+    "versions": [
+      {
+        "name": "viral_master_prod_prompt",
+        "version": "v1",
+        "prompt": "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: AI for founders. Audience: startup founders. Angle: counterintuitive business leverage. Niche: Psychology & Human Behavior. Trigger: Ego Validation. Open with a bold stop-the-scroll hook in the first 1\u20132 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA. Maintain high-retention pacing, cinematic modern aesthetics, bold captions, and an emotionally charged, highly shareable style. CTA: {cta}.",
+        "metadata": {
+          "topic": "AI for founders",
+          "audience": "startup founders",
+          "angle": "counterintuitive business leverage",
+          "cta": "Follow for more",
+          "niche": "Psychology & Human Behavior",
+          "trigger": "Ego Validation"
+        },
+        "score": 130.0,
+        "status": "draft"
+      },
+      {
+        "name": "viral_master_prod_prompt",
+        "version": "v2",
+        "prompt": "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: AI for founders. Audience: startup founders. Angle: counterintuitive business leverage. Niche: Founder & Business Strategy. Trigger: Curiosity Gap. Open with a bold stop-the-scroll hook in the first 1\u20132 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA. Maintain high-retention pacing, cinematic modern aesthetics, bold captions, and an emotionally charged, highly shareable style. CTA: {cta}.",
+        "metadata": {
+          "topic": "AI for founders",
+          "audience": "startup founders",
+          "angle": "counterintuitive business leverage",
+          "cta": "Follow for more",
+          "niche": "Founder & Business Strategy",
+          "trigger": "Curiosity Gap"
+        },
+        "score": 130.0,
+        "status": "draft"
+      },
+      {
+        "name": "viral_master_prod_prompt",
+        "version": "v3",
+        "prompt": "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: AI for founders. Audience: startup founders. Angle: counterintuitive business leverage. Niche: AI & Tech Breakthroughs. Trigger: FOMO. Open with a bold stop-the-scroll hook in the first 1\u20132 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA. Maintain high-retention pacing, cinematic modern aesthetics, bold captions, and an emotionally charged, highly shareable style. CTA: {cta}.",
+        "metadata": {
+          "topic": "AI for founders",
+          "audience": "startup founders",
+          "angle": "counterintuitive business leverage",
+          "cta": "Follow for more",
+          "niche": "AI & Tech Breakthroughs",
+          "trigger": "FOMO"
+        },
+        "score": 130.0,
+        "status": "draft"
+      },
+      {
+        "name": "viral_master_prod_prompt",
+        "version": "v4",
+        "prompt": "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: AI for founders. Audience: startup founders. Angle: counterintuitive business leverage. Niche: Founder & Business Strategy. Trigger: Curiosity Gap. Open with a bold stop-the-scroll hook in the first 1\u20132 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA. Maintain high-retention pacing, cinematic modern aesthetics, bold captions, and an emotionally charged, highly shareable style. CTA: {cta}.",
+        "metadata": {
+          "topic": "AI for founders",
+          "audience": "startup founders",
+          "angle": "counterintuitive business leverage",
+          "cta": "Follow for more",
+          "niche": "Founder & Business Strategy",
+          "trigger": "Curiosity Gap"
+        },
+        "score": 130.0,
+        "status": "draft"
+      },
+      {
+        "name": "viral_master_prod_prompt",
+        "version": "v5",
+        "prompt": "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: AI for founders. Audience: startup founders. Angle: counterintuitive business leverage. Niche: AI & Tech Breakthroughs. Trigger: FOMO. Open with a bold stop-the-scroll hook in the first 1\u20132 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA. Maintain high-retention pacing, cinematic modern aesthetics, bold captions, and an emotionally charged, highly shareable style. CTA: {cta}.",
+        "metadata": {
+          "topic": "AI for founders",
+          "audience": "startup founders",
+          "angle": "counterintuitive business leverage",
+          "cta": "Follow for more",
+          "niche": "AI & Tech Breakthroughs",
+          "trigger": "FOMO"
+        },
+        "score": 130.0,
+        "status": "draft"
+      },
+      {
+        "name": "viral_master_prod_prompt",
+        "version": "v6",
+        "prompt": "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: dashboard smoke test. Audience: founders. Angle: fast leverage. Niche: AI & Tech Breakthroughs. Trigger: FOMO. Open with a bold stop-the-scroll hook in the first 1\u20132 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA. Maintain high-retention pacing, cinematic modern aesthetics, bold captions, and an emotionally charged, highly shareable style. CTA: {cta}.",
+        "metadata": {
+          "topic": "dashboard smoke test",
+          "audience": "founders",
+          "angle": "fast leverage",
+          "cta": "Follow",
+          "niche": "AI & Tech Breakthroughs",
+          "trigger": "FOMO"
+        },
+        "score": 130.0,
+        "status": "draft"
+      },
+      {
+        "name": "viral_master_prod_prompt",
+        "version": "v7",
+        "prompt": "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: graph smoke test. Audience: founders. Angle: reliable leverage. Niche: Psychology & Human Behavior. Trigger: Ego Validation. Open with a bold stop-the-scroll hook in the first 1-2 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA: Follow for more.",
+        "metadata": {
+          "topic": "graph smoke test",
+          "audience": "founders",
+          "angle": "reliable leverage",
+          "cta": "Follow for more",
+          "niche": "Psychology & Human Behavior",
+          "trigger": "Ego Validation"
+        },
+        "score": 130.0,
+        "status": "draft"
+      },
+      {
+        "name": "viral_master_prod_prompt",
+        "version": "v8",
+        "prompt": "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: approval smoke. Audience: founders. Angle: controlled release. Niche: Founder & Business Strategy. Trigger: Curiosity Gap. Open with a bold stop-the-scroll hook in the first 1-2 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA: Follow for more.",
+        "metadata": {
+          "topic": "approval smoke",
+          "audience": "founders",
+          "angle": "controlled release",
+          "cta": "Follow for more",
+          "niche": "Founder & Business Strategy",
+          "trigger": "Curiosity Gap"
+        },
+        "score": 130.0,
+        "status": "draft"
+      },
+      {
+        "name": "viral_master_prod_prompt",
+        "version": "v9",
+        "prompt": "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: AI for founders. Audience: startup founders. Angle: counterintuitive business leverage. Niche: Psychology & Human Behavior. Trigger: Ego Validation. Open with a bold stop-the-scroll hook in the first 1-2 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA: Follow for more.",
+        "metadata": {
+          "topic": "AI for founders",
+          "audience": "startup founders",
+          "angle": "counterintuitive business leverage",
+          "cta": "Follow for more",
+          "niche": "Psychology & Human Behavior",
+          "trigger": "Ego Validation"
+        },
+        "score": 130.0,
+        "status": "draft"
+      },
+      {
+        "name": "viral_master_prod_prompt",
+        "version": "v10",
+        "prompt": "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: AI for founders. Audience: startup founders. Angle: counterintuitive business leverage. Niche: Psychology & Human Behavior. Trigger: Ego Validation. Open with a bold stop-the-scroll hook in the first 1-2 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA: Follow for more.",
+        "metadata": {
+          "topic": "AI for founders",
+          "audience": "startup founders",
+          "angle": "counterintuitive business leverage",
+          "cta": "Follow for more",
+          "niche": "Psychology & Human Behavior",
+          "trigger": "Ego Validation"
+        },
+        "score": 130.0,
+        "status": "draft"
+      },
+      {
+        "name": "viral_master_prod_prompt",
+        "version": "v11",
+        "prompt": "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: AI for founders. Audience: startup founders. Angle: counterintuitive business leverage. Niche: Psychology & Human Behavior. Trigger: Ego Validation. Open with a bold stop-the-scroll hook in the first 1-2 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA: Follow for more.",
+        "metadata": {
+          "topic": "AI for founders",
+          "audience": "startup founders",
+          "angle": "counterintuitive business leverage",
+          "cta": "Follow for more",
+          "niche": "Psychology & Human Behavior",
+          "trigger": "Ego Validation"
+        },
+        "score": 130.0,
+        "status": "draft"
+      },
+      {
+        "name": "viral_master_prod_prompt",
+        "version": "v12",
+        "prompt": "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: AI for founders. Audience: startup founders. Angle: counterintuitive business leverage. Niche: Psychology & Human Behavior. Trigger: Ego Validation. Open with a bold stop-the-scroll hook in the first 1\u20132 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA. Maintain high-retention pacing, cinematic modern aesthetics, bold captions, and an emotionally charged, highly shareable style. CTA: {cta}.",
+        "metadata": {
+          "topic": "AI for founders",
+          "audience": "startup founders",
+          "angle": "counterintuitive business leverage",
+          "cta": "Follow for more",
+          "niche": "Psychology & Human Behavior",
+          "trigger": "Ego Validation"
+        },
+        "score": 130.0,
+        "status": "draft"
+      },
+      {
+        "name": "viral_master_prod_prompt",
+        "version": "v13",
+        "prompt": "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: AI for founders. Audience: startup founders. Angle: counterintuitive business leverage. Niche: Founder & Business Strategy. Trigger: Curiosity Gap. Open with a bold stop-the-scroll hook in the first 1\u20132 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA. Maintain high-retention pacing, cinematic modern aesthetics, bold captions, and an emotionally charged, highly shareable style. CTA: {cta}.",
+        "metadata": {
+          "topic": "AI for founders",
+          "audience": "startup founders",
+          "angle": "counterintuitive business leverage",
+          "cta": "Follow for more",
+          "niche": "Founder & Business Strategy",
+          "trigger": "Curiosity Gap"
+        },
+        "score": 130.0,
+        "status": "draft"
+      },
+      {
+        "name": "viral_master_prod_prompt",
+        "version": "v14",
+        "prompt": "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: AI for founders. Audience: startup founders. Angle: counterintuitive business leverage. Niche: AI & Tech Breakthroughs. Trigger: FOMO. Open with a bold stop-the-scroll hook in the first 1\u20132 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA. Maintain high-retention pacing, cinematic modern aesthetics, bold captions, and an emotionally charged, highly shareable style. CTA: {cta}.",
+        "metadata": {
+          "topic": "AI for founders",
+          "audience": "startup founders",
+          "angle": "counterintuitive business leverage",
+          "cta": "Follow for more",
+          "niche": "AI & Tech Breakthroughs",
+          "trigger": "FOMO"
+        },
+        "score": 130.0,
+        "status": "draft"
+      },
+      {
+        "name": "viral_master_prod_prompt",
+        "version": "v15",
+        "prompt": "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: AI for founders. Audience: startup founders. Angle: counterintuitive business leverage with stronger stop-the-scroll tension and a sharper emotional payoff. Niche: Psychology & Human Behavior. Trigger: Ego Validation. Open with a bold stop-the-scroll hook in the first 1\u20132 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA. Maintain high-retention pacing, cinematic modern aesthetics, bold captions, and an emotionally charged, highly shareable style. CTA: {cta}.",
+        "metadata": {
+          "topic": "AI for founders",
+          "audience": "startup founders",
+          "angle": "counterintuitive business leverage with stronger stop-the-scroll tension and a sharper emotional payoff",
+          "cta": "Follow for more",
+          "niche": "Psychology & Human Behavior",
+          "trigger": "Ego Validation"
+        },
+        "score": 130.0,
+        "status": "draft"
+      },
+      {
+        "name": "viral_master_prod_prompt",
+        "version": "v16",
+        "prompt": "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: AI for founders. Audience: startup founders. Angle: counterintuitive business leverage with stronger stop-the-scroll tension and a sharper emotional payoff. Niche: Founder & Business Strategy. Trigger: Curiosity Gap. Open with a bold stop-the-scroll hook in the first 1\u20132 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA. Maintain high-retention pacing, cinematic modern aesthetics, bold captions, and an emotionally charged, highly shareable style. CTA: {cta}.",
+        "metadata": {
+          "topic": "AI for founders",
+          "audience": "startup founders",
+          "angle": "counterintuitive business leverage with stronger stop-the-scroll tension and a sharper emotional payoff",
+          "cta": "Follow for more",
+          "niche": "Founder & Business Strategy",
+          "trigger": "Curiosity Gap"
+        },
+        "score": 130.0,
+        "status": "draft"
+      },
+      {
+        "name": "viral_master_prod_prompt",
+        "version": "v17",
+        "prompt": "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: AI for founders. Audience: startup founders. Angle: counterintuitive business leverage with stronger stop-the-scroll tension and a sharper emotional payoff. Niche: AI & Tech Breakthroughs. Trigger: FOMO. Open with a bold stop-the-scroll hook in the first 1\u20132 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA. Maintain high-retention pacing, cinematic modern aesthetics, bold captions, and an emotionally charged, highly shareable style. CTA: {cta}.",
+        "metadata": {
+          "topic": "AI for founders",
+          "audience": "startup founders",
+          "angle": "counterintuitive business leverage with stronger stop-the-scroll tension and a sharper emotional payoff",
+          "cta": "Follow for more",
+          "niche": "AI & Tech Breakthroughs",
+          "trigger": "FOMO"
+        },
+        "score": 130.0,
+        "status": "draft"
+      },
+      {
+        "name": "viral_master_prod_prompt",
+        "version": "v18",
+        "prompt": "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: AI for founders. Audience: startup founders. Angle: counterintuitive business leverage with stronger stop-the-scroll tension and a sharper emotional payoff with stronger stop-the-scroll tension and a sharper emotional payoff. Niche: Psychology & Human Behavior. Trigger: Ego Validation. Open with a bold stop-the-scroll hook in the first 1\u20132 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA. Maintain high-retention pacing, cinematic modern aesthetics, bold captions, and an emotionally charged, highly shareable style. CTA: {cta}.",
+        "metadata": {
+          "topic": "AI for founders",
+          "audience": "startup founders",
+          "angle": "counterintuitive business leverage with stronger stop-the-scroll tension and a sharper emotional payoff with stronger stop-the-scroll tension and a sharper emotional payoff",
+          "cta": "Follow for more",
+          "niche": "Psychology & Human Behavior",
+          "trigger": "Ego Validation"
+        },
+        "score": 130.0,
+        "status": "draft"
+      },
+      {
+        "name": "viral_master_prod_prompt",
+        "version": "v19",
+        "prompt": "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: AI for founders. Audience: startup founders. Angle: counterintuitive business leverage with stronger stop-the-scroll tension and a sharper emotional payoff with stronger stop-the-scroll tension and a sharper emotional payoff. Niche: Founder & Business Strategy. Trigger: Curiosity Gap. Open with a bold stop-the-scroll hook in the first 1\u20132 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA. Maintain high-retention pacing, cinematic modern aesthetics, bold captions, and an emotionally charged, highly shareable style. CTA: {cta}.",
+        "metadata": {
+          "topic": "AI for founders",
+          "audience": "startup founders",
+          "angle": "counterintuitive business leverage with stronger stop-the-scroll tension and a sharper emotional payoff with stronger stop-the-scroll tension and a sharper emotional payoff",
+          "cta": "Follow for more",
+          "niche": "Founder & Business Strategy",
+          "trigger": "Curiosity Gap"
+        },
+        "score": 130.0,
+        "status": "draft"
+      },
+      {
+        "name": "viral_master_prod_prompt",
+        "version": "v20",
+        "prompt": "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: AI for founders. Audience: startup founders. Angle: counterintuitive business leverage with stronger stop-the-scroll tension and a sharper emotional payoff with stronger stop-the-scroll tension and a sharper emotional payoff. Niche: AI & Tech Breakthroughs. Trigger: FOMO. Open with a bold stop-the-scroll hook in the first 1\u20132 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA. Maintain high-retention pacing, cinematic modern aesthetics, bold captions, and an emotionally charged, highly shareable style. CTA: {cta}.",
+        "metadata": {
+          "topic": "AI for founders",
+          "audience": "startup founders",
+          "angle": "counterintuitive business leverage with stronger stop-the-scroll tension and a sharper emotional payoff with stronger stop-the-scroll tension and a sharper emotional payoff",
+          "cta": "Follow for more",
+          "niche": "AI & Tech Breakthroughs",
+          "trigger": "FOMO"
+        },
+        "score": 130.0,
+        "status": "draft"
+      },
+      {
+        "name": "viral_master_prod_prompt",
+        "version": "v21",
+        "prompt": "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: AI for founders. Audience: startup founders. Angle: counterintuitive business leverage. Niche: Psychology & Human Behavior. Trigger: Ego Validation. Open with a bold stop-the-scroll hook in the first 1-2 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA: Follow for more.",
+        "metadata": {
+          "topic": "AI for founders",
+          "audience": "startup founders",
+          "angle": "counterintuitive business leverage",
+          "cta": "Follow for more",
+          "niche": "Psychology & Human Behavior",
+          "trigger": "Ego Validation"
+        },
+        "score": 130.0,
+        "status": "draft"
+      },
+      {
+        "name": "viral_master_prod_prompt",
+        "version": "v22",
+        "prompt": "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: AI for founders. Audience: startup founders. Angle: counterintuitive business leverage. Niche: Psychology & Human Behavior. Trigger: Ego Validation. Open with a bold stop-the-scroll hook in the first 1-2 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA: Follow for more.",
+        "metadata": {
+          "topic": "AI for founders",
+          "audience": "startup founders",
+          "angle": "counterintuitive business leverage",
+          "cta": "Follow for more",
+          "niche": "Psychology & Human Behavior",
+          "trigger": "Ego Validation"
+        },
+        "score": 130.0,
+        "status": "draft"
+      },
+      {
+        "name": "viral_master_prod_prompt",
+        "version": "v23",
+        "prompt": "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: AI for founders. Audience: startup founders. Angle: counterintuitive business leverage. Niche: Psychology & Human Behavior. Trigger: Ego Validation. Open with a bold stop-the-scroll hook in the first 1-2 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA: Follow for more.",
+        "metadata": {
+          "topic": "AI for founders",
+          "audience": "startup founders",
+          "angle": "counterintuitive business leverage",
+          "cta": "Follow for more",
+          "niche": "Psychology & Human Behavior",
+          "trigger": "Ego Validation"
+        },
+        "score": 130.0,
+        "status": "prod"
+      }
+    ],
+    "prod": {
+      "name": "viral_master_prod_prompt",
+      "version": "v23",
+      "prompt": "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: AI for founders. Audience: startup founders. Angle: counterintuitive business leverage. Niche: Psychology & Human Behavior. Trigger: Ego Validation. Open with a bold stop-the-scroll hook in the first 1-2 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA: Follow for more.",
+      "metadata": {
+        "topic": "AI for founders",
+        "audience": "startup founders",
+        "angle": "counterintuitive business leverage",
+        "cta": "Follow for more",
+        "niche": "Psychology & Human Behavior",
+        "trigger": "Ego Validation"
+      },
+      "score": 130.0,
+      "status": "prod"
+    }
+  }
+}

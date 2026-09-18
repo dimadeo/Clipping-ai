@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clipping AI Business Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #111827;
+      color: #e5e7eb;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 24px;
+    }
+    .panel {
+      background: #1f2937;
+      border: 1px solid #374151;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 18px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    }
+    h1, h2 { margin-top: 0; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px;
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    label {
+      font-size: 12px;
+      text-transform: uppercase;
+      color: #9ca3af;
+      letter-spacing: 0.08em;
+    }
+    input, button, select {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid #4b5563;
+      background: #0f172a;
+      color: #f3f4f6;
+      box-sizing: border-box;
+    }
+    button {
+      background: #2563eb;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover { background: #1d4ed8; }
+    .status-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 14px;
+      border-radius: 8px;
+      background: #0f172a;
+      border: 1px solid #374151;
+      margin-top: 12px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    .running { background: #f59e0b; color: #111827; }
+    .completed { background: #10b981; color: #111827; }
+    .error { background: #ef4444; color: white; }
+    .retrying, .queued { background: #f97316; color: #111827; }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+    }
+    .metric {
+      background: #0f172a;
+      border: 1px solid #374151;
+      border-radius: 8px;
+      padding: 12px;
+    }
+    .metric strong { display: block; font-size: 22px; margin-top: 5px; }
+    .metric span { color: #9ca3af; font-size: 11px; text-transform: uppercase; }
+    pre {
+      background: #0f172a;
+      border: 1px solid #374151;
+      border-radius: 8px;
+      padding: 14px;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 12px;
+    }
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    input[type="checkbox"] {
+      width: auto;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="panel">
+      <h1>Clipping AI Business Dashboard</h1>
+      <div class="status-box">
+        <div>
+          <strong>Status:</strong> <span id="statusText">idle</span>
+        </div>
+        <span id="statusBadge" class="badge">idle</span>
+      </div>
+      <div class="metrics" style="margin-top: 14px;">
+        <div class="metric"><span>Queue</span><strong id="queueDepth">0</strong></div>
+        <div class="metric"><span>Completed</span><strong id="runsCompleted">0</strong></div>
+        <div class="metric"><span>Failed</span><strong id="runsFailed">0</strong></div>
+        <div class="metric"><span>Retries</span><strong id="renderRetries">0</strong></div>
+        <div class="metric"><span>Last run</span><strong id="lastDuration">-</strong></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Run orchestrator</h2>
+      <div class="grid">
+        <div class="field">
+          <label>Topic</label>
+          <input id="topic" value="AI for founders" />
+        </div>
+        <div class="field">
+          <label>Audience</label>
+          <input id="audience" value="startup founders" />
+        </div>
+        <div class="field">
+          <label>Angle</label>
+          <input id="angle" value="counterintuitive business leverage" />
+        </div>
+        <div class="field">
+          <label>CTA</label>
+          <input id="cta" value="Follow for more" />
+        </div>
+        <div class="field">
+          <label>Count</label>
+          <input id="count" type="number" min="1" max="10" value="3" />
+        </div>
+        <div class="field">
+          <label>Max iterations</label>
+          <input id="maxIterations" type="number" min="1" value="2" />
+        </div>
+        <div class="field">
+          <label>Render retries</label>
+          <input id="maxRetries" type="number" min="0" max="5" value="2" />
+        </div>
+        <div class="field">
+          <label>Retry delay seconds</label>
+          <input id="retryDelay" type="number" min="1" max="300" value="15" />
+        </div>
+      </div>
+
+      <div class="checkbox-row">
+        <label><input id="production" type="checkbox" checked /> Production mode</label>
+        <label><input id="render" type="checkbox" checked /> Render to BFL</label>
+        <label><input id="loop" type="checkbox" /> Loop</label>
+      </div>
+
+      <div style="margin-top:16px;">
+        <button id="runBtn">Run pipeline</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Latest result</h2>
+      <pre id="resultBox">Waiting for a run...</pre>
+    </div>
+  </div>
+
+  <script>
+    async function fetchStatus() {
+      const res = await fetch('/status');
+      const data = await res.json();
+      const statusText = document.getElementById('statusText');
+      const statusBadge = document.getElementById('statusBadge');
+      const resultBox = document.getElementById('resultBox');
+      const metrics = data.metrics || {};
+      statusText.textContent = data.status || 'idle';
+      statusBadge.textContent = data.status || 'idle';
+      statusBadge.className = 'badge ' + (data.status || 'idle');
+      document.getElementById('queueDepth').textContent = data.queue_depth || 0;
+      document.getElementById('runsCompleted').textContent = metrics.runs_completed || 0;
+      document.getElementById('runsFailed').textContent = metrics.runs_failed || 0;
+      document.getElementById('renderRetries').textContent = metrics.render_retries || 0;
+      document.getElementById('lastDuration').textContent = metrics.last_duration_seconds ? `${metrics.last_duration_seconds}s` : '-';
+      if (data.result && Object.keys(data.result).length) {
+        resultBox.textContent = JSON.stringify(data.result, null, 2);
+      } else {
+        resultBox.textContent = JSON.stringify(data, null, 2);
+      }
+    }
+
+    document.getElementById('runBtn').addEventListener('click', async () => {
+      const payload = {
+        topic: document.getElementById('topic').value,
+        audience: document.getElementById('audience').value,
+        angle: document.getElementById('angle').value,
+        cta: document.getElementById('cta').value,
+        count: Number(document.getElementById('count').value || 3),
+        max_iterations: Number(document.getElementById('maxIterations').value || 2),
+        max_retries: Number(document.getElementById('maxRetries').value || 2),
+        retry_delay_seconds: Number(document.getElementById('retryDelay').value || 15),
+        render: document.getElementById('render').checked,
+        production: document.getElementById('production').checked,
+        loop: document.getElementById('loop').checked
+      };
+
+      const res = await fetch('/run', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      document.getElementById('resultBox').textContent = JSON.stringify(data, null, 2);
+      fetchStatus();
+    });
+
+    fetchStatus();
+    setInterval(fetchStatus, 4000);
+  </script>
+</body>
+</html>
