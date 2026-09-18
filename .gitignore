@@ -4,3 +4,4 @@ node_modules
 __pycache__/
 *.py[cod]
 rust_core/target/
+upscaled/.env.example

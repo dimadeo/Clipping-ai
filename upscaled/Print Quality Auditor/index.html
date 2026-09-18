@@ -1,0 +1,387 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Print Quality Auditor</title>
+<meta name="description" content="Preflight and printability audit for raster artwork across small, standard and large print formats.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112..125,500..800&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+:root{
+  --stock:#EEF0EC; --sheet:#FAFBF8; --sunk:#E3E6E0; --ink:#17191E; --ink-2:#4A4F57; --ink-3:#737A83;
+  --rule:#CBD0C7; --rule-2:#DDE1D9;
+  --accent:#0072A8; --accent-ink:#FFFFFF; --accent-soft:#D6E9F2;
+  --pass:#277C4E; --pass-soft:#D8EDDF; --warn:#A76F00; --warn-soft:#F4E6C6; --fail:#BE1E57; --fail-soft:#F6D9E3;
+  --c:#00A0DC; --m:#E0007A; --y:#F2D500; --k:#1A1A1A;
+  --display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --body:"Source Sans 3","Segoe UI",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
+  --shadow:0 1px 0 rgba(20,24,30,.04),0 8px 24px -12px rgba(20,24,30,.18);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --stock:#101215; --sheet:#181B1F; --sunk:#0B0D0F; --ink:#E5E7E2; --ink-2:#AEB4AC; --ink-3:#848B85;
+    --rule:#30353B; --rule-2:#24282D;
+    --accent:#44B4E8; --accent-ink:#06131A; --accent-soft:#12303F;
+    --pass:#58C487; --pass-soft:#153023; --warn:#E3AD41; --warn-soft:#352914; --fail:#F2628F; --fail-soft:#3A1624;
+    --k:#E5E7E2; --shadow:0 1px 0 rgba(0,0,0,.3),0 10px 28px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --stock:#101215; --sheet:#181B1F; --sunk:#0B0D0F; --ink:#E5E7E2; --ink-2:#AEB4AC; --ink-3:#848B85;
+  --rule:#30353B; --rule-2:#24282D;
+  --accent:#44B4E8; --accent-ink:#06131A; --accent-soft:#12303F;
+  --pass:#58C487; --pass-soft:#153023; --warn:#E3AD41; --warn-soft:#352914; --fail:#F2628F; --fail-soft:#3A1624;
+  --k:#E5E7E2; --shadow:0 1px 0 rgba(0,0,0,.3),0 10px 28px -14px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{background:var(--stock)}
+body{background:var(--stock);color:var(--ink);font:400 15px/1.5 var(--body);padding:0 clamp(16px,3vw,40px) 64px;margin:0}
+h1,h2,h3{font-family:var(--display);font-stretch:118%;text-wrap:balance;margin:0;letter-spacing:-.01em}
+h2{font-size:1.15rem;font-weight:750}
+h3{font-size:.95rem;font-weight:700}
+p{margin:0}
+button,select,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.label{font:600 .68rem/1.2 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+.wrap{max-width:1360px;margin:0 auto}
+
+/* control strip */
+.strip{display:grid;grid-template-columns:repeat(24,1fr);height:10px;margin:0 calc(-1 * clamp(16px,3vw,40px));}
+.strip span{display:block}
+
+/* masthead / job ticket */
+.mast{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 32px;padding-block:22px 18px;border-bottom:1px solid var(--rule)}
+.brand{display:flex;flex-direction:column;gap:6px}
+.brand h1{font-size:clamp(1.6rem,3.2vw,2.3rem);font-weight:800;font-stretch:125%;line-height:1}
+.brand h1 b{color:var(--accent);font-weight:800}
+.brand p{color:var(--ink-2);max-width:62ch}
+.mast-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--rule);background:var(--sheet);border-radius:6px;padding:8px 14px;font-weight:600;cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:var(--ink-3)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.btn svg{width:16px;height:16px}
+
+.ticket{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1px;background:var(--rule-2);border:1px solid var(--rule);border-radius:8px;overflow:hidden;margin-top:18px}
+.ticket div{background:var(--sheet);padding:9px 12px;display:flex;flex-direction:column;gap:3px;min-width:0}
+.ticket .v{font:500 .9rem/1.25 var(--mono);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.ticket .file .v{font-family:var(--body);font-weight:600}
+.flag{display:inline-block;font:600 .64rem/1 var(--mono);letter-spacing:.06em;padding:3px 6px;border-radius:3px;text-transform:uppercase;vertical-align:middle}
+.flag.pass{background:var(--pass-soft);color:var(--pass)}
+.flag.warn{background:var(--warn-soft);color:var(--warn)}
+.flag.fail{background:var(--fail-soft);color:var(--fail)}
+.flag.info{background:var(--accent-soft);color:var(--accent)}
+.sample-note{margin-top:10px;color:var(--ink-2);font-size:.88rem;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+/* job settings */
+.settings{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:flex-end;padding-block:14px;border-bottom:1px solid var(--rule)}
+.field{display:flex;flex-direction:column;gap:4px}
+.field select,.field input{background:var(--sheet);border:1px solid var(--rule);border-radius:5px;padding:6px 8px;min-width:0}
+.field input[type=number]{width:84px;font-family:var(--mono)}
+.field .pair{display:flex;align-items:center;gap:6px}
+.status{margin-left:auto;display:flex;align-items:center;gap:10px;color:var(--ink-2);font-size:.88rem}
+.meter{width:120px;height:4px;background:var(--sunk);border-radius:2px;overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+
+/* main grid */
+.main{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:24px;padding-block:24px}
+@media (max-width:980px){.main{grid-template-columns:1fr}}
+.panel{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;box-shadow:var(--shadow)}
+.panel-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 18px 10px;border-bottom:1px solid var(--rule-2)}
+.panel-b{padding:16px 18px}
+
+/* proof */
+.proof-stage{position:relative;background:var(--sunk);border-radius:6px;display:grid;place-items:center;padding:28px;min-height:280px}
+.proof-box{position:relative;max-width:100%}
+.proof-box canvas{display:block;max-width:100%;height:auto}
+.proof-box .ov{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.proof-box .marks{position:absolute;inset:-22px;width:calc(100% + 44px);height:calc(100% + 44px);pointer-events:none;overflow:visible}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:6px;overflow:hidden;flex-wrap:wrap}
+.seg button{border:0;background:transparent;padding:6px 10px;font:500 .78rem/1 var(--mono);cursor:pointer;color:var(--ink-2)}
+.seg button+button{border-left:1px solid var(--rule)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--sheet)}
+.legend{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:.82rem;color:var(--ink-2);flex-wrap:wrap}
+.legend .ramp{height:8px;width:160px;border-radius:2px}
+.drop-hint{position:absolute;inset:8px;border:2px dashed var(--accent);border-radius:8px;display:none;place-items:center;background:color-mix(in srgb,var(--sheet) 80%,transparent);font:700 1.1rem var(--display);color:var(--accent)}
+body.dragging .drop-hint{display:grid}
+
+/* gauges */
+.tiers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:560px){.tiers{grid-template-columns:1fr}}
+.tier{border:1px solid var(--rule-2);border-radius:8px;padding:12px 12px 10px;display:flex;flex-direction:column;gap:6px;background:var(--sheet);position:relative;overflow:hidden}
+.tier::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--tone,var(--rule))}
+.tier.target{border-color:var(--ink-3)}
+.tier-head{display:flex;justify-content:space-between;gap:6px;align-items:baseline}
+.tier-head h3{font-size:.9rem}
+.tier svg{width:100%;height:auto;display:block}
+.tier .ex{font-size:.8rem;color:var(--ink-2);line-height:1.3}
+.tier dl{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;margin:4px 0 0;font-size:.8rem}
+.tier dt{color:var(--ink-3)}
+.tier dd{margin:0;text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.verdict{font:700 .66rem/1.2 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--tone)}
+
+.matrix-wrap{overflow-x:auto;margin-top:16px}
+table{border-collapse:collapse;width:100%;font-size:.86rem}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule-2);vertical-align:top}
+th{font:600 .66rem/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.score-chip{display:inline-block;min-width:3.2em;text-align:center;font:600 .9rem/1 var(--mono);padding:5px 6px;border-radius:4px;background:var(--tone-soft);color:var(--tone)}
+.score-chip.sm{min-width:0;font-size:.76rem;padding:3px 5px}
+
+/* upload queue */
+.queue-panel{margin-top:18px}
+.queue-list{display:flex;flex-direction:column;gap:2px}
+.qitem{display:flex;align-items:stretch;gap:4px}
+.qrow{flex:1;min-width:0;display:grid;grid-template-columns:minmax(0,1.4fr) auto minmax(0,auto);gap:12px;align-items:center;padding:8px 10px;border-radius:6px;cursor:pointer;border:1px solid transparent;background:none;text-align:left;font:inherit;color:inherit}
+.qrow:hover{background:var(--sunk)}
+.qrow.active{background:var(--accent-soft);border-color:var(--accent)}
+.qname{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qdims{font:500 .78rem/1 var(--mono);color:var(--ink-3);white-space:nowrap}
+.qchips{display:flex;gap:4px;flex-wrap:nowrap}
+.qremove{flex:none;align-self:center;border:0;background:transparent;color:var(--ink-3);font-size:1rem;line-height:1;cursor:pointer;padding:2px 10px;border-radius:4px}
+.qremove:hover{background:var(--fail-soft);color:var(--fail)}
+@media (max-width:640px){.qrow{grid-template-columns:1fr auto;column-gap:10px}.qdims,.qchips{grid-column:1}.qchips{justify-self:start;margin-top:2px}}
+
+/* components list */
+.comps{display:flex;flex-direction:column;gap:6px;margin-top:14px}
+.comp{display:grid;grid-template-columns:minmax(0,1.3fr) repeat(3,minmax(0,.55fr));gap:8px;align-items:center;font-size:.82rem}
+.comp .bar{height:6px;background:var(--sunk);border-radius:3px;position:relative;overflow:hidden}
+.comp .bar i{position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:var(--tone)}
+.comp.head{color:var(--ink-3);font:600 .64rem/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase}
+
+/* instrument sections */
+.sections{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+@media (max-width:980px){.sections{grid-template-columns:1fr}}
+.readouts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.readout{border:1px solid var(--rule-2);border-radius:7px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;border-left:3px solid var(--tone,var(--rule))}
+.readout .big{font:600 1.3rem/1.1 var(--mono);font-variant-numeric:tabular-nums}
+.readout .big small{font-size:.7rem;color:var(--ink-3);font-weight:500;margin-left:3px}
+.readout .sub{font-size:.8rem;color:var(--ink-2);line-height:1.35}
+.findings{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
+.findings li{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;font-size:.9rem}
+.findings li p{color:var(--ink-2);max-width:70ch}
+.findings li strong{color:var(--ink);font-weight:600}
+details.crops{margin-top:14px;border-top:1px solid var(--rule-2);padding-top:10px}
+details.crops summary{cursor:pointer;font-weight:600;font-size:.88rem;color:var(--accent)}
+.crop-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:10px}
+.crop{display:flex;flex-direction:column;gap:4px;font-size:.78rem;color:var(--ink-2)}
+.crop canvas{width:100%;height:auto;border-radius:4px;border:1px solid var(--rule);image-rendering:pixelated;background:var(--sunk)}
+.hist{width:100%;height:auto;display:block;margin-top:12px}
+
+/* lighting table */
+.light-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+@media (max-width:520px){.light-grid{grid-template-columns:1fr}}
+.light{border-radius:7px;padding:10px 12px;background:var(--sunk);display:flex;flex-direction:column;gap:3px}
+.light .big{font:600 1.15rem/1.1 var(--mono)}
+
+/* checklist */
+.blueprint{padding-block:24px 0}
+.check-groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px 24px}
+.check-group h3{display:flex;align-items:center;gap:8px;padding-bottom:6px;border-bottom:1px solid var(--rule-2);margin-bottom:6px}
+.check{display:grid;grid-template-columns:auto 1fr;gap:10px;padding:8px 0;border-bottom:1px dashed var(--rule-2);align-items:start}
+.check input{margin-top:4px;width:16px;height:16px;accent-color:var(--accent)}
+.check label{cursor:pointer;display:flex;flex-direction:column;gap:3px}
+.check label b{font-weight:600}
+.check label span{color:var(--ink-2);font-size:.86rem;max-width:68ch}
+.check label code{font-family:var(--mono);font-size:.8rem;background:var(--sunk);padding:1px 4px;border-radius:3px}
+.check input:checked + label b{text-decoration:line-through;color:var(--ink-3)}
+
+/* expert */
+.expert{margin-top:24px}
+.expert-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:24px}
+@media (max-width:860px){.expert-body{grid-template-columns:1fr}}
+.expert-out{font-size:.92rem;display:flex;flex-direction:column;gap:12px}
+.expert-out h3{margin-top:4px}
+.expert-out p,.expert-out li{color:var(--ink-2);max-width:72ch}
+.expert-out ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.thinking{display:flex;align-items:center;gap:10px;color:var(--ink-2)}
+.thinking i{width:10px;height:10px;border-radius:50%;background:var(--accent);animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.25;transform:scale(.7)}}
+@media (prefers-reduced-motion:reduce){.thinking i{animation:none}.meter i{transition:none}}
+.foot{margin-top:28px;color:var(--ink-3);font-size:.8rem;max-width:90ch}
+
+/* batch monitor */
+.bm-bar{height:8px;background:var(--sunk);border-radius:4px;overflow:hidden;margin:0 0 14px}
+.bm-bar i{display:block;height:100%;background:var(--accent);transition:width .3s}
+.bm-sub{font-size:.78rem;color:var(--ink-3)}
+.bm-flags{margin:4px 0 0;padding-left:16px;font-size:.8rem;color:var(--ink-2);max-width:48ch}
+#bmRows td{vertical-align:top}
+#bmRows td b{font-weight:600;overflow-wrap:anywhere}
+@media (prefers-reduced-motion:reduce){.bm-bar i{transition:none}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* workflow stepper */
+.wf{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-direction:column;gap:0}
+.wf li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:12px;padding:12px 0;border-top:1px solid var(--rule-2)}
+.wf li:first-child{border-top:0;padding-top:0}
+.wf .dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--tone,var(--rule));display:grid;place-items:center;font:700 .7rem var(--mono);color:var(--tone,var(--ink-3));margin-top:2px;background:var(--sheet)}
+.wf li.done .dot{background:var(--tone);color:var(--sheet)}
+.wf li.running .dot{animation:pulse 1.4s ease-in-out infinite}
+.wf .wf-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.wf .wf-h b{font-weight:650}
+.wf .wf-d{color:var(--ink-2);font-size:.88rem;margin-top:3px;max-width:90ch}
+.wf .wf-d code{font-family:var(--mono);font-size:.8rem;background:var(--sunk);padding:1px 4px;border-radius:3px}
+.wf .bm-bar{margin:8px 0 4px;max-width:520px}
+.wf table{max-width:900px;margin-top:8px}
+@media (prefers-reduced-motion:reduce){.wf li.running .dot{animation:none}}
+</style>
+
+<div class="strip" id="strip" aria-hidden="true"></div>
+<div class="wrap">
+  <header class="mast">
+    <div class="brand">
+      <span class="label">Preflight &amp; printability audit</span>
+      <h1>Print Quality <b>Auditor</b></h1>
+      <p>Drop in one or more PNG, JPEG, WebP, TIFF or PDF deliveries from the upscale pipeline. Each is measured in your browser: effective PPI, hairline weight, shadow banding, simulated ink coverage and contrast under real lighting, graded for small, standard and large formats.</p>
+    </div>
+    <div class="mast-actions">
+      <div class="seg" role="group" aria-label="Mode" id="modeSeg"><button type="button" data-mode="audit" aria-pressed="true">Audit a file</button><button type="button" data-mode="batch" aria-pressed="false">Follow a batch</button></div>
+      <span id="auditActions" style="display:contents">
+        <input type="file" id="file" class="sr" multiple accept=".png,.jpg,.jpeg,.webp,.tif,.tiff,.pdf,image/png,image/jpeg,image/webp,image/tiff,application/pdf">
+        <label for="file" class="btn primary" tabindex="0" id="fileBtn" title="Select one or more files"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 11V2M4.5 5.5 8 2l3.5 3.5M2.5 10v3.5h11V10"/></svg>Load artwork</label>
+        <button class="btn" id="sampleBtn" type="button">Reload sample</button>
+        <button class="btn" id="exportBtn" type="button" hidden>Save report</button>
+      </span>
+      <span id="batchActions" style="display:contents" hidden>
+        <input type="file" id="batchFile" class="sr" accept=".json,application/json">
+        <button class="btn primary" id="watchBtn" type="button">Watch batch_status.json</button>
+        <button class="btn" id="stopWatchBtn" type="button" hidden>Stop watching</button>
+      </span>
+    </div>
+  </header>
+
+  <div id="batchMode" hidden>
+    <section class="panel" aria-labelledby="bmH" style="margin-top:18px">
+      <div class="panel-h"><h2 id="bmH">Batch monitor</h2><span class="label" id="bmStatus">Not watching</span></div>
+      <div class="panel-b">
+        <p id="bmHint" style="color:var(--ink-2);max-width:80ch;margin-bottom:14px"></p>
+        <div id="bmSummary"></div>
+        <div class="matrix-wrap"><table><thead><tr><th>#</th><th>Image</th><th>Status</th><th>Print</th><th>Print quality (re-check after fix)</th><th>Cost</th><th>Time</th></tr></thead><tbody id="bmRows"><tr><td colspan="7" style="color:var(--ink-2)">Run a batch with <code>upscale_pipeline.py --print-fix</code> and pick its <code>batch_status.json</code>.</td></tr></tbody></table></div>
+      </div>
+    </section>
+  </div>
+
+  <div id="auditMode">
+  <section class="panel queue-panel" id="queuePanel" aria-label="Loaded files" hidden>
+    <div class="panel-h"><h2>Files</h2><span style="display:flex;align-items:center;gap:10px"><span class="label" id="queueStatus"></span><button class="btn" type="button" id="clearQueueBtn">Clear all</button></span></div>
+    <div class="panel-b"><div class="queue-list" id="queueList"></div></div>
+  </section>
+  <section class="ticket" id="ticket" aria-label="File details"></section>
+  <p class="sample-note" id="sampleNote"></p>
+
+  <section class="settings" aria-label="Job settings">
+    <div class="field"><span class="label">Large-format size (Tier C)</span>
+      <select id="preset">
+        <option value="59.4x84.1">A1 poster · 59.4 × 84.1 cm</option>
+        <option value="84.1x118.9">A0 poster · 84.1 × 118.9 cm</option>
+        <option value="100x100">Square canvas · 100 × 100 cm</option>
+        <option value="60x90">Canvas · 60 × 90 cm</option>
+        <option value="100x150">Banner · 100 × 150 cm</option>
+        <option value="custom">Custom…</option>
+      </select></div>
+    <div class="field"><span class="label">W × H (cm)</span>
+      <div class="pair"><input type="number" id="sizeW" min="1" step="0.1" value="59.4" aria-label="Width in cm"><span>×</span><input type="number" id="sizeH" min="1" step="0.1" value="84.1" aria-label="Height in cm"></div></div>
+    <div class="field"><span class="label">Viewing distance C</span>
+      <div class="pair"><input type="number" id="distC" min="20" step="10" value="150" aria-label="Viewing distance in cm"><span class="mono">cm</span></div></div>
+    <div class="field"><span class="label">Placement</span>
+      <select id="fit"><option value="cover">Full bleed (crop to fill)</option><option value="contain">Fit inside (margins)</option></select></div>
+    <div class="field"><span class="label">Substrate / ink limit</span>
+      <select id="substrate">
+        <option value="coated">Coated paper · FOGRA39 · 300%</option>
+        <option value="uncoated">Uncoated paper · FOGRA29 · 260%</option>
+        <option value="canvas" selected>Canvas / fine-art inkjet · 280%</option>
+        <option value="vinyl">Banner vinyl · solvent · 300%</option>
+        <option value="textile">Textile · dye-sub / DTG · 250%</option>
+      </select></div>
+    <div class="status" role="status" aria-live="polite"><span id="statusText">Starting…</span><span class="meter"><i id="meter"></i></span></div>
+  </section>
+
+  <div class="main">
+    <section class="panel" aria-labelledby="proofH">
+      <div class="panel-h"><h2 id="proofH">Soft proof</h2>
+        <div class="seg" role="group" aria-label="Overlay map" id="maps">
+          <button type="button" data-map="none" aria-pressed="true">Artwork</button>
+          <button type="button" data-map="tac" aria-pressed="false">Ink TAC</button>
+          <button type="button" data-map="band" aria-pressed="false">Banding</button>
+          <button type="button" data-map="line" aria-pressed="false">Hairlines</button>
+          <button type="button" data-map="clip" aria-pressed="false">Clipping</button>
+        </div>
+      </div>
+      <div class="panel-b">
+        <div class="proof-stage" id="stage">
+          <div class="proof-box" id="proofBox">
+            <canvas id="proofCanvas" width="10" height="10"></canvas>
+            <canvas id="overlay" class="ov" width="10" height="10"></canvas>
+            <svg class="marks" id="marks" aria-hidden="true"></svg>
+          </div>
+          <div class="drop-hint">Drop artwork to audit</div>
+        </div>
+        <div class="legend" id="legend"></div>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="tierH">
+      <div class="panel-h"><h2 id="tierH">1 · Quality score by format tier</h2><span class="label">1.0 – 10.0 · 9.0+ production grade</span></div>
+      <div class="panel-b">
+        <div class="tiers" id="tiers"></div>
+        <div class="comps" id="comps"></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="sections">
+    <section class="panel" aria-labelledby="shH">
+      <div class="panel-h"><h2 id="shH">2 · Shadows, blending &amp; transparency</h2><span class="label">Under physical ink constraints</span></div>
+      <div class="panel-b" id="shadowPanel"></div>
+    </section>
+    <section class="panel" aria-labelledby="lgH">
+      <div class="panel-h"><h2 id="lgH">3 · Legibility &amp; ink saturation</h2><span class="label">Simulated on press</span></div>
+      <div class="panel-b" id="legPanel"></div>
+    </section>
+  </div>
+
+  <section class="blueprint" aria-labelledby="bpH">
+    <div class="panel">
+      <div class="panel-h"><h2 id="bpH">4 · Master audit matrix &amp; rectification blueprint</h2><span class="label" id="bpCount"></span></div>
+      <div class="panel-b">
+        <div class="matrix-wrap"><table><thead><tr><th>Tier</th><th>Format</th><th>Effective PPI</th><th>Finest line</th><th>Score</th><th>Primary bottleneck to a 10</th></tr></thead><tbody id="matrix"></tbody></table></div>
+        <div class="check-groups" id="checklist" style="margin-top:22px"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel expert" aria-labelledby="exH">
+    <div class="panel-h"><h2 id="exH">Prepress engineer's review</h2><span class="label">Claude reads the artwork and the measurements</span></div>
+    <div class="panel-b expert-body">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <p style="color:var(--ink-2)">The measurements above are objective but cannot tell a drop shadow from a painted vignette, or body copy from texture. The review looks at the artwork itself, checks each measured finding against what it sees, and adjusts the tier scores where the numbers mislead.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" type="button" id="askBtn" disabled>Run expert review</button><button class="btn" type="button" id="stopBtn" hidden>Stop</button></div>
+        <p class="label" id="expertStatus">Connecting…</p>
+      </div>
+      <div class="expert-out" id="expertOut"><p>No review yet for this file.</p></div>
+    </div>
+  </section>
+  </div>
+
+  <section class="panel" aria-labelledby="wfH" id="workflowPanel" style="margin-top:24px">
+    <div class="panel-h"><h2 id="wfH">5 · Upscale pipeline workflow</h2><span class="label" id="wfStatus">Local server only</span></div>
+    <div class="panel-b">
+      <p id="wfNext" style="color:var(--ink-2);max-width:90ch;margin-bottom:14px">Shows the whole print job from draft to finished PDFs when this page is opened through <code>run_auditor.ps1</code> on the computer that runs the pipeline.</p>
+      <div id="wfReadouts" class="readouts"></div>
+      <ol class="wf" id="wfStages"></ol>
+    </div>
+  </section>
+
+  <p class="foot">Ink coverage is simulated with a heavy-GCR separation model that approximates a FOGRA39-type conversion from sRGB. Treat TAC figures as a screening estimate and confirm with the shop's output profile. PDF deliveries written by <code>upscale_pipeline.py</code> (one page, one lossless image) are read directly; other PDFs, AI and PSD files are not, so export a flattened proof at final size. Nothing is uploaded unless you run the expert review. The batch monitor reads the <code>batch_status.json</code> that <code>upscale_pipeline.py</code> 1.4 rewrites after every image; its print-quality column is the pipeline's own re-check of each delivered file, with the same ink, black-floor and banding measures as this page (the pipeline ignores plateaus under 6 px, so its banding score runs a little stricter).</p>
+</div>
+
+<script src="vendor/pako.min.js" onerror="var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js';document.head.appendChild(s)"></script>
+<script src="vendor/UTIF.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/utif@3.1.0/UTIF.js';document.head.appendChild(s)"></script>
+<script src="analysis.js"></script>
+<script src="grade.js"></script>
+<script src="ui.js"></script>
+<script src="batch.js"></script>
+<script src="local.js"></script>
