@@ -13,7 +13,7 @@ This workspace is the migration foundation for moving clipping orchestration, pr
 ## Runtime entrypoints
 
 - `cargo run -p orchestration-service --bin orchestration_exec -- --topic "AI"`
-- `cargo run -p orchestration-service --bin production_exec -- --production --render`
+- `cargo run -p orchestration-service --bin production_exec -- --render --max-retries 2`
 - `cargo run -p monitoring-service --bin monitoring_server`
 - `cargo run -p monitoring-service --bin dashboard_state_update -- dashboard_state.json completed`
 - `cargo run -p control-center-api --bin control_center`

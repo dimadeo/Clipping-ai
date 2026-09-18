@@ -111,10 +111,14 @@ impl MonitoringStore {
                 state.result = result.clone();
             }
             if let Some(returncode) = value.get("returncode").and_then(|v| v.as_i64()) {
-                state.returncode = Some(returncode as i32);
+                if (i32::MIN as i64..=i32::MAX as i64).contains(&returncode) {
+                    state.returncode = Some(returncode as i32);
+                }
             }
             if let Some(queue_depth) = value.get("queue_depth").and_then(|v| v.as_u64()) {
-                state.queue_depth = queue_depth as usize;
+                if queue_depth <= usize::MAX as u64 {
+                    state.queue_depth = queue_depth as usize;
+                }
             }
             if let Some(metrics) = value.get("metrics") {
                 if let Some(total) = metrics.get("runs_total").and_then(|v| v.as_u64()) {

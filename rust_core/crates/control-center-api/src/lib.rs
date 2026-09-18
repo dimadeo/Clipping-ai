@@ -4,7 +4,7 @@ use std::net::{TcpListener, TcpStream};
 use std::sync::{Arc, Mutex};
 use std::time::Instant;
 
-use monitoring_service::{run_http_server, MonitoringStore};
+use monitoring_service::MonitoringStore;
 use orchestration_service::run_production_workflow;
 use shared_types::{ProductionRequest, RunStatus};
 
@@ -99,9 +99,28 @@ fn handle_connection(stream: TcpStream, center: &ControlCenter) {
         ("GET", "/health") => respond(stream, "200 OK", "{\"ok\":true}", "application/json"),
         ("GET", "/status") => respond(stream, "200 OK", &center.status_json(), "application/json"),
         ("POST", "/run") => {
-            let request_payload = parse_body(&request)
-                .and_then(|body| serde_json::from_str::<ProductionRequest>(body).ok())
-                .unwrap_or_default();
+            let Some(body) = parse_body(&request) else {
+                respond(
+                    stream,
+                    "400 Bad Request",
+                    "{\"error\":\"missing request body\"}",
+                    "application/json",
+                );
+                return;
+            };
+
+            let request_payload = match serde_json::from_str::<ProductionRequest>(body) {
+                Ok(payload) => payload,
+                Err(_) => {
+                    respond(
+                        stream,
+                        "400 Bad Request",
+                        "{\"error\":\"invalid request payload\"}",
+                        "application/json",
+                    );
+                    return;
+                }
+            };
 
             center.queue_run(request_payload);
             let _ = center.process_next();
@@ -113,12 +132,7 @@ fn handle_connection(stream: TcpStream, center: &ControlCenter) {
 
 pub fn run_control_center_server(bind: &str, state_path: &str) -> Result<(), String> {
     let monitor = MonitoringStore::new(state_path);
-    let center = ControlCenter::new(monitor.clone());
-
-    let monitor_clone = monitor.clone();
-    std::thread::spawn(move || {
-        let _ = run_http_server(monitor_clone, "0.0.0.0:8001");
-    });
+    let center = ControlCenter::new(monitor);
 
     let listener = TcpListener::bind(bind).map_err(|err| err.to_string())?;
     for stream in listener.incoming().flatten() {
@@ -132,6 +146,13 @@ pub fn run_control_center_server(bind: &str, state_path: &str) -> Result<(), Str
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn rejects_malformed_run_payload() {
+        let malformed = r#"{"topic": 1"#;
+        let parsed = serde_json::from_str::<ProductionRequest>(malformed);
+        assert!(parsed.is_err());
+    }
 
     #[test]
     fn queue_and_process_updates_status() {
