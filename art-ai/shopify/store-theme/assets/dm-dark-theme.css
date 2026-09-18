@@ -1,0 +1,263 @@
+/* The Dark Matters: a continuous black gallery across the storefront. */
+html:has(body.dm-dark-theme) {
+  background: #000;
+  color-scheme: dark;
+  scrollbar-color: #82735d #000;
+}
+
+.dm-dark-theme {
+  --dm-black: #000;
+  --dm-ivory: #ece9e2;
+  --dm-muted: #b6afa2;
+  --dm-bronze: #b6a689;
+  --dm-border: #40382d;
+  --dm-ease: cubic-bezier(.22, 1, .36, 1);
+  --color-background: var(--dm-black);
+  --color-background-rgb: 0 0 0;
+  --color-foreground: var(--dm-ivory);
+  --color-foreground-rgb: 236 233 226;
+  --color-border: var(--dm-bronze);
+  --color-border-rgb: 182 166 137;
+  --color-foreground-muted: var(--dm-muted);
+  --color-foreground-subdued: var(--dm-muted);
+  --color-primary-button-text: #000;
+  --color-primary-button-background: var(--dm-ivory);
+  --color-primary-button-border: var(--dm-ivory);
+  --color-primary-button-focus-outline: var(--dm-bronze);
+  --color-primary-button-hover-text: #000;
+  --color-primary-button-hover-background: var(--dm-bronze);
+  --color-primary-button-hover-border: var(--dm-bronze);
+  --color-secondary-button-text: var(--dm-ivory);
+  --color-secondary-button-background: #000;
+  --color-secondary-button-border: #82735d;
+  --color-secondary-button-hover-text: var(--dm-ivory);
+  --color-secondary-button-hover-background: #191610;
+  --color-secondary-button-hover-border: var(--dm-bronze);
+  --color-input-background: #000;
+  --color-input-text: var(--dm-ivory);
+  --color-input-text-rgb: 236 233 226;
+  --color-input-border: #82735d;
+  --color-variant-background: #000;
+  --color-variant-text: var(--dm-ivory);
+  --color-variant-text-rgb: 236 233 226;
+  --color-variant-border: #82735d;
+  --color-variant-hover-background: #191610;
+  --color-variant-hover-text: var(--dm-ivory);
+  --color-variant-hover-border: var(--dm-bronze);
+  --color-selected-variant-background: var(--dm-ivory);
+  --color-selected-variant-text: #000;
+  --color-selected-variant-text-rgb: 0 0 0;
+  --color-selected-variant-border: var(--dm-ivory);
+  --color-selected-variant-hover-background: var(--dm-bronze);
+  --color-selected-variant-hover-text: #000;
+  --color-selected-variant-hover-border: var(--dm-bronze);
+  background: #000;
+  color: var(--dm-ivory);
+}
+
+/* Section-specific palettes also serve dynamically rendered cart and filter content. */
+.dm-dark-theme [class*="color-custom-"],
+.dm-dark-theme [class*="color-custom-"] .text-block {
+  --color-background: #000;
+  --color-background-rgb: 0 0 0;
+  --color: var(--dm-ivory);
+  --color-rgb: 236 233 226;
+  --color-foreground: var(--dm-ivory);
+  --color-foreground-rgb: 236 233 226;
+  --color-foreground-muted: var(--dm-muted);
+  --color-foreground-subdued: var(--dm-muted);
+  --color-border: var(--dm-bronze);
+  --color-border-rgb: 182 166 137;
+}
+
+.dm-dark-theme :is(
+  .page-wrapper, .content-for-layout, .section-background, .section,
+  .header__row, footer, .dm-catalogue, .cart-page, .cart-summary,
+  .cart-summary__inner, .cart-drawer__content, .cart-drawer__summary,
+  .theme-drawer__dialog, .theme-drawer__header, .menu-drawer,
+  .menu-drawer__submenu, .predictive-search, .dialog-modal,
+  .password-dialog, .shopify-policy__container
+) {
+  background-color: #000;
+  color: var(--dm-ivory);
+}
+
+.dm-dark-theme :is(.theme-drawer__dialog, .dialog-modal, .password-dialog) {
+  border-color: var(--dm-border);
+  box-shadow: 0 0 0 1px var(--dm-border), 0 16px 70px #000;
+}
+
+.dm-dark-theme :is(.theme-drawer__dialog, .dialog-modal)::backdrop {
+  background: rgb(0 0 0 / .72);
+  backdrop-filter: blur(5px);
+}
+
+.dm-dark-theme .theme-drawer__header {
+  border-bottom: 1px solid var(--dm-border);
+}
+
+.dm-dark-theme :is(.theme-drawer__title, .cart-title) {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  letter-spacing: -.025em;
+}
+
+.dm-dark-theme .theme-drawer__badge {
+  color: var(--dm-ivory);
+  background-color: #211c15;
+  border: 1px solid var(--dm-border);
+}
+
+.dm-dark-theme :is(.cart-drawer__summary, .cart-summary__inner) {
+  border-top: 1px solid var(--dm-border);
+}
+
+.dm-dark-theme :is(.cart__checkout-button, .cart__submit, .button, .button-secondary) {
+  letter-spacing: .055em;
+}
+
+.dm-dark-theme :is(.field__input, .search-input, textarea, select) {
+  color: var(--dm-ivory);
+  caret-color: var(--dm-bronze);
+}
+
+.dm-dark-theme :is(.field__input, .search-input, textarea)::placeholder {
+  color: var(--dm-muted);
+  opacity: 1;
+}
+
+.dm-dark-theme :is(input, textarea, select):autofill {
+  box-shadow: 0 0 0 1000px #000 inset;
+  -webkit-text-fill-color: var(--dm-ivory);
+  caret-color: var(--dm-ivory);
+}
+
+.dm-dark-theme :is(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--dm-bronze);
+  outline-offset: 4px;
+}
+
+.dm-dark-theme ::selection {
+  background: var(--dm-bronze);
+  color: #000;
+}
+
+/* Gallery controls disappear when there is no room in that direction. */
+.dm-dark-theme .dm-catalogue__navigation button {
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.dm-dark-theme .dm-catalogue__navigation button:focus-visible {
+  outline: none;
+  border-bottom-color: var(--dm-bronze);
+  box-shadow: none;
+}
+
+.dm-dark-theme .dm-catalogue__navigation button:disabled {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Readable policy pages share the typography and spacing of the gallery. */
+.dm-dark-theme .shopify-policy__container {
+  box-sizing: border-box;
+  max-width: 800px;
+  padding: clamp(40px, 7vw, 88px) 24px clamp(64px, 9vw, 112px);
+  margin-inline: auto;
+}
+
+.dm-dark-theme .shopify-policy__title {
+  text-align: left;
+  border-bottom: 1px solid var(--dm-border);
+  padding-bottom: 28px;
+  margin-bottom: 32px;
+}
+
+.dm-dark-theme .shopify-policy__title h1 {
+  font: 400 clamp(34px, 5vw, 60px)/1.12 Georgia, "Times New Roman", serif;
+  letter-spacing: -.035em;
+  color: var(--dm-ivory);
+}
+
+.dm-dark-theme .shopify-policy__body {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--dm-ivory);
+  overflow-wrap: break-word;
+}
+
+.dm-dark-theme .shopify-policy__body :is(h2, h3, h4) {
+  color: var(--dm-ivory);
+  line-height: 1.35;
+}
+
+.dm-dark-theme :is(.shopify-policy__body, .rte) a:not(.button, .button-secondary) {
+  color: #d6c7aa;
+  text-decoration-color: #82735d;
+  text-underline-offset: .25em;
+}
+
+.dm-dark-theme :is(.shopify-policy__body, .rte) a:not(.button, .button-secondary):hover {
+  color: var(--dm-ivory);
+  text-decoration-color: var(--dm-ivory);
+}
+
+/* One-time entrances and quiet hover movement; existing wordmark typing is untouched. */
+@media (prefers-reduced-motion: no-preference) {
+  .dm-dark-theme .shopify-policy__container,
+  .dm-dark-theme .cart-page__title,
+  .dm-dark-theme [data-template^="page"] .section-content-wrapper,
+  .dm-dark-theme .dm-catalogue__heading {
+    animation: dm-gallery-enter .65s var(--dm-ease) both;
+  }
+
+  .dm-dark-theme .theme-drawer__dialog {
+    --animation-speed: .4s;
+  }
+
+  .dm-dark-theme .theme-drawer__dialog[open] .cart-drawer__content {
+    animation: dm-gallery-enter .55s var(--dm-ease) .08s both;
+  }
+
+  .dm-dark-theme :is(.button, .button-secondary, .dm-catalogue__navigation button) {
+    transition: color .25s ease, background-color .25s ease,
+      border-color .25s ease, box-shadow .25s ease, transform .3s var(--dm-ease);
+  }
+
+  .dm-dark-theme :is(.shopify-policy__body, .rte) a {
+    transition: color .25s ease, text-decoration-color .25s ease;
+  }
+
+  @media (hover: hover) {
+    .dm-dark-theme :is(.button, .button-secondary, .dm-catalogue__navigation button):not(:disabled, [aria-disabled="true"]):hover {
+      transform: translateY(-2px);
+    }
+  }
+}
+
+@keyframes dm-gallery-enter {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dm-dark-theme .theme-drawer__dialog,
+  .dm-dark-theme .theme-drawer__dialog .cart-drawer__content,
+  .dm-dark-theme .menu-drawer,
+  .dm-dark-theme .menu-drawer__submenu,
+  .dm-dark-theme .dialog-modal,
+  .dm-dark-theme .password-dialog,
+  .dm-dark-theme .password-dialog__content,
+  .dm-dark-theme .page-wrapper,
+  .dm-dark-theme .shopify-policy__container,
+  .dm-dark-theme .cart-page__title,
+  .dm-dark-theme [data-template^="page"] .section-content-wrapper,
+  .dm-dark-theme .dm-catalogue__heading {
+    animation: none !important;
+    transition: none !important;
+  }
+}

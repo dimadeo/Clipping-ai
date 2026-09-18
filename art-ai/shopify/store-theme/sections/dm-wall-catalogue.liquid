@@ -1,0 +1,173 @@
+{% liquid
+  assign wall_collection = section.settings.collection
+  if wall_collection == blank
+    assign wall_collection = collections.all
+  endif
+%}
+<div class="dm-catalogue" id="dm-catalogue-{{ section.id }}">
+  <div class="dm-catalogue__heading"><div><p>THE COLLECTION / TEN SPACES</p><h2>{{ section.settings.heading | escape }}</h2></div><span>Scroll through the rooms. Discover a work.</span></div>
+  <div class="dm-catalogue__rail" tabindex="0" role="region" aria-label="Scrolling artwork catalogue">
+    {% for block in section.blocks %}
+      {% liquid
+        assign room_number = forloop.index | prepend: '0' | slice: -2, 2
+        assign room_asset = 'dm-black-room-' | append: room_number | append: '.jpg'
+        assign product_offset = forloop.index0 | times: 2
+        assign room_products = block.settings.products
+        assign room_limit = 3
+        if room_products == blank
+          assign room_products = wall_collection.products
+          assign room_limit = 2
+        else
+          assign product_offset = 0
+        endif
+      %}
+      <section class="dm-catalogue__room" aria-label="{{ block.settings.title | escape }}" {{ block.shopify_attributes }}>
+        {% if block.settings.background != blank %}
+          {{ block.settings.background | image_url: width: 1800 | image_tag: class: 'dm-catalogue__background', loading: 'lazy', sizes: '(max-width: 750px) 94vw, 86vw', widths: '600, 1000, 1400, 1800', alt: block.settings.title }}
+        {% else %}
+          <img class="dm-catalogue__background" src="{{ room_asset | asset_url }}" width="1536" height="1024" alt="{{ block.settings.title | escape }}" loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
+        {% endif %}
+        <div class="dm-catalogue__wall">
+          {% for artwork in room_products limit: room_limit offset: product_offset %}
+            <a class="dm-catalogue__art" href="{{ artwork.url }}">
+              {% if artwork.featured_image %}
+                {{ artwork.featured_image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '300, 600, 900', sizes: '(max-width: 750px) 32vw, 28vw', alt: artwork.title }}
+              {% endif %}
+              <span>{{ artwork.title | escape }}</span>
+              {% if section.settings.show_prices %}<small>{% if artwork.price_varies %}From {% endif %}{{ artwork.price | money }}{% unless artwork.available %} · Sold out{% endunless %}</small>{% endif %}
+            </a>
+          {% else %}
+            {% if request.design_mode %}<p class="dm-catalogue__empty">Choose artwork or a collection in the section settings.</p>{% endif %}
+          {% endfor %}
+        </div>
+        <span class="dm-catalogue__label">{{ room_number }} / {{ block.settings.title | escape }}</span>
+      </section>
+    {% endfor %}
+  </div>
+  <div class="dm-catalogue__navigation"><span>SCROLL TO EXPLORE <span aria-hidden="true">↔</span></span><div><button type="button" data-dm-direction="-1" aria-label="Previous room">←</button><button type="button" data-dm-direction="1" aria-label="Next room">→</button></div></div>
+  {% if wall_collection != blank %}<a class="dm-catalogue__all" href="{{ wall_collection.url }}">View the complete collection ↗</a>{% endif %}
+</div>
+<style>
+.dm-catalogue{background:#0c0c0c;color:#ece9e2;padding:36px 0 24px;font:13px/1.5 Arial,sans-serif}.dm-catalogue *{box-sizing:border-box}.dm-catalogue__heading{padding:0 4% 25px;display:flex;align-items:end;justify-content:space-between;gap:20px}.dm-catalogue__heading p{font-size:9px;letter-spacing:.2em;color:#b6a689;margin:0}.dm-catalogue__heading h2{font:normal clamp(28px,3vw,48px)/1.2 Georgia,serif;color:inherit;margin:8px 0 0}.dm-catalogue__heading>span{color:#aaa49a;font-size:12px}.dm-catalogue__rail{display:flex;overflow-x:auto;overflow-y:hidden;gap:14px;padding:0 4% 15px;scroll-snap-type:x mandatory;scrollbar-width:thin;scrollbar-color:#978767 #1c1b18;overscroll-behavior-x:contain;scroll-behavior:smooth}.dm-catalogue__room{position:relative;flex:0 0 min(86vw,110vh);aspect-ratio:3/2;scroll-snap-align:center;overflow:hidden;isolation:isolate;background:#101010}.dm-catalogue__background{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;z-index:-1}.dm-catalogue__wall{position:absolute;inset:15% 9% 36%;display:flex;align-items:center;justify-content:center;gap:7%}.dm-catalogue__art{height:100%;max-width:40%;min-width:0;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:#eee4d2}.dm-catalogue__art img{max-height:82%;max-width:100%;width:auto;height:auto;object-fit:contain;border:4px solid #201d18;box-shadow:3px 7px 16px #000b;transition:transform .2s}.dm-catalogue__art:hover img{transform:translateY(-3px)}.dm-catalogue__art span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;margin-top:10px}.dm-catalogue__art small{font-size:10px;color:#bcaf95}.dm-catalogue__label{position:absolute;bottom:16px;left:18px;background:#0b0b0ba6;padding:7px 12px;font-size:10px;letter-spacing:.08em}.dm-catalogue__navigation{display:flex;justify-content:space-between;align-items:center;padding:12px 4%;font-size:10px;letter-spacing:.12em;color:#baab90}.dm-catalogue__navigation button{cursor:pointer;border:1px solid #7f725d;border-radius:50%;width:38px;height:38px;background:none;color:#eee4d2;font-size:18px;margin-left:8px}.dm-catalogue__all{display:inline-block;margin:0 4%;color:#d6c7aa;text-underline-offset:5px;font-size:12px}.dm-catalogue :focus-visible{outline:2px solid #e4cda4;outline-offset:4px}.dm-catalogue__empty{color:#ccc1ad;text-align:center}@media(max-width:750px){.dm-catalogue__heading{display:block}.dm-catalogue__heading>span{display:block;margin-top:10px}.dm-catalogue__room{flex-basis:94vw}.dm-catalogue__rail{gap:8px}.dm-catalogue__art img{border-width:2px}.dm-catalogue__art span,.dm-catalogue__art small{font-size:8px}.dm-catalogue__art span{margin-top:5px}.dm-catalogue__label{font-size:8px;bottom:8px;left:8px;padding:4px 7px}}@media(prefers-reduced-motion:reduce){.dm-catalogue__rail{scroll-behavior:auto}.dm-catalogue__art img{transition:none}}
+</style>
+<script src="{{ 'dm-wall-catalogue.js' | asset_url }}" defer></script>
+{% schema %}
+{
+  "name": "Black wall catalogue",
+  "tag": "section",
+  "class": "dm-wall-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Art that stays with you."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Art collection"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_prices",
+      "label": "Show product prices",
+      "default": true
+    }
+  ],
+  "max_blocks": 10,
+  "blocks": [
+    {
+      "type": "room",
+      "name": "Furnished wall",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Room name",
+          "default": "The viewing room"
+        },
+        {
+          "type": "image_picker",
+          "id": "background",
+          "label": "Room background"
+        },
+        {
+          "type": "product_list",
+          "id": "products",
+          "label": "Artwork on this wall",
+          "limit": 3
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Black wall catalogue",
+      "blocks": [
+        {
+          "type": "room",
+          "settings": {
+            "title": "The quiet living room"
+          }
+        },
+        {
+          "type": "room",
+          "settings": {
+            "title": "A room for reading"
+          }
+        },
+        {
+          "type": "room",
+          "settings": {
+            "title": "The long-table ritual"
+          }
+        },
+        {
+          "type": "room",
+          "settings": {
+            "title": "Slow Sunday mornings"
+          }
+        },
+        {
+          "type": "room",
+          "settings": {
+            "title": "The creative study"
+          }
+        },
+        {
+          "type": "room",
+          "settings": {
+            "title": "An artful arrival"
+          }
+        },
+        {
+          "type": "room",
+          "settings": {
+            "title": "The listening lounge"
+          }
+        },
+        {
+          "type": "room",
+          "settings": {
+            "title": "A kitchen to gather"
+          }
+        },
+        {
+          "type": "room",
+          "settings": {
+            "title": "The garden retreat"
+          }
+        },
+        {
+          "type": "room",
+          "settings": {
+            "title": "After hours"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+

@@ -1,0 +1,19 @@
+{
+  "name": "aura-autonomous-art-fulfillment",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Webhook-driven digital art fulfillment engine",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@langchain/core": "^1.2.10",
+    "@langchain/langgraph": "^1.4.14",
+    "@langchain/openai": "^1.5.12",
+    "langchain": "^1.5.11",
+    "sharp": "^0.35.4",
+    "zod": "^4.6.1"
+  }
+}

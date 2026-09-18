@@ -1,0 +1,73 @@
+{% assign block_settings = block.settings %}
+<a
+  {% if template.name == 'index' and block_settings.hide_logo_on_home_page %}data-hidden-on-home-page{% endif %}
+  href="{{ routes.root_url }}"
+  aria-label="THE DARK MATTERS — Home"
+  class="size-style spacing-style header-logo"
+  style="{% render 'size-style', settings: block_settings %}{% render 'spacing-style', settings: block_settings %}"
+  {{ block.shopify_attributes }}
+>
+  <span class="dm-wordmark" aria-hidden="true">
+    <span class="dm-wordmark__measure">THE DARK MATTERS</span>
+    <span class="dm-wordmark__typing">THE DARK MATTERS</span>
+  </span>
+</a>
+{% stylesheet %}
+.header-logo{display:flex;height:100%;color:var(--color-foreground);justify-content:center;align-items:center;text-decoration:none;flex-shrink:0}
+.header-logo[data-hidden-on-home-page]{display:none}
+#header-component:is([sticky='always']:not([data-scroll-direction='none']),[sticky='scroll-up'][data-scroll-direction='up']) .header-logo[data-hidden-on-home-page]{display:flex}
+.dm-wordmark{position:relative;display:inline-block;font:500 15px/1.4 'Courier New',monospace;letter-spacing:.08em;white-space:nowrap}
+.dm-wordmark__measure{visibility:hidden}
+.dm-wordmark__typing{position:absolute;inset:0 auto 0 0;display:block;overflow:hidden;box-sizing:content-box;width:100%;border-right:1px solid transparent;animation:dm-brand-type 1.65s steps(16,end) .2s both,dm-brand-caret .55s step-end 4 forwards}
+@keyframes dm-brand-type{from{width:0}to{width:100%}}
+@keyframes dm-brand-caret{0%,49%{border-right-color:currentColor}50%,100%{border-right-color:transparent}}
+@media(max-width:749px){.header-logo{padding:0}.dm-wordmark{font-size:clamp(10px,2.8vw,14px);letter-spacing:.025em}}
+@media(prefers-reduced-motion:reduce){.dm-wordmark__typing{animation:none;width:100%;border-right:0}}
+{% endstylesheet %}
+{% schema %}
+{
+  "name": "t:names.logo",
+  "tag": null,
+  "class": "header-logo",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:content.edit_logo_in_theme_settings"
+    },
+    {
+      "type": "header",
+      "content": "t:content.visibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_logo_on_home_page",
+      "label": "t:settings.hide_logo_on_home_page",
+      "info": "t:info.hide_logo_on_home_page_help"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding_desktop"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ]
+}
+{% endschema %}
