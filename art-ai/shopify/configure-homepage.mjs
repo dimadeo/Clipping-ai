@@ -1,0 +1,11 @@
+import fs from 'node:fs';
+const file = new URL('./store-theme/templates/index.json', import.meta.url);
+const text = fs.readFileSync(file, 'utf8');
+const index = JSON.parse(text.slice(text.indexOf('{')));
+const names = ['Linen & travertine', 'The reading corner', 'Walnut dining', 'Quiet bedroom', 'The study', 'Sculptural entrance', 'Velvet lounge', 'Oak & limestone', 'Garden textures', 'After hours'];
+const blocks = Object.fromEntries(names.map((title, i) => ['room_' + (i + 1), {type: 'room', settings: {title}}]));
+index.sections.dm_wall_catalogue = {type: 'dm-wall-catalogue', blocks, block_order: Object.keys(blocks), settings: {heading: 'Art that stays with you.', show_prices: true}};
+for (const id of index.order) if (index.sections[id].type === 'hero') index.sections[id].disabled = true;
+index.order = ['dm_wall_catalogue', ...index.order.filter(id => id !== 'dm_wall_catalogue')];
+fs.writeFileSync(file, JSON.stringify(index, null, 2) + '\n');
+console.log('Homepage configured with ten catalogue rooms.');

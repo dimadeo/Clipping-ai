@@ -1,0 +1,208 @@
+================================================================================
+                    PRINT SHOP SUBMISSION QUICK REFERENCE
+================================================================================
+File: imgi_11_top20-220x220-wpa_100x100cm_150ppi.tif
+Audit Date: 2026-09-15
+Quality Score: 7.0 / 10.0 (ACCEPTABLE WITH CAVEATS)
+================================================================================
+
+STEP 1: SEND THIS EMAIL TO YOUR PRINT SHOP (RIGHT NOW)
+================================================================================
+
+Subject: Pre-Flight Submission – Please Confirm Color Space & Print Method
+
+Dear [Print Shop Name],
+
+I have a large-format image file ready for production:
+
+• Format: 100 × 100 cm poster
+• Current color space: RGB (24-bit)
+• Dimensions: 5942 × 5942 px (150.93 PPI)
+• File: imgi_11_top20-220x220-wpa_100x100cm_150ppi.tif
+• Substrate: [Specify: Glossy / Matte / Fine Art / Canvas / Other]
+
+**Before I finalize the file, please confirm:**
+
+1. Print method: Offset lithography, digital wide-format (inkjet), or other?
+2. Preferred input color space: CMYK (which profile: ISO 12647-2/SWOP) or RGB (sRGB/Adobe RGB)?
+3. Can you accept a color proof review before full production?
+4. Will you accept 150.93 PPI or do I need to downsample to 150.00 PPI?
+
+Once confirmed, I'll convert the file and submit it for production.
+
+Best regards,
+[Your Name]
+
+================================================================================
+STEP 2: BASED ON THEIR RESPONSE, FOLLOW THE APPROPRIATE PATH
+================================================================================
+
+SCENARIO A: OFFSET LITHOGRAPHY + CMYK REQUIRED
+────────────────────────────────────────────────
+
+Print Shop Response: "Please convert to CMYK, ISO 12647-2 (or SWOP)"
+
+ACTION: Convert in Photoshop
+  ✓ Image → Mode → Convert to CMYK
+  ✓ Select Profile: ISO 12647-2 (Europe) or SWOP (USA)
+  ✓ Rendering Intent: Relative Colorimetric
+  ✓ Image → Image Size → Downsample to 5906 × 5906 px (optional but recommended)
+  ✓ Image → Flatten Image
+  ✓ File → Export As → [filename]_CMYK_ISO12647-2.tif
+    - TIFF Options: ✓ LZW Compression, ✓ Save ICC Profile, ✗ Alpha Channels
+  ✓ File → File Info → Verify CMYK profile is embedded
+  ✓ Sample dark areas with Eyedropper → Check CMYK values:
+      • Good: K = 80–100%, C+M+Y = 0–40%
+      • At Risk: C+M+Y > 50%
+      • Bad: K < 50% (will look gray, not black)
+
+DELIVERABLE: CMYK TIFF with ISO 12647-2 profile embedded
+
+────────────────────────────────────────────────
+
+SCENARIO B: DIGITAL WIDE-FORMAT (INKJET) + sRGB/ADOBE RGB
+────────────────────────────────────────────────────────
+
+Print Shop Response: "Please use sRGB (or Adobe RGB) color space"
+
+ACTION: Assign profile in Photoshop
+  ✓ Edit → Assign Profile → sRGB (or Adobe RGB per their request)
+  ✓ File → Export As → [filename]_sRGB.tif
+    - TIFF Options: ✓ LZW Compression, ✓ Save ICC Profile, ✗ Alpha Channels
+  ✓ File → File Info → Verify sRGB profile is embedded
+
+DELIVERABLE: RGB TIFF with sRGB (or Adobe RGB) profile embedded
+
+────────────────────────────────────────────────
+
+SCENARIO C: PRINT SHOP ACCEPTS 150.93 PPI (No change needed)
+─────────────────────────────────────────────────────────
+
+Print Shop Response: "150.93 PPI is fine; just convert to [CMYK/sRGB]"
+
+ACTION: Follow Scenario A or B above (no downsampling required)
+
+================================================================================
+STEP 3: REQUEST & REVIEW COLOR PROOF
+================================================================================
+
+After submitting file to print shop, request:
+
+  ✓ "Can you provide a color proof (1:1 scale or minimum 50%) before full run?"
+
+On the proof, verify:
+  ✓ Shadow depth matches original (not too dark, not too light)
+  ✓ Text is crisp and legible (especially if any text < 8 pt)
+  ✓ No visible banding in gradients
+  ✓ Color saturation looks intentional (not washed out or oversaturated)
+
+If proof looks good: Approve for full press run
+If issues found: Request corrections or provide marked-up proof to print shop
+
+================================================================================
+KEY RISK FACTORS & MITIGATIONS
+================================================================================
+
+RISK: Color shift from RGB→CMYK conversion
+LIKELIHOOD: High
+MITIGATION: Confirm color space with print shop BEFORE conversion; request color proof
+
+RISK: Black mud in shadows (dark areas look gray instead of black)
+LIKELIHOOD: Medium
+MITIGATION: After CMYK conversion, verify K ≥ 80%, C+M+Y ≤ 40% in dark areas
+
+RISK: PPI overscan (150.93 vs. 150.00 max)
+LIKELIHOOD: Low
+MITIGATION: Ask print shop if they can accept 150.93; if not, downsample to 5906 px
+
+RISK: Text illegibility (small text choked or swallowed by ink)
+LIKELIHOOD: Very Low (your contrast is high)
+MITIGATION: Verify all text ≥ 8 pt on proof
+
+RISK: Transparency issues (white halos around objects)
+LIKELIHOOD: Zero (file is fully opaque)
+MITIGATION: None needed
+
+================================================================================
+FILE SPECS FOR PRINT SHOP (Keep handy)
+================================================================================
+
+Filename:          imgi_11_top20-220x220-wpa_100x100cm_150ppi.tif
+Dimensions:        5942 × 5942 px (or 5906 × 5906 px if downsampled)
+PPI:               150.93 (or 150.00 if downsampled)
+Print Size:        100 × 100 cm
+Color Mode:        [RGB → will convert to CMYK or sRGB per print shop request]
+Bit Depth:         8-bit per channel
+File Format:       TIFF (LZW compressed)
+ICC Profile:       [CMYK ISO 12647-2 / sRGB - per print shop request]
+Transparency:      None (fully opaque)
+Contrast:          High (Std Dev 63.8 / 255)
+Shadow Depth:      Strong (44/255 brightness in dark areas)
+Issues:            None detected beyond color space specification
+
+================================================================================
+AUDIT SUMMARY
+================================================================================
+
+QUALITY SCORE: 7.0 / 10.0
+GRADE: ACCEPTABLE WITH CAVEATS ⚠️
+STATUS: Ready for print shop submission AFTER color space confirmation
+
+WHAT'S GOOD:
+  ✓ High contrast (63.8 σ) — excellent legibility
+  ✓ Strong shadows (44/255) — good tonal depth
+  ✓ No transparency issues (fully opaque)
+  ✓ No visible artifacts or banding
+  ✓ ICC profile embedded
+  ✓ Line weights adequate (2.1 px per 1 pt)
+
+WHAT NEEDS ATTENTION:
+  ⚠️ PPI slightly over spec (150.93 vs. 150 max) — marginal overage
+  ⚠️ RGB color space — must convert or specify for print method
+  ⚠️ Color space decision critical — offset litho ≠ digital inkjet
+
+NEXT STEP: Send email to print shop immediately (see STEP 1 above)
+
+================================================================================
+FULL AUDIT REPORT LOCATION
+================================================================================
+
+For detailed technical analysis, see:
+  → C:\Users\andre\Upscaled\PREPRESS_AUDIT_imgi_11_top20_220_wpa.md
+  → C:\Users\andre\Upscaled\Print Quality Auditor\AUDIT_REPORT.md
+
+================================================================================
+GLOSSARY (For print shop discussions)
+================================================================================
+
+PPI (Pixels Per Inch)
+  → Measure of image resolution. At 100 cm print size, need ~150 PPI for crisp output.
+
+CMYK (Cyan, Magenta, Yellow, Black)
+  → Print-native color space for offset lithography. RGB must convert to CMYK.
+
+sRGB / Adobe RGB
+  → Print color spaces for digital wide-format (inkjet). RGB stays RGB but tagged.
+
+ICC Profile
+  → Color conversion instructions. Embedded profile tells RIP (print processor)
+    how to render colors accurately.
+
+Offset Lithography
+  → Traditional plate-based printing (like newspaper/magazine). Requires CMYK.
+
+Digital Wide-Format (Inkjet)
+  → Large-format inkjet printing (banners, posters). Can accept RGB or CMYK.
+
+TAC (Total Area Coverage)
+  → Sum of CMYK ink percentages. Max 300% for offset litho (else muddy/wet).
+
+Rich Black / Process Black
+  → Rich black = CMYK mix (e.g., K100 + C40). Process black = K100 only.
+  → Use rich black for deeper shadows; process black for neutral grays.
+
+RIP (Raster Image Processor)
+  → Software that converts your file to printer commands. Handles anti-aliasing,
+    color conversion, resolution adjustment.
+
+================================================================================

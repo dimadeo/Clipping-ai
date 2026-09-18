@@ -1,0 +1,23 @@
+{%- liquid
+  assign policy_handles = 'refund-policy,privacy-policy,terms-of-service,shipping-policy,legal-notice,contact-information' | split: ','
+  assign policy_labels = 'Refunds & returns,Privacy,Terms of service,Shipping & downloads,Art & licensing,Contact' | split: ','
+-%}
+<aside class="dm-policy-sidebar">
+  <nav class="dm-policy-nav" aria-label="Store policies">
+    <p class="dm-policy-nav__label">Information</p>
+    <ul role="list">
+      {%- for handle in policy_handles -%}
+        {%- assign policy_url = '/policies/' | append: handle -%}
+        <li>
+          <a href="{{ policy_url }}"{% if request.path == policy_url %} aria-current="page"{% endif %}>
+            {{ policy_labels[forloop.index0] | escape }}
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </nav>
+  <div class="dm-policy-support">
+    <p>Customer service</p>
+    <a href="mailto:hello@thedarkmatters.art">hello@thedarkmatters.art</a>
+  </div>
+</aside>

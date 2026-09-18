@@ -1,0 +1,222 @@
+file,folder,print_size,tier_c_score,grade,effective_ppi,main_limiter,effective_resolution,pixels_at_viewing_distance,line_weight,shadow_banding,ink_tac,shadow_clipping,reversed_detail,stroke_contrast_glare,transparency_white_box,black_build
+Batch_01_thedarkmaters_art_20x150cm_150ppi.pdf,output,20x150cm,3.5,critical,60,Stroke contrast in glare,4.6,10,9.9,6.1,10,10,9.5,1,10,10
+imgi_10_top20-220x220-saa_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,5.7,10,10,10,10,10,10
+imgi_113_showimg_ime97_search_150x75cm_150ppi.pdf,output,150x75cm,4.4,critical,38,Effective resolution,1.9,9.1,10,7.6,10,10,10,10,10,10
+imgi_114_showimg_ime117_search_150x75cm_150ppi.pdf,output,150x75cm,4.4,critical,38,Effective resolution,1.9,9.1,10,6.1,10,10,10,10,10,10
+imgi_115_showimg_ime154_search_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,9.5,10,10,10
+imgi_116_showimg_ime109_search_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,10,10,10,10,10,8.2,10
+imgi_117_showimg_ime83_search_75x150cm_150ppi.pdf,output,75x150cm,4.4,critical,38,Effective resolution,1.9,9.1,10,7.6,10,10,9.5,10,10,10
+imgi_118_showimg_ime105_search_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,6.8,10,10,9.5,10,10,10
+imgi_11_top20-220x220-wpa_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,7.2,10,10,10,10,10,10
+imgi_120_showimg_mcs01_search_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,9.5,10,10,10
+imgi_121_showimg_mcs41_search_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_122_showimg_mcs16_search_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,9.5,10,10,10
+imgi_123_showimg_mcs38_search_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,4.6,10,10,10,10,10,10
+imgi_124_showimg_mcs46_search_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_125_showimg_mcs10_search_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,9.5,10,10,10
+imgi_127_showimg_gve52_search_100x141cm_150ppi.pdf,output,100x141cm,4.4,critical,38,Effective resolution,1.9,8.9,10,4,10,10,9.5,10,10,10
+imgi_129_showimg_wuh93_search_133x100cm_150ppi.pdf,output,133x100cm,4.4,critical,38,Effective resolution,1.9,8.5,10,3,10,10,10,10,10,10
+imgi_12_top20-220x220-bse_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,5,10,10,10,10,10,10
+imgi_130_showimg_wuh73_search_133x100cm_150ppi.pdf,output,133x100cm,4.4,critical,38,Effective resolution,1.9,8.5,10,3,10,10,10,10,10,10
+imgi_131_showimg_wuh116_search_133x100cm_150ppi.pdf,output,133x100cm,4.4,critical,38,Effective resolution,1.9,8.5,10,8,10,10,10,10,10,10
+imgi_133_showimg_ldr73_search_100x133cm_150ppi.pdf,output,100x133cm,4.4,critical,38,Effective resolution,1.9,8.5,10,3,10,10,9.5,10,10,10
+imgi_134_showimg_ldr40_search_100x129cm_150ppi.pdf,output,100x129cm,4.4,critical,38,Effective resolution,1.9,8.5,10,3,10,10,9.5,10,10,10
+imgi_135_showimg_ldr109_search_150x100cm_150ppi.pdf,output,150x100cm,4.4,critical,38,Effective resolution,1.9,9.1,10,3,10,10,9.5,10,10,10
+imgi_136_showimg_ldr13_search_150x94cm_150ppi.pdf,output,150x94cm,4.4,critical,38,Effective resolution,1.9,9.1,10,5.3,10,10,10,10,10,10
+imgi_137_showimg_ldr80_search_150x100cm_150ppi.pdf,output,150x100cm,4.4,critical,38,Effective resolution,1.9,9.1,10,3,10,10,10,10,10,10
+imgi_138_showimg_ldr49_search_100x129cm_150ppi.pdf,output,100x129cm,4.4,critical,38,Effective resolution,1.9,8.5,10,3,10,10,9.5,10,10,10
+imgi_13_top20-220x220-yle_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,6.8,10,10,10,10,10,10
+imgi_140_showimg_mcn55_search_100x133cm_150ppi.pdf,output,100x133cm,4.4,critical,38,Effective resolution,1.9,8.5,10,6,10,10,9.5,10,10,10
+imgi_141_showimg_mcn68_search_100x125cm_150ppi.pdf,output,100x125cm,4.4,critical,38,Effective resolution,1.9,8.3,10,7.2,10,10,9.5,10,10,10
+imgi_142_showimg_mcn16_search_150x90cm_150ppi.pdf,output,150x90cm,4.4,critical,38,Effective resolution,1.9,9.1,10,5,10,10,10,10,10,10
+imgi_143_showimg_mcn25_search_142x100cm_150ppi.pdf,output,142x100cm,4.4,critical,38,Effective resolution,1.9,8.9,10,7.7,10,10,10,10,10,10
+imgi_144_showimg_mcn43_search_100x141cm_150ppi.pdf,output,100x141cm,4.4,critical,38,Effective resolution,1.9,8.9,10,4.7,10,10,10,10,10,10
+imgi_145_showimg_mcn10_search_142x100cm_150ppi.pdf,output,142x100cm,4.4,critical,38,Effective resolution,1.9,8.9,10,6.8,10,10,10,10,10,10
+imgi_147_showimg_gua53_search_150x75cm_150ppi.pdf,output,150x75cm,4.4,critical,38,Effective resolution,1.9,9.1,10,5.7,10,10,10,10,10,10
+imgi_148_showimg_gua44_search_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,9.5,10,10,10
+imgi_149_showimg_gua35_search_150x75cm_150ppi.pdf,output,150x75cm,4.4,critical,38,Effective resolution,1.9,9.1,10,3.6,10,10,10,10,10,10
+imgi_14_top20-220x220-cgo_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_150_showimg_gua41_search_133x100cm_150ppi.pdf,output,133x100cm,4.4,critical,38,Effective resolution,1.9,8.5,10,3,10,10,10,10,10,10
+imgi_151_showimg_gua07_search_133x100cm_150ppi.pdf,output,133x100cm,4.4,critical,38,Effective resolution,1.9,8.5,10,3,10,10,10,10,10,10
+imgi_152_showimg_gua56_search_150x94cm_150ppi.pdf,output,150x94cm,4.4,critical,38,Effective resolution,1.9,9.1,10,3,10,10,10,10,10,10
+imgi_155_showimg_wpa215_search_150x77cm_150ppi.pdf,output,150x77cm,4.4,critical,38,Effective resolution,1.9,9.1,10,5,10,10,10,10,10,10
+imgi_156_showimg_wpa260_search_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,7.2,10,10,9.5,10,10,10
+imgi_157_showimg_wpa206_search_134x100cm_150ppi.pdf,output,134x100cm,4.4,critical,38,Effective resolution,1.9,8.4,10,5.2,10,10,10,10,10,10
+imgi_158_showimg_wpa264_search_100x133cm_150ppi.pdf,output,100x133cm,4.4,critical,38,Effective resolution,1.9,8.5,10,6.4,10,10,9.5,10,10,10
+imgi_159_showimg_wpa149_search_134x100cm_150ppi.pdf,output,134x100cm,4.4,critical,38,Effective resolution,1.9,8.4,10,6,10,10,9.5,10,10,10
+imgi_15_top20-220x220-hhl_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_160_showimg_wpa242_search_133x100cm_150ppi.pdf,output,133x100cm,4.4,critical,38,Effective resolution,1.9,8.5,10,6.7,10,10,10,10,10,10
+imgi_161_showimg_bse17_search_117x100cm_150ppi.pdf,output,117x100cm,4.4,critical,38,Effective resolution,1.9,8,10,3,10,10,9.5,10,10,9.4
+imgi_162_showimg_bse20_search_100x128cm_150ppi.pdf,output,100x128cm,4.4,critical,38,Effective resolution,1.9,8.3,10,3,10,10,9.5,10,10,9.4
+imgi_164_showimg_ylm16_search_145x100cm_150ppi.pdf,output,145x100cm,4.4,critical,38,Effective resolution,1.9,8.9,10,7.1,10,10,10,10,10,10
+imgi_165_showimg_ylm22_search_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,6.8,10,10,9.5,10,10,10
+imgi_166_showimg_ylm19_search_144x100cm_150ppi.pdf,output,144x100cm,4.4,critical,38,Effective resolution,1.9,8.9,10,8.1,10,10,10,10,10,10
+imgi_167_showimg_ylm13_search_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,6.1,10,10,9.5,10,10,10
+imgi_168_showimg_ylm04_search_150x58cm_150ppi.pdf,output,150x58cm,4.4,critical,38,Effective resolution,1.9,9.1,10,8.1,10,10,10,10,10,10
+imgi_169_showimg_ylm01_search_145x100cm_150ppi.pdf,output,145x100cm,4.4,critical,38,Effective resolution,1.9,8.9,10,7.6,10,10,10,10,10,10
+imgi_16_top20-220x220-cmu_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_171_showimg_cgo155_search_144x100cm_150ppi.pdf,output,144x100cm,4.4,critical,38,Effective resolution,1.9,8.9,10,3,10,10,10,10,10,10
+imgi_172_showimg_cgo146_search_95x150cm_150ppi.pdf,output,95x150cm,5.5,critical,50,Shadow gradient banding,3.3,9.7,10,3,10,10,9.5,10,10,9.4
+imgi_173_showimg_cgo109_search_80x150cm_150ppi.pdf,output,80x150cm,3.5,critical,38,Stroke contrast in glare,1.9,9.1,9.9,3,10,10,9.5,1,10,9.4
+imgi_174_showimg_cgo144_search_116x100cm_150ppi.pdf,output,116x100cm,4.4,critical,38,Effective resolution,1.9,8,10,3,10,10,9.5,10,10,10
+imgi_175_showimg_cgo152_search_133x100cm_150ppi.pdf,output,133x100cm,4.4,critical,38,Effective resolution,1.9,8.5,10,3,10,10,10,10,10,10
+imgi_176_showimg_cgo51_search_100x113cm_150ppi.pdf,output,100x113cm,4.4,critical,38,Effective resolution,1.9,7.8,10,3,10,10,9.5,10,10,9.4
+imgi_178_showimg_hhl59_search_111x100cm_150ppi.pdf,output,111x100cm,4.4,critical,38,Effective resolution,1.9,7.8,10,6.8,10,10,9.5,10,10,10
+imgi_179_showimg_hhl104_search_150x53cm_150ppi.pdf,output,150x53cm,4.4,critical,38,Effective resolution,1.9,9.1,10,3,10,10,10,10,10,10
+imgi_180_showimg_hhl157_search_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,9.5,10,10,10
+imgi_181_showimg_hhl128_search_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,9.5,10,10,10
+imgi_182_showimg_hhl69_search_150x55cm_150ppi.pdf,output,150x55cm,4.4,critical,38,Effective resolution,1.9,9.1,10,3,10,10,10,10,10,10
+imgi_183_showimg_hhl86_search_55x150cm_150ppi.pdf,output,55x150cm,3.5,critical,50,Stroke contrast in glare,3.3,9.7,9.9,3,10,10,9.5,1,10,10
+imgi_184_showimg_mcu35_search_150x79cm_150ppi.pdf,output,150x79cm,4.4,critical,38,Effective resolution,1.9,9.1,10,7.6,10,10,10,10,10,10
+imgi_185_showimg_mcu29_search_150x94cm_150ppi.pdf,output,150x94cm,4.4,critical,38,Effective resolution,1.9,9.1,10,7.2,10,10,10,10,10,10
+imgi_186_showimg_mcu39_search_150x99cm_150ppi.pdf,output,150x99cm,4.4,critical,38,Effective resolution,1.9,9.1,10,7.6,10,10,10,10,10,10
+imgi_187_showimg_mcu26_search_150x92cm_150ppi.pdf,output,150x92cm,4.4,critical,38,Effective resolution,1.9,9.1,10,3,10,10,10,10,10,10
+imgi_188_showimg_mcu11_search_150x98cm_150ppi.pdf,output,150x98cm,4.4,critical,38,Effective resolution,1.9,9.1,10,7.2,10,10,10,10,10,10
+imgi_189_showimg_mcu17_search_150x99cm_150ppi.pdf,output,150x99cm,4.4,critical,38,Effective resolution,1.9,9.1,10,7.2,10,10,10,10,10,10
+imgi_191_showimg_cmu39_search_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,9.5,10,10,10
+imgi_192_showimg_cmu22_search_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3.6,10,10,9.5,10,10,10
+imgi_193_showimg_cmu31_search_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,9.5,10,10,10
+imgi_194_showimg_cmu33_search_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3.9,10,10,9.5,10,10,10
+imgi_195_showimg_cmu17_search_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,9.5,10,10,10
+imgi_197_showimg_pbl37_search_53x150cm_150ppi.pdf,output,53x150cm,3.5,critical,50,Stroke contrast in glare,3.3,9.7,9.9,3,10,10,9.5,1,10,10
+imgi_198_showimg_pbl28_search_100x113cm_150ppi.pdf,output,100x113cm,4.4,critical,38,Effective resolution,1.9,7.8,10,3,10,10,9.5,10,10,10
+imgi_1_hka02-neuheiten-387x220_150x85cm_150ppi.pdf,output,150x85cm,4.4,critical,38,Effective resolution,1.9,9.1,10,4.3,10,10,10,10,10,10
+imgi_200_showimg_pbl33_search_57x150cm_150ppi.pdf,output,57x150cm,5.5,critical,50,Shadow gradient banding,3.3,9.7,10,3,10,10,9.5,10,10,10
+imgi_201_showimg_pbl09_search_50x150cm_150ppi.pdf,output,50x150cm,3.5,critical,60,Stroke contrast in glare,4.6,10,9.9,5,10,10,9.5,1,10,9.4
+imgi_203_showimg_ssn49_search_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,8,10,10,10,10,10,10
+imgi_204_showimg_ssn59_search_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,5.3,10,10,10,10,10,10
+imgi_205_showimg_ssn56_search_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_206_showimg_ssn29_search_100x102cm_150ppi.pdf,output,100x102cm,4.4,critical,38,Effective resolution,1.9,7.4,10,6,10,10,10,10,10,10
+imgi_207_showimg_ssn73_search_150x49cm_150ppi.pdf,output,150x49cm,4.4,critical,38,Effective resolution,1.9,9.1,10,5.7,10,10,10,10,10,10
+imgi_209_showimg_nha21_search_150x80cm_150ppi.pdf,output,150x80cm,4.4,critical,38,Effective resolution,1.9,9.1,10,6.8,10,10,10,10,10,10
+imgi_210_showimg_nha11_search_133x100cm_150ppi.pdf,output,133x100cm,4.4,critical,38,Effective resolution,1.9,8.5,10,6.4,10,10,10,10,10,10
+imgi_211_showimg_nha02_search_100x109cm_150ppi.pdf,output,100x109cm,4.4,critical,38,Effective resolution,1.9,7.6,10,10,10,10,10,10,8.2,10
+imgi_212_showimg_nha14_search_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3.9,10,10,10,10,10,10
+imgi_213_showimg_nha08_search_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,4.3,10,10,10,10,10,10
+imgi_214_showimg_nha28_search_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,5.7,10,10,10,10,10,10
+imgi_216_showimg_rja05_search_134x100cm_150ppi.pdf,output,134x100cm,4.4,critical,38,Effective resolution,1.9,8.4,10,7.1,10,10,10,10,10,10
+imgi_217_showimg_rja54_search_133x100cm_150ppi.pdf,output,133x100cm,4.4,critical,38,Effective resolution,1.9,8.5,10,3,10,10,10,10,10,10
+imgi_218_showimg_rja60_search_100x133cm_150ppi.pdf,output,100x133cm,4.4,critical,38,Effective resolution,1.9,8.5,10,5.3,10,10,9.5,10,10,10
+imgi_219_showimg_rja19_search_128x100cm_150ppi.pdf,output,128x100cm,4.4,critical,38,Effective resolution,1.9,8.2,10,8,10,10,10,10,10,10
+imgi_220_showimg_rja57_search_133x100cm_150ppi.pdf,output,133x100cm,4.4,critical,38,Effective resolution,1.9,8.5,10,6.7,10,10,10,10,10,10
+imgi_221_showimg_rja21_search_100x133cm_150ppi.pdf,output,100x133cm,4.4,critical,38,Effective resolution,1.9,8.5,10,7.6,10,10,9.5,10,10,10
+imgi_229_top20-220x220-bhu_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_230_top20-220x220-ime_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,7.2,10,10,10,10,10,10
+imgi_231_top20-220x220-mcs_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_232_top20-220x220-gve_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3.6,10,10,10,10,10,10
+imgi_233_top20-220x220-wuh_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3.9,10,10,10,10,10,10
+imgi_234_top20-220x220-ldr_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_235_top20-220x220-mcn_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3.9,10,10,10,10,10,10
+imgi_236_top20-220x220-gua_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_237_top20-220x220-saa_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,5,10,10,10,10,10,10
+imgi_238_top20-220x220-wpa_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,7.2,10,10,10,10,10,10
+imgi_239_top20-220x220-bse_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_240_top20-220x220-yle_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,6.8,10,10,10,10,10,10
+imgi_241_top20-220x220-cgo_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_242_top20-220x220-hhl_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_243_top20-220x220-cmu_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_245_nyc-220x220_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,7.2,10,10,10,10,10,10
+imgi_246_bowie-220x220_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_247_abstrakt-220x220_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_248_landschaften-220x220_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,6.1,10,10,10,10,10,10
+imgi_249_wasser-220x220_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,4.3,10,10,10,10,10,10
+imgi_24_nyc-220x220_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,7.2,10,10,10,10,10,10
+imgi_250_guachinarte-220x220_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_251_schwarz-weiss-220x220_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_252_dratwa-220x220_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_253_bestseller-220x220_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,5.3,10,10,10,10,10,10
+imgi_254_neuheiten-220x220_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,8.1,10,10,10,10,10,10
+imgi_255_multi-phase-220x220_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_256_menschen-220x220_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_257_blumen-220x220_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,6.4,10,10,10,10,10,10
+imgi_258_digital-220x220_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_259_city-220x220_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,6.4,10,10,10,10,10,10
+imgi_25_bowie-220x220_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3.6,10,10,10,10,10,10
+imgi_262_showimg_ime97_desktop_150x75cm_150ppi.pdf,output,150x75cm,4.4,critical,38,Effective resolution,1.9,9.1,10,7.2,10,10,9.5,10,10,10
+imgi_263_showimg_ime117_desktop_150x75cm_150ppi.pdf,output,150x75cm,4.4,critical,38,Effective resolution,1.9,9.1,10,10,10,10,10,10,8.2,10
+imgi_264_showimg_ime154_desktop_100x100cm_150ppi.pdf,output,100x100cm,3.5,critical,38,Stroke contrast in glare,1.9,7.4,9.9,5.7,10,10,9.5,1,10,10
+imgi_265_showimg_ime109_desktop_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,7.2,10,10,9.5,10,10,10
+imgi_266_showimg_ime83_desktop_75x150cm_150ppi.pdf,output,75x150cm,4.4,critical,38,Effective resolution,1.9,9.1,9.9,7.2,10,10,9.5,10,10,10
+imgi_267_showimg_ime105_desktop_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,6.1,10,10,9.5,10,10,10
+imgi_269_showimg_mcs01_desktop_100x100cm_150ppi.pdf,output,100x100cm,3.5,critical,38,Stroke contrast in glare,1.9,7.4,9.9,3,10,10,9.5,1,10,10
+imgi_26_abstrakt-220x220_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3.6,10,10,10,10,10,10
+imgi_270_showimg_mcs41_desktop_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,9.5,10,10,10
+imgi_271_showimg_mcs16_desktop_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,9.5,10,10,10
+imgi_272_showimg_mcs38_desktop_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,5,10,10,9.5,10,10,10
+imgi_273_showimg_mcs46_desktop_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_274_showimg_mcs10_desktop_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,9.5,10,10,10
+imgi_276_showimg_gve52_desktop_100x141cm_150ppi.pdf,output,100x141cm,5.5,critical,50,Shadow gradient banding,3.3,9.6,10,3,10,10,9.5,10,10,9.4
+imgi_278_showimg_wuh93_desktop_133x100cm_150ppi.pdf,output,133x100cm,4.4,critical,38,Effective resolution,1.9,8.5,10,3,10,10,9.5,10,10,10
+imgi_279_showimg_wuh73_desktop_133x100cm_150ppi.pdf,output,133x100cm,4.4,critical,38,Effective resolution,1.9,8.5,10,3,10,10,9.5,10,10,10
+imgi_27_landschaften-220x220_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,6.1,10,10,10,10,10,10
+imgi_281_showimg_ldr73_desktop_100x133cm_150ppi.pdf,output,100x133cm,3.5,critical,50,Stroke contrast in glare,3.3,9.4,9.9,3.1,10,10,9.5,1,10,10
+imgi_282_showimg_ldr40_desktop_100x129cm_150ppi.pdf,output,100x129cm,3.5,critical,50,Stroke contrast in glare,3.3,9.4,9.9,3,10,10,9.5,1,10,10
+imgi_283_showimg_ldr109_desktop_150x100cm_150ppi.pdf,output,150x100cm,4.4,critical,38,Effective resolution,1.9,9.1,10,3,10,10,9.5,10,10,9.4
+imgi_284_showimg_ldr13_desktop_150x94cm_150ppi.pdf,output,150x94cm,4.4,critical,38,Effective resolution,1.9,9.1,10,4.6,10,10,9.5,10,10,9.4
+imgi_285_showimg_ldr80_desktop_150x100cm_150ppi.pdf,output,150x100cm,4.4,critical,38,Effective resolution,1.9,9.1,10,3,10,10,9.5,10,10,9.4
+imgi_287_showimg_mcn55_desktop_100x133cm_150ppi.pdf,output,100x133cm,5.8,critical,50,Effective resolution,3.3,9.4,10,5.6,10,10,9.5,10,10,10
+imgi_288_showimg_mcn68_desktop_100x125cm_150ppi.pdf,output,100x125cm,4.4,critical,38,Effective resolution,1.9,8.3,10,6.8,10,10,9.5,10,10,10
+imgi_289_showimg_mcn16_desktop_150x90cm_150ppi.pdf,output,150x90cm,4.4,critical,38,Effective resolution,1.9,9.1,10,4.6,10,10,9.5,10,10,10
+imgi_28_wasser-220x220_100x100cm_150ppi.pdf,output,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,5.3,10,10,10,10,10,10
+imgi_290_showimg_mcn25_desktop_142x100cm_150ppi.pdf,output,142x100cm,4.4,critical,38,Effective resolution,1.9,8.9,10,7.7,10,10,9.5,10,10,10
+imgi_291_showimg_mcn43_desktop_100x142cm_150ppi.pdf,output,100x142cm,4.4,critical,38,Effective resolution,1.9,8.8,10,3.6,10,10,9.5,10,10,10
+imgi_292_showimg_mcn10_desktop_142x100cm_150ppi.pdf,output,142x100cm,4.4,critical,38,Effective resolution,1.9,8.9,10,6.5,10,10,9.5,10,10,10
+imgi_294_showimg_gua53_desktop_150x75cm_150ppi.pdf,output,150x75cm,4.4,critical,38,Effective resolution,1.9,9.1,10,5.3,10,10,9.5,10,10,10
+imgi_295_showimg_gua44_desktop_100x100cm_150ppi.pdf,output,100x100cm,5.5,critical,50,Shadow gradient banding,3.3,8.5,10,3,10,10,9.5,10,10,10
+imgi_395_showimg_ylm13_desktop_100x100cm_150ppi.pdf,output\print_batch_01,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,7.1,10,9.5,10,10,9.4
+imgi_416_showimg_cmu39_desktop_100x100cm_150ppi.pdf,output\print_batch_01,100x100cm,3.6,critical,50,Stroke contrast in glare,3.3,8.5,10,3,2,9.3,9.5,1.1,10,8.8
+imgi_417_showimg_cmu22_desktop_100x100cm_150ppi.pdf,output\print_batch_01,100x100cm,5.3,critical,50,Effective resolution,3.3,8.5,10,4.3,4.1,9.3,9.5,10,10,9.4
+imgi_418_showimg_cmu31_desktop_100x100cm_150ppi.pdf,output\print_batch_01,100x100cm,3.5,critical,38,Stroke contrast in glare,1.9,7.4,9.9,3,3.4,9.3,9.5,1,10,8.8
+imgi_419_showimg_cmu33_desktop_100x100cm_150ppi.pdf,output\print_batch_01,100x100cm,3.5,critical,38,Stroke contrast in glare,1.9,7.4,9.9,3,2.9,9.3,9.5,1,10,8.8
+imgi_422_showimg_pbl28_desktop_100x113cm_150ppi.pdf,output\print_batch_01,100x113cm,3.5,critical,38,Stroke contrast in glare,1.9,7.8,10,5,6.3,9.3,9.5,1,10,8.8
+imgi_435_showimg_nha08_desktop_100x100cm_150ppi.pdf,output\print_batch_01,100x100cm,5.4,critical,50,Shadow gradient banding,3.3,8.5,10,3,8,10,9.5,10,10,10
+imgi_2_top20-220x220-bhu_100x100cm_150ppi.pdf,output\print_batch_02,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_29_guachinarte-220x220_100x100cm_150ppi.pdf,output\print_batch_02,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_296_showimg_gua35_desktop_150x75cm_150ppi.pdf,output\print_batch_02,150x75cm,4.4,critical,38,Effective resolution,1.9,9.1,10,3.6,10,10,9.5,10,10,10
+imgi_297_showimg_gua41_desktop_133x100cm_150ppi.pdf,output\print_batch_02,133x100cm,4.4,critical,38,Effective resolution,1.9,8.5,10,3,10,10,9.5,10,10,10
+imgi_3_top20-220x220-ime_100x100cm_150ppi.pdf,output\print_batch_02,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,7.2,10,10,10,10,10,10
+imgi_30_schwarz-weiss-220x220_100x100cm_150ppi.pdf,output\print_batch_02,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3.2,10,10,10,10,10,10
+imgi_300_showimg_wpa215_desktop_150x77cm_150ppi.pdf,output\print_batch_02,150x77cm,4.4,critical,38,Effective resolution,1.9,9.1,10,3.9,10,10,9.5,10,10,10
+imgi_301_showimg_wpa260_desktop_100x100cm_150ppi.pdf,output\print_batch_02,100x100cm,3.5,critical,50,Stroke contrast in glare,3.3,8.5,9.9,6.8,10,10,9.5,1,10,10
+imgi_302_showimg_wpa206_desktop_134x100cm_150ppi.pdf,output\print_batch_02,134x100cm,4.4,critical,38,Effective resolution,1.9,8.4,10,4.5,10,10,9.5,10,10,10
+imgi_303_showimg_wpa264_desktop_100x133cm_150ppi.pdf,output\print_batch_02,100x133cm,3.5,critical,60,Stroke contrast in glare,4.6,9.9,10,6.4,10,10,9.5,1,10,10
+imgi_304_showimg_wpa149_desktop_134x100cm_150ppi.pdf,output\print_batch_03,134x100cm,4.4,critical,38,Effective resolution,1.9,8.4,10,5.2,10,10,9.5,10,10,10
+imgi_31_dratwa-220x220_100x100cm_150ppi.pdf,output\print_batch_03,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_313_masters-220x220_100x100cm_150ppi.pdf,output\print_batch_03,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,4.3,10,10,10,10,10,10
+imgi_32_bestseller-220x220_100x100cm_150ppi.pdf,output\print_batch_03,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,6.1,10,10,10,10,10,10
+imgi_33_neuheiten-220x220_100x100cm_150ppi.pdf,output\print_batch_03,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,8.1,10,10,10,10,10,10
+imgi_34_multi-phase-220x220_100x100cm_150ppi.pdf,output\print_batch_03,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_35_masters-220x220_100x100cm_150ppi.pdf,output\print_batch_03,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,5.7,10,10,10,10,10,10
+imgi_36_menschen-220x220_100x100cm_150ppi.pdf,output\print_batch_03,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_37_blumen-220x220_100x100cm_150ppi.pdf,output\print_batch_03,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,6.8,10,10,10,10,10,10
+imgi_38_digital-220x220_100x100cm_150ppi.pdf,output\print_batch_03,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,10,10,10,10
+imgi_385_showimg_wuh116_desktop_133x100cm_150ppi.pdf,output\print_batch_03,133x100cm,4.4,critical,38,Effective resolution,1.9,8.5,10,8,10,10,9.5,10,10,10
+imgi_386_showimg_ldr49_desktop_100x129cm_150ppi.pdf,output\print_batch_03,100x129cm,4.4,critical,38,Effective resolution,1.9,8.5,9.9,3,10,10,9.5,10,10,10
+imgi_387_showimg_gua07_desktop_133x100cm_150ppi.pdf,output\print_batch_03,133x100cm,4.4,critical,38,Effective resolution,1.9,8.5,10,3,10,10,9.5,10,10,10
+imgi_388_showimg_gua56_desktop_150x94cm_150ppi.pdf,output\print_batch_03,150x94cm,4.4,critical,38,Effective resolution,1.9,9.1,10,3,10,10,9.5,10,10,10
+imgi_389_showimg_wpa242_desktop_133x100cm_150ppi.pdf,output\print_batch_03,133x100cm,4.4,critical,38,Effective resolution,1.9,8.5,10,6,10,10,9.5,10,10,10
+imgi_39_city-220x220_100x100cm_150ppi.pdf,output\print_batch_03,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,6.8,10,10,10,10,10,10
+imgi_390_showimg_bse17_desktop_116x100cm_150ppi.pdf,output\print_batch_03,116x100cm,4.4,critical,38,Effective resolution,1.9,8,10,3,10,10,9.5,10,10,9.4
+imgi_391_showimg_bse20_desktop_100x128cm_150ppi.pdf,output\print_batch_03,100x128cm,3.6,critical,38,Stroke contrast in glare,1.9,8.3,9.9,3,10,10,9.5,1.1,10,8.8
+imgi_392_showimg_ylm16_desktop_145x100cm_150ppi.pdf,output\print_batch_03,145x100cm,4.4,critical,38,Effective resolution,1.9,8.8,10,6,10,10,9.5,10,10,10
+imgi_393_showimg_ylm22_desktop_100x100cm_150ppi.pdf,output\print_batch_03,100x100cm,3.5,critical,50,Stroke contrast in glare,3.3,8.5,9.9,6.4,10,10,9.5,1,10,10
+imgi_394_showimg_ylm19_desktop_144x100cm_150ppi.pdf,output\print_batch_03,144x100cm,4.4,critical,38,Effective resolution,1.9,8.9,10,7.6,10,10,9.5,10,10,10
+imgi_396_showimg_ylm04_desktop_150x58cm_150ppi.pdf,output\print_batch_03,150x58cm,4.4,critical,38,Effective resolution,1.9,9.1,10,8,10,10,9.5,10,10,10
+imgi_397_showimg_ylm01_desktop_145x100cm_150ppi.pdf,output\print_batch_03,145x100cm,4.4,critical,38,Effective resolution,1.9,8.8,10,7.1,10,10,9.5,10,10,10
+imgi_398_showimg_cgo155_desktop_144x100cm_150ppi.pdf,output\print_batch_03,144x100cm,4.4,critical,38,Effective resolution,1.9,8.9,10,3,10,10,9.5,10,10,10
+imgi_399_showimg_cgo146_desktop_95x150cm_150ppi.pdf,output\print_batch_03,95x150cm,5.5,critical,50,Shadow gradient banding,3.3,9.7,10,3,10,10,9.5,10,10,9.4
+imgi_400_showimg_cgo109_desktop_80x150cm_150ppi.pdf,output\print_batch_03,80x150cm,3.5,critical,60,Stroke contrast in glare,4.6,10,9.9,3,10,10,9.5,1,10,8.8
+imgi_401_showimg_cgo144_desktop_116x100cm_150ppi.pdf,output\print_batch_03,116x100cm,4.4,critical,38,Effective resolution,1.9,8,10,3,10,10,9.5,10,10,9.4
+imgi_402_showimg_cgo152_desktop_133x100cm_150ppi.pdf,output\print_batch_03,133x100cm,4.4,critical,38,Effective resolution,1.9,8.5,10,3,10,10,9.5,10,10,9.4
+imgi_403_showimg_cgo51_desktop_100x113cm_150ppi.pdf,output\print_batch_03,100x113cm,3.5,critical,38,Stroke contrast in glare,1.9,7.8,9.9,3,10,10,9.5,1,10,9.4
+imgi_404_showimg_hhl59_desktop_111x100cm_150ppi.pdf,output\print_batch_03,111x100cm,4.4,critical,38,Effective resolution,1.9,7.8,10,6.8,10,10,9.5,10,10,10
+imgi_405_showimg_hhl104_desktop_150x53cm_150ppi.pdf,output\print_batch_03,150x53cm,4.4,critical,38,Effective resolution,1.9,9.1,10,3,10,10,9.5,10,10,10
+imgi_406_showimg_hhl157_desktop_100x100cm_150ppi.pdf,output\print_batch_03,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,9.5,10,10,10
+imgi_407_showimg_hhl128_desktop_100x100cm_150ppi.pdf,output\print_batch_03,100x100cm,4.4,critical,38,Effective resolution,1.9,7.4,10,3,10,10,9.5,10,10,10
+imgi_408_showimg_hhl69_desktop_150x55cm_150ppi.pdf,output\print_batch_03,150x55cm,4.4,critical,38,Effective resolution,1.9,9.1,10,3,10,10,9.5,10,10,10
+imgi_409_showimg_hhl86_desktop_55x150cm_150ppi.pdf,output\print_batch_03,55x150cm,3.5,critical,60,Stroke contrast in glare,4.6,10,9.4,3,10,10,9.5,1,10,10
+imgi_410_showimg_mcu35_desktop_150x79cm_150ppi.pdf,output\print_batch_03,150x79cm,4.4,critical,38,Effective resolution,1.9,9.1,10,8,10,10,10,10,10,10
+imgi_411_showimg_mcu29_desktop_150x94cm_150ppi.pdf,output\print_batch_03,150x94cm,4.4,critical,38,Effective resolution,1.9,9.1,10,6.4,10,10,10,10,10,10
+imgi_412_showimg_mcu39_desktop_150x99cm_150ppi.pdf,output\print_batch_03,150x99cm,4.4,critical,38,Effective resolution,1.9,9.1,10,7.2,10,10,10,10,10,10
+imgi_413_showimg_mcu26_desktop_150x93cm_150ppi.pdf,output\print_batch_03,150x93cm,4.4,critical,38,Effective resolution,1.9,9.1,10,3,10,10,10,10,10,10
+imgi_414_showimg_mcu11_desktop_150x99cm_150ppi.pdf,output\print_batch_03,150x99cm,4.4,critical,38,Effective resolution,1.9,9.1,10,6.4,10,10,10,10,10,10
