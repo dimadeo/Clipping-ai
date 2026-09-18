@@ -77,12 +77,16 @@ impl MonitoringStore {
         }
         .to_string();
 
-        state.message = if matches!(status, RunStatus::Completed) {
-            "Orchestrator run finished".to_string()
-        } else {
-            "Orchestrator run failed".to_string()
+        state.message = match status {
+            RunStatus::Completed => "Orchestrator run finished".to_string(),
+            RunStatus::Rejected => "Orchestrator run rejected".to_string(),
+            _ => "Orchestrator run failed".to_string(),
         };
-        state.last_run = Some("completed".to_string());
+        state.last_run = Some(match status {
+            RunStatus::Completed => "completed".to_string(),
+            RunStatus::Rejected => "rejected".to_string(),
+            _ => "failed".to_string(),
+        });
         state.returncode = Some(returncode);
         state.result = result;
         state.metrics.last_duration_seconds = Some(duration_seconds);
@@ -267,8 +271,29 @@ mod tests {
 
         let state = store.snapshot();
         assert_eq!(state.status, "error");
+        assert_eq!(state.last_run.as_deref(), Some("failed"));
         assert_eq!(state.metrics.render_retries, 1);
         assert_eq!(state.metrics.runs_failed, 1);
+    }
+
+    #[test]
+    fn rejected_runs_have_distinct_terminal_message() {
+        let temp = std::env::temp_dir().join("monitoring_state_rejected.json");
+        let _ = fs::remove_file(&temp);
+        let store = MonitoringStore::new(&temp);
+
+        store.start_run();
+        store.finish_run(
+            RunStatus::Rejected,
+            serde_json::json!({"status":"rejected"}),
+            1,
+            0.8,
+        );
+
+        let state = store.snapshot();
+        assert_eq!(state.status, "rejected");
+        assert_eq!(state.message, "Orchestrator run rejected");
+        assert_eq!(state.last_run.as_deref(), Some("rejected"));
     }
 
     #[test]

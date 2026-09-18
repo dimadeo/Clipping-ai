@@ -53,7 +53,6 @@ impl ControlCenter {
                 Ok(true)
             }
             Err(err) => {
-                self.monitor.mark_retry();
                 self.monitor.finish_run(
                     RunStatus::Failed,
                     serde_json::json!({"error": err}),
@@ -123,8 +122,15 @@ fn handle_connection(stream: TcpStream, center: &ControlCenter) {
             };
 
             center.queue_run(request_payload);
-            let _ = center.process_next();
-            respond(stream, "200 OK", "{\"ok\":true}", "application/json");
+            match center.process_next() {
+                Ok(_) => respond(stream, "200 OK", "{\"ok\":true}", "application/json"),
+                Err(_) => respond(
+                    stream,
+                    "500 Internal Server Error",
+                    "{\"error\":\"workflow execution failed\"}",
+                    "application/json",
+                ),
+            };
         }
         _ => respond(stream, "404 Not Found", "Not found", "text/plain"),
     }
