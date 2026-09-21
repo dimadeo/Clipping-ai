@@ -44,12 +44,13 @@ class MidjourneyClient:
             return "bfl"
 
         runway_key = bool(str(os.getenv("RUNWAY_API_KEY") or "").strip())
+        runway_secret = bool(str(os.getenv("RUNWAYML_API_SECRET") or "").strip())
         runway_hint = bool(str(os.getenv("RUNWAY_MODEL") or "").strip())
         midjourney_key = bool(str(os.getenv("MIDJOURNEY_API_KEY") or "").strip())
         bfl_key = bool(str(os.getenv("BFL_API_KEY") or "").strip())
 
         # If only Runway credentials/hints are configured, prefer Runway as the default creator backend.
-        if (runway_key or runway_hint) and not (midjourney_key or bfl_key):
+        if (runway_key or runway_secret or runway_hint) and not (midjourney_key or bfl_key):
             return "runway"
         if bfl_key and not midjourney_key:
             return "bfl"
@@ -59,13 +60,15 @@ class MidjourneyClient:
     def _resolve_api_key(provider: str) -> Optional[str]:
         if provider == "runway":
             return (
-                os.getenv("RUNWAY_API_KEY")
+                os.getenv("RUNWAYML_API_SECRET")
+                or os.getenv("RUNWAY_API_KEY")
                 or os.getenv("RENDERER_API_KEY")
                 or os.getenv("MIDJOURNEY_API_KEY")
                 or os.getenv("BFL_API_KEY")
             )
         return (
-            os.getenv("MIDJOURNEY_API_KEY")
+            os.getenv("RUNWAYML_API_SECRET")
+            or os.getenv("MIDJOURNEY_API_KEY")
             or os.getenv("BFL_API_KEY")
             or os.getenv("RENDERER_API_KEY")
             or os.getenv("RUNWAY_API_KEY")
@@ -101,6 +104,7 @@ class MidjourneyClient:
         headers = {"Content-Type": "application/json", "Accept": "application/json"}
         if self.api_key and self.provider == "runway":
             headers["Authorization"] = f"Bearer {self.api_key}"
+            headers["X-Runway-Version"] = os.getenv("RUNWAY_API_VERSION") or "2024-11-06"
         elif self.api_key:
             headers["x-key"] = self.api_key
         return headers

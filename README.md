@@ -51,18 +51,36 @@ python qvac_ondevice_demo.py
 
 ## Runway Text-to-Image
 
-Use the local CLI wrapper to generate images with Runway through the shared renderer adapter.
+Use either of these two paths:
+
+- Adapter path (`runway_text_to_image.py`) to test your existing dashboard renderer integration.
+- Official SDK path (`runway_sdk_text_to_image.py`) to follow Runway's recommended quickstart flow.
 
 Set your API key in the current shell:
 
 ```powershell
-$env:RUNWAY_API_KEY = "<your_runway_api_key>"
+$env:RUNWAYML_API_SECRET = "<your_runway_api_secret>"
+$env:RENDERER_PROVIDER = "runway"
+$env:RUNWAY_ENDPOINT = "https://api.dev.runwayml.com/v1/text_to_image"
+$env:RUNWAY_API_VERSION = "2024-11-06"
 ```
 
-Run a text-to-image request:
+Install dependencies (once):
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+```
+
+Run the shared adapter path (dashboard-compatible):
 
 ```powershell
 .\.venv\Scripts\python.exe .\runway_text_to_image.py --prompt "Cinematic portrait of a founder in a neon office" --ratio 9:16 --wait --output .\dashboard_uploads\runway_t2i_last.json
+```
+
+Run the official Runway Python SDK path:
+
+```powershell
+.\.venv\Scripts\python.exe .\runway_sdk_text_to_image.py --prompt "Editorial fine-art portrait with dramatic side light" --model gen4_image --ratio 1920:1080 --output .\dashboard_uploads\runway_sdk_t2i_last.json
 ```
 
 Optional flags:
@@ -72,7 +90,15 @@ Optional flags:
 - `--reference-image` for image-to-image style guidance
 - `--idempotency-key` for safe retries
 
-The app downloads the model it needs on first run and then performs a local inference call.
+SDK-specific optional flags:
+
+- `--reference-image URI=TAG` to attach tagged reference images (repeatable)
+- `--no-wait` to return immediately after task creation
+
+Quick low-risk testing options:
+
+- Keep using the dashboard with render disabled to validate orchestration and approvals without API calls.
+- Use `runway_sdk_text_to_image.py --no-wait` for faster smoke tests when you only need task creation feedback (this still starts a billable task).
 
 ## Notes
 

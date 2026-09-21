@@ -7,3 +7,4 @@ langchain-anthropic
 langchain-openai
 langsmith==0.12.6
 langgraph==1.2.11
+runwayml
