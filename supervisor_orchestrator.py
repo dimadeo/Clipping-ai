@@ -35,7 +35,7 @@ def web_search(query: str) -> str:
         raise ValueError("query must not be empty")
 
     url = f"https://api.duckduckgo.com/?q={quote_plus(normalized_query)}&format=json&no_html=1"
-    request = Request(url, headers={"User-Agent": "ClippingAiBusiness/1.0"})
+    request = Request(url, headers={"User-Agent": "FineArtOps/1.0"})
     with urlopen(request, timeout=10) as response:
         payload = json.loads(response.read().decode("utf-8"))
 

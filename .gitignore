@@ -4,5 +4,5 @@ node_modules
 __pycache__/
 *.py[cod]
 rust_core/target/
-upscaled/.env.example
 upscaled/rust_core/target/
+dashboard_uploads/

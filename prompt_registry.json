@@ -344,15 +344,45 @@
           "trigger": "Ego Validation"
         },
         "score": 130.0,
+        "status": "draft"
+      },
+      {
+        "name": "viral_master_prod_prompt",
+        "version": "v24",
+        "prompt": "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: Prompt: A mesmerizing geometric fractal design demonstrating absolute mathematical precision. Infinite self-similar repeating patterns scale downwards into a central golden spiral. Sharp, overlapping crystalline vectors in shades of magenta. Audience: startup founders. Angle: counterintuitive business leverage. Niche: Psychology & Human Behavior. Trigger: Ego Validation. Open with a bold stop-the-scroll hook in the first 1-2 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA: Follow for more.",
+        "metadata": {
+          "topic": "Prompt: A mesmerizing geometric fractal design demonstrating absolute mathematical precision. Infinite self-similar repeating patterns scale downwards into a central golden spiral. Sharp, overlapping crystalline vectors in shades of magenta",
+          "audience": "startup founders",
+          "angle": "counterintuitive business leverage",
+          "cta": "Follow for more",
+          "niche": "Psychology & Human Behavior",
+          "trigger": "Ego Validation"
+        },
+        "score": 130.0,
+        "status": "draft"
+      },
+      {
+        "name": "viral_master_prod_prompt",
+        "version": "v25",
+        "prompt": "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: 2. The Fluid Art Fusion (Organic meets Geometric)Prompt: Abstract fine art print blending fluid acrylic pour techniques with hard-edged geometric structures. Swirling, organic fractal waves of deep indigo and neon pink bleed into structured. Audience: startup founders. Angle: counterintuitive business leverage. Niche: Psychology & Human Behavior. Trigger: Ego Validation. Open with a bold stop-the-scroll hook in the first 1-2 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA: Follow for more.",
+        "metadata": {
+          "topic": "2. The Fluid Art Fusion (Organic meets Geometric)Prompt: Abstract fine art print blending fluid acrylic pour techniques with hard-edged geometric structures. Swirling, organic fractal waves of deep indigo and neon pink bleed into structured",
+          "audience": "startup founders",
+          "angle": "counterintuitive business leverage",
+          "cta": "Follow for more",
+          "niche": "Psychology & Human Behavior",
+          "trigger": "Ego Validation"
+        },
+        "score": 130.0,
         "status": "prod"
       }
     ],
     "prod": {
       "name": "viral_master_prod_prompt",
-      "version": "v23",
-      "prompt": "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: AI for founders. Audience: startup founders. Angle: counterintuitive business leverage. Niche: Psychology & Human Behavior. Trigger: Ego Validation. Open with a bold stop-the-scroll hook in the first 1-2 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA: Follow for more.",
+      "version": "v25",
+      "prompt": "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: 2. The Fluid Art Fusion (Organic meets Geometric)Prompt: Abstract fine art print blending fluid acrylic pour techniques with hard-edged geometric structures. Swirling, organic fractal waves of deep indigo and neon pink bleed into structured. Audience: startup founders. Angle: counterintuitive business leverage. Niche: Psychology & Human Behavior. Trigger: Ego Validation. Open with a bold stop-the-scroll hook in the first 1-2 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA: Follow for more.",
       "metadata": {
-        "topic": "AI for founders",
+        "topic": "2. The Fluid Art Fusion (Organic meets Geometric)Prompt: Abstract fine art print blending fluid acrylic pour techniques with hard-edged geometric structures. Swirling, organic fractal waves of deep indigo and neon pink bleed into structured",
         "audience": "startup founders",
         "angle": "counterintuitive business leverage",
         "cta": "Follow for more",
