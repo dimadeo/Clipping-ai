@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Offline System Readiness</title>
+  <style>
+    :root {
+      --bg: #0b1117;
+      --panel: #121a24;
+      --muted: #9eb0c3;
+      --text: #e8eef5;
+      --ok: #2ecc71;
+      --warn: #f1c40f;
+      --bad: #ff6b6b;
+      --line: #1e2b3a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: radial-gradient(circle at top right, #142133 0%, var(--bg) 45%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 20px 44px;
+    }
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(1.6rem, 2.6vw, 2.4rem);
+      letter-spacing: 0.02em;
+    }
+    .sub {
+      margin: 6px 0 0;
+      color: var(--muted);
+    }
+    .btn {
+      border: 1px solid #2f4663;
+      background: #162335;
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .btn:hover { background: #1b2f46; }
+    .status {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(18, 26, 36, 0.92);
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .status strong {
+      font-size: 1.15rem;
+      letter-spacing: 0.01em;
+    }
+    .pill {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+    .ok { color: var(--ok); }
+    .ok-pill { background: rgba(46, 204, 113, 0.14); color: var(--ok); }
+    .warn { color: var(--warn); }
+    .warn-pill { background: rgba(241, 196, 15, 0.16); color: var(--warn); }
+    .bad { color: var(--bad); }
+    .bad-pill { background: rgba(255, 107, 107, 0.16); color: var(--bad); }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(18, 26, 36, 0.88);
+      padding: 14px;
+    }
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+      color: #d8e8f8;
+    }
+    .kv {
+      margin: 0;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      font-size: 0.95rem;
+    }
+    .kv dt { color: var(--muted); }
+    .kv dd { margin: 0; text-align: right; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.93rem;
+      margin-top: 6px;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      padding: 9px 6px;
+      vertical-align: top;
+    }
+    th { color: #d9e4f1; font-weight: 600; }
+    td { color: #c4d2e0; }
+    code {
+      color: #b9d7ff;
+      background: rgba(27, 39, 55, 0.8);
+      padding: 1px 5px;
+      border-radius: 6px;
+    }
+    ul {
+      margin: 6px 0 0;
+      padding-left: 18px;
+    }
+    .muted { color: var(--muted); }
+    pre {
+      margin: 8px 0 0;
+      max-height: 220px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #0f1721;
+      padding: 10px;
+      color: #d1deeb;
+      font-size: 0.86rem;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <h1>Offline System Readiness</h1>
+        <p class="sub">Local-only status for your computer. No internet checks are required.</p>
+      </div>
+      <button class="btn" id="refreshBtn" type="button">Refresh</button>
+    </div>
+
+    <section class="status" id="overall"></section>
+
+    <div class="grid">
+      <section class="card">
+        <h2>Runtime Check</h2>
+        <dl class="kv" id="runtime"></dl>
+      </section>
+      <section class="card">
+        <h2>Current Server State</h2>
+        <dl class="kv" id="serverState"></dl>
+      </section>
+      <section class="card">
+        <h2>Print Review Snapshot</h2>
+        <dl class="kv" id="print"></dl>
+      </section>
+    </div>
+
+    <section class="card">
+      <h2>Required Local Files</h2>
+      <table>
+        <thead>
+          <tr><th>Component</th><th>Path</th><th>Status</th></tr>
+        </thead>
+        <tbody id="filesBody"></tbody>
+      </table>
+    </section>
+
+    <section class="card" style="margin-top: 12px;">
+      <h2>Warnings</h2>
+      <div id="warnings"></div>
+    </section>
+
+    <section class="card" style="margin-top: 12px;">
+      <h2>Offline Check Output</h2>
+      <div class="muted">Tail output from the latest local verification run.</div>
+      <pre id="output">Loading...</pre>
+    </section>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    function esc(text) {
+      return String(text ?? "").replace(/[&<>"']/g, (ch) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;",
+      }[ch]));
+    }
+
+    function tf(value) {
+      return value ? "Yes" : "No";
+    }
+
+    function pill(ok, warnOnly = false) {
+      if (ok) return '<span class="pill ok-pill">PASS</span>';
+      if (warnOnly) return '<span class="pill warn-pill">ATTENTION</span>';
+      return '<span class="pill bad-pill">FAIL</span>';
+    }
+
+    function renderWarnings(items) {
+      if (!Array.isArray(items) || !items.length) {
+        return '<p class="ok">No active warnings.</p>';
+      }
+      return `<ul>${items.map((item) => {
+        const sev = String(item?.severity || "warning").toLowerCase();
+        const cls = sev === "error" ? "bad" : "warn";
+        const scope = esc(item?.scope || "System");
+        const msg = esc(item?.message || "");
+        return `<li class="${cls}"><strong>${scope}:</strong> ${msg}</li>`;
+      }).join("")}</ul>`;
+    }
+
+    function render(data) {
+      const ok = Boolean(data?.ok);
+      const summary = esc(data?.summary || "Offline status unavailable.");
+      const checkedAt = esc(data?.checked_at || "-");
+      $("overall").innerHTML = `
+        <strong class="${ok ? "ok" : "bad"}">${summary}</strong>
+        ${pill(ok, !ok)}
+        <div class="muted" style="margin-top: 8px;">Checked at: <code>${checkedAt}</code></div>
+      `;
+
+      const runtime = data?.runtime || {};
+      $("runtime").innerHTML = `
+        <dt>Checks available</dt><dd>${tf(runtime.available)}</dd>
+        <dt>Tests passed</dt><dd class="${runtime.passed ? "ok" : "bad"}">${tf(runtime.passed)}</dd>
+        <dt>Exit code</dt><dd>${esc(runtime.exit_code ?? "-")}</dd>
+        <dt>Duration</dt><dd>${esc(runtime.duration_seconds ?? "-")}</dd>
+        <dt>Checked at</dt><dd>${esc(runtime.checked_at || "-")}</dd>
+      `;
+
+      const state = data?.status || {};
+      $("serverState").innerHTML = `
+        <dt>Status</dt><dd>${esc(state.state || "-")}</dd>
+        <dt>Workflow</dt><dd>${esc(state.workflow || "-")}</dd>
+        <dt>Run ID</dt><dd>${esc(state.run_id || "-")}</dd>
+        <dt>Message</dt><dd>${esc(state.message || "-")}</dd>
+      `;
+
+      const print = data?.print_review || {};
+      $("print").innerHTML = `
+        <dt>Review available</dt><dd>${tf(print.available)}</dd>
+        <dt>Failed outputs</dt><dd>${esc(print.failed ?? "-")}</dd>
+        <dt>Critical outputs</dt><dd>${esc(print.critical ?? "-")}</dd>
+        <dt>Caveats</dt><dd>${esc(print.caveats ?? "-")}</dd>
+        <dt>Updated</dt><dd>${esc(print.updated_utc || "-")}</dd>
+      `;
+
+      const files = Array.isArray(data?.files) ? data.files : [];
+      $("filesBody").innerHTML = files.map((file) => `
+        <tr>
+          <td>${esc(file.name)}</td>
+          <td><code>${esc(file.path)}</code></td>
+          <td class="${file.ok ? "ok" : "bad"}">${file.ok ? "OK" : "Missing"}</td>
+        </tr>
+      `).join("") || '<tr><td colspan="3">No file checks available.</td></tr>';
+
+      $("warnings").innerHTML = renderWarnings(data?.warnings);
+      const output = Array.isArray(runtime.output_tail) ? runtime.output_tail.join("\n") : "";
+      $("output").textContent = output || runtime.summary || "No output captured yet.";
+    }
+
+    async function load() {
+      try {
+        const response = await fetch("/api/v1/offline-health", { cache: "no-store" });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const payload = await response.json();
+        render(payload);
+      } catch (error) {
+        $("overall").innerHTML = `<strong class="bad">Offline dashboard cannot reach local API.</strong>${pill(false)}<div class="muted" style="margin-top:8px;">${esc(error.message || String(error))}</div>`;
+      }
+    }
+
+    $("refreshBtn").addEventListener("click", load);
+    load();
+    setInterval(load, 7000);
+  </script>
+</body>
+</html>

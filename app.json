@@ -12,7 +12,7 @@
       "@qvac/sdk/expo-plugin"
     ],
     "android": {
-      "package": "com.anonymous.clippingai"
+      "package": "com.anonymous.fineartops"
     }
   }
 }

@@ -1,353 +1,159 @@
-================================================================================
-           FINAL PREPRESS ACTION PLAN FOR FINE ART PRINTING
-            Complete Workflow: Audit → Pipeline → Print Shop
-================================================================================
-
-YOUR SITUATION:
-  • Fine art upscaling pipeline (Replicate API + Real-ESRGAN)
-  • Premium substrate (expensive material)
-  • Large-format prints (100 × 150 cm @ 150 PPI)
-  • Quality-critical output (cannot afford failures)
-
-TODAY'S AUDIT RESULTS:
-  File: imgi_11_top20-220x220-wpa_100x100cm_150ppi.tif
-  Quality Score: 7.0 / 10.0 (Acceptable with Caveats)
-  ✓ READY FOR FINE ART PRINTING (after 2 confirmations)
-
-================================================================================
-                        IMMEDIATE ACTION ITEMS
-================================================================================
-
-[ PRIORITY 1 ] CONFIRM COLOR SPACE WITH PRINT SHOP
-─────────────────────────────────────────────────────
-
-SEND THIS EMAIL TODAY:
-
----
-Subject: Fine Art Upscaling Project – Color Space Confirmation
-
-Dear [Print Shop Name],
-
-I have premium upscaled images ready for fine art printing on expensive substrate.
-My upscaling pipeline outputs large-format TIFF files with the following specs:
-
-• Format: TIFF (LZW lossless compression)
-• Color Space: sRGB with embedded ICC profile
-• Resolution: 150 DPI (native, no resampling)
-• Print Size: 100 × 150 cm @ 150 PPI (large-format sharp)
-• Bleed: 3 mm per side (professional finishing)
-• Bit Depth: 8-bit per channel (24-bit RGB total)
-
-QUESTIONS FOR YOU:
-
-1. Is sRGB the correct color space for your workflow, or do you prefer:
-   • Adobe RGB (extended gamut)?
-   • ProPhoto RGB?
-   • A custom ICC profile specific to your equipment?
-
-2. Do you have a custom ICC profile I should use for color accuracy?
-
-3. Will your RIP (Raster Image Processor) correctly read the embedded
-   ICC profile?
-
-4. Are there any other specifications I should adjust?
-   (e.g., 16-bit instead of 8-bit, different bleed size, etc.)
-
-Once I receive your confirmation, I'll update my pipeline and ensure all
-future batches match your requirements exactly.
-
-Best regards,
-[Your Name]
----
-
-EXPECTED RESPONSES & ACTIONS:
-
-✓ IF THEY SAY: "sRGB is perfect"
-  → No changes needed. Current pipeline is correct.
-  → Run all future batches with confidence.
-
-✓ IF THEY SAY: "Use Adobe RGB"
-  → Edit .env file and uncomment ICC_TARGET line (see guide)
-  → Set ICC_TARGET=C:\Users\andre\Upscaled\profiles\AdobeRGB1998.icc
-  → Run future batches normally (pipeline handles conversion)
-
-✓ IF THEY SAY: "Use this custom profile" (and send a .icc file)
-  → Place their profile in: C:\Users\andre\Upscaled\profiles\
-  → Edit .env and set ICC_TARGET to their profile path
-  → Run future batches (automatic conversion)
-
-================================================================================
-
-[ PRIORITY 2 ] VERIFY AUDIT FINDINGS WITH PRINT SHOP
-──────────────────────────────────────────────────────
-
-SEND THEM THIS DOCUMENT:
-
-  File Location: C:\Users\andre\Upscaled\Print Quality Auditor\AUDIT_REPORT.md
-
-KEY FINDINGS TO SHARE:
-
-  ✓ Quality Score: 7.0 / 10.0 (Acceptable with Caveats)
-  ✓ Contrast: Excellent (63.8 σ) — sharp graphics, legible text
-  ✓ Shadows: Strong (44/255) — deep blacks, good tonal depth
-  ✓ Format: TIFF LZW — lossless, fine art safe
-  ✓ Resolution: 150.93 PPI (marginally over 150 max)
-  ✓ No artifacts: No banding, posterization, or compression issues
-  ⚠️ Color space: Currently sRGB (confirm if acceptable)
-
-PRINT SHOP ACTIONS:
-
-  • Verify they can accept RGB sRGB input (or provide alternative ICC)
-  • Confirm the 150.93 PPI is acceptable (vs. ideal 150.00)
-  • Request a color proof before full production (standard practice)
-  • Verify their RIP can read embedded ICC profile
-
-================================================================================
-
-[ PRIORITY 3 ] CONFIRM PIPELINE OUTPUT (AFTER COLOR SPACE CONFIRMED)
-──────────────────────────────────────────────────────────────────
-
-Once print shop confirms color space, VERIFY your pipeline is locked in:
-
-CHECKLIST:
-
-  Edit C:\Users\andre\Upscaled\.env
-
-  Verify these lines are UNCOMMENTED and CORRECT:
-
-    ✓ UPSCALE_FORMAT=tiff
-    ✓ UPSCALE_PRESET=printshop
-    ✓ UPSCALE_PRINT_SIZE=150x100
-    ✓ UPSCALE_PRINT_PPI=150
-    ✓ UPSCALE_BLEED_MM=3
-
-  For color space, ONE of these:
-
-    • Keep commented (uses sRGB by default):
-      # UPSCALE_ICC_TARGET=...
-
-    • OR uncomment with sRGB profile:
-      UPSCALE_ICC_TARGET=C:\Users\andre\Upscaled\profiles\sRGB_IEC61966-2.1.icc
-
-    • OR uncomment with Adobe RGB:
-      UPSCALE_ICC_TARGET=C:\Users\andre\Upscaled\profiles\AdobeRGB1998.icc
-
-    • OR uncomment with print shop custom profile:
-      UPSCALE_ICC_TARGET=C:\Users\andre\Upscaled\profiles\[PrintShop_Profile].icc
-
-  SAVE the file.
-
-================================================================================
-
-[ PRIORITY 4 ] RUN A TEST BATCH TO VERIFY OUTPUTS
-─────────────────────────────────────────────────
-
-Once .env is locked in:
-
-  Command:
-    cd C:\Users\andre\Upscaled
-    python upscale_pipeline.py ./input --out ./output --model auto --exact
-
-  After batch completes, CHECK THE SPEC SHEET:
-
-    Look in: C:\Users\andre\Upscaled\output\print_batch_NN\*_SPEC.txt
-
-    Verify these lines match your expectations:
-
-      Format:             TIF, LZW, single layer
-      Colour:             [sRGB / Adobe RGB / Custom] -- ICC embedded, 8-bit RGB
-      Resolution tag:     150.0 dpi
-      Print size:         100.0 x 150.0 cm at 150.0 PPI
-      Bleed:              3.0 mm per side
-
-    IF ALL CORRECT: ✓ Your pipeline is locked and ready.
-    IF WRONG:       ⚠️ Re-check .env and try again.
-
-================================================================================
-
-[ PRIORITY 5 ] SEND A TEST FILE TO PRINT SHOP FOR APPROVAL
-─────────────────────────────────────────────────────────
-
-After test batch confirms correct output:
-
-  1. Pick ONE image from your test batch
-  2. Send it to print shop with this note:
-
-     ---
-     Subject: Color Proof Request – Fine Art Upscaling Test
-
-     Dear [Print Shop Name],
-
-     Attached is a test file from my upscaling pipeline (same specs as full batch).
-
-     Specifications:
-     • Format: TIFF (LZW lossless)
-     • Color Space: [sRGB / Adobe RGB / Custom]
-     • Resolution: 150 DPI (do not resample)
-     • Print Size: 100 × 150 cm @ 150 PPI
-     • Bleed: 3 mm per side
-
-     Can you provide a color proof at 50% scale or full size?
-     I want to verify the color accuracy and shadow depth before committing
-     to the full print run on expensive substrate.
-
-     Best regards,
-     [Your Name]
-     ---
-
-  3. Review the proof:
-     ✓ Colors accurate? ✓ Shadows deep enough? ✓ Text sharp? ✓ No artifacts?
-
-  4. If proof looks good: Approve for full production
-     If issues: Request corrections or changes to pipeline
-
-================================================================================
-
-[ PRIORITY 6 ] LOCK IN FINAL CONFIGURATION FOR FUTURE BATCHES
-──────────────────────────────────────────────────────────────
-
-Once color proof is approved:
-
-  CREATE A "FINE ART BATCH" BATCH FILE (optional but recommended):
-
-  Save as: C:\Users\andre\Upscaled\run_fine_art_batch.ps1
-
-    # Fine Art Print Batch (locked configuration)
-    $ErrorActionPreference = "Stop"
-
-    Write-Output "Starting fine art print batch..."
-    Write-Output ""
-    Write-Output "Output format: TIFF (LZW lossless)"
-    Write-Output "Color space: [sRGB / Adobe RGB / Custom]"
-    Write-Output "Print size: 100 × 150 cm @ 150 PPI"
-    Write-Output ""
-
-    python upscale_pipeline.py ./input --out ./output `
-      --model auto `
-      --exact `
-      --preset printshop `
-      --print-ppi 150 `
-      --print-size 150x100
-
-    Write-Output ""
-    Write-Output "Batch complete. Check output/ for _SPEC.txt files."
-
-  TO RUN A BATCH:
-    cd C:\Users\andre\Upscaled
-    .\run_fine_art_batch.ps1
-
-  EVERY FILE WILL AUTOMATICALLY:
-    ✓ Output as TIFF (LZW)
-    ✓ Embed ICC profile (your chosen color space)
-    ✓ Set resolution to 150 DPI
-    ✓ Size to 100 × 150 cm @ 150 PPI
-    ✓ Add 3mm bleed
-    ✓ Generate _SPEC.txt for print reference
-
-================================================================================
-
-                        WORKFLOW SUMMARY DIAGRAM
-
-INPUT (220×220 px original)
-    ↓
-UPSCALE PIPELINE (Replicate API + Real-ESRGAN A100)
-    ↓ (9000 px / 150 cm @ 150 PPI)
-DOWNSCALE TO EXACT SPEC (5906 px trim + 3mm bleed = 5942 px)
-    ↓
-CONVERT COLOR SPACE (sRGB / Adobe RGB / Custom ICC)
-    ↓
-EMBED ICC PROFILE (color-managed)
-    ↓
-ENCODE AS TIFF-LZW (lossless compression)
-    ↓
-ADD 150 DPI TAG (native resolution)
-    ↓
-OUTPUT: filename_100x150cm_150ppi.tif
-    ↓
-GENERATE _SPEC.txt (print shop reference)
-    ↓
-DELIVER TO PRINT SHOP
-    ↓
-PRINT SHOP RIP → FINE ART PRINT (Premium Substrate)
-
-================================================================================
-
-                       CURRENT STATUS SUMMARY
-
-AUDIT COMPLETE:
-  ✅ File analyzed: imgi_11_top20-220x220-wpa_100x100cm_150ppi.tif
-  ✅ Quality Score: 7.0 / 10.0 (Acceptable with Caveats)
-  ✅ Audit Report Generated: AUDIT_REPORT.md
-  ✅ Print Shop Submission Guide: QUICK_REFERENCE_PRINT_SHOP_GUIDE.txt
-
-PIPELINE VERIFIED:
-  ✅ Output format: TIFF (LZW) ← Correct for fine art
-  ✅ Color space: sRGB embedded ← Confirm with print shop
-  ✅ Resolution: 150 DPI ← Correct
-  ✅ Print spec: 100 × 150 cm @ 150 PPI ← Correct
-  ✅ Bleed: 3mm per side ← Professional standard
-  ✅ Preset: printshop ← Automatic specs + spec sheet
-
-NEXT ACTIONS (IN ORDER):
-  1. Email print shop asking about color space (sRGB / Adobe RGB / Custom?)
-  2. Provide them audit report (shows quality metrics)
-  3. Update .env based on their response (ICC profile)
-  4. Run test batch and verify spec sheet output
-  5. Send test file for color proof approval
-  6. Once approved, run production batches with confidence
-
-================================================================================
-
-DOCUMENTATION FILES GENERATED:
-
-1. PREPRESS AUDIT REPORTS:
-   • C:\Users\andre\Upscaled\Print Quality Auditor\AUDIT_REPORT.md
-     (Full technical analysis: 7 sections, Master Audit Matrix, Rectification Blueprint)
-
-   • C:\Users\andre\Upscaled\Print Quality Auditor\QUICK_REFERENCE_PRINT_SHOP_GUIDE.txt
-     (Quick email template, conversion checklist, risk mitigation)
-
-2. PIPELINE CONFIGURATION:
-   • C:\Users\andre\Upscaled\FINE_ART_PIPELINE_LOCKDOWN.md
-     (Complete verification, lock-in procedures, color space selection guide)
-
-   • C:\Users\andre\Upscaled\.env
-     (Already configured; verify settings before each batch)
-
-3. THIS FILE:
-   • C:\Users\andre\Upscaled\FINAL_PREPRESS_ACTION_PLAN.txt
-     (Unified workflow, priorities, commands, checklists)
-
-================================================================================
-
-KEY TAKEAWAYS FOR FINE ART PRINTING:
-
-✓ YOUR PIPELINE OUTPUTS CORRECT FILES for fine art
-  (TIFF-LZW, ICC embedded, spec sheet, correct PPI/size/bleed)
-
-⚠️ ONLY MISSING PIECE: Print shop's color space preference
-  (Ask them: sRGB OK? Or Adobe RGB? Or custom profile?)
-
-✓ ONCE CONFIRMED: Run batches with 100% confidence
-  (Pipeline is locked. Output will be correct every time.)
-
-✗ DO NOT DEVIATE from --preset printshop + TIFF format
-  (PNG/JPG = unsuitable for fine art. Must use TIFF.)
-
-================================================================================
-
-FINAL RECOMMENDATION:
-
-You have a production-grade system in place. The audit confirms your file
-quality (7.0 / 10.0), the pipeline outputs correct specifications, and your
-infrastructure is ready for expensive material printing.
-
-The ONLY decision remaining is confirming the color space with your print shop.
-Once that's done, you can run unlimited batches with confidence, knowing each
-file will be print-ready.
-
-Send the email (Priority 1) TODAY. Everything else follows from their response.
-
-================================================================================
-                    Ready for Fine Art Production ✅
-================================================================================
+===============================================================================
+MASTER FINE ART PRINT AUDITOR - PREPRESS PLAN
+Independent Fine Art / Giclee Quality-Control and Printer Handoff Protocol
+===============================================================================
+
+PURPOSE
+- This plan is an independent quality gate for professional fine-art print masters.
+- The auditor must never generate or modify artwork.
+- The auditor must only: INSPECT -> MEASURE -> VERIFY -> CALCULATE -> TEST -> CLASSIFY -> REPORT.
+
+INDEPENDENCE PRINCIPLE
+- Never trust file names, prior reports, metadata labels, or previous approvals by default.
+- Every approval must be based on measured and verified evidence.
+
+ABSOLUTE TRUTH RULE
+- Never fabricate technical details.
+- Never claim 300 DPI, 16-bit, Adobe RGB, or print ready unless verified.
+- Preferred approval labels:
+  - Fine Art / Giclee Print Ready
+  - Professional Fine Art Master
+
+FINAL STATUS (EXACTLY ONE)
+- APPROVED
+- APPROVED WITH NOTES
+- CONDITIONAL APPROVAL
+- HOLD - CORRECTION REQUIRED
+- REJECTED
+
+SUPPORTED PRODUCTION RANGE
+- 2A0, A0, A1, A2, A3, A4
+- 1:1 custom square
+- Portrait and landscape
+
+300-DPI REFERENCE CHECKPOINTS
+- 2A0: 14043 x 19866 px (portrait), 19866 x 14043 px (landscape)
+- A0: 9933 x 14043 px
+- A1: 7016 x 9933 px
+- A2: 4961 x 7016 px
+- A3: 3508 x 4961 px
+- A4: 2480 x 3508 px
+- 1:1 max: 17717 x 17717 px (~150 x 150 cm at 300 DPI)
+
+SECTION 1 - FILE IDENTITY AUDIT
+Record all verified values:
+- Artwork title
+- File name, extension, size in bytes
+- Pixel width, pixel height, total pixels, megapixels
+- Aspect ratio and orientation
+- Bit depth, channels, alpha presence
+- Embedded ICC profile, color space, DPI/PPI tag, compression
+- Date audited
+- SHA-256 checksum (when available)
+
+SECTION 2 - FILE INTEGRITY CHECK
+Verify:
+- File decodes correctly and is not truncated/corrupt
+- Channels are valid and not broken
+- Transparency is expected and intentional
+- No conflicting profile assignment
+- Metadata does not introduce RIP risk
+If integrity cannot be verified -> HOLD - CORRECTION REQUIRED.
+
+SECTION 3 - TRUE DPI CALCULATION
+Calculate independently:
+- Effective DPI width = pixel width / print width in inches
+- Effective DPI height = pixel height / print height in inches
+Report:
+- Horizontal DPI
+- Vertical DPI
+- Requested DPI
+- Variance
+Important: metadata changes alone do not increase real resolution.
+
+SECTION 4 - PRINT-SIZE VALIDATION
+For requested print size report:
+- Required pixels vs available pixels
+- Effective DPI
+- Surplus or deficiency
+- Maximum recommended size at 300 DPI
+- Maximum recommended size at 240 DPI (when relevant)
+
+SECTION 5 - ASPECT-RATIO AUDIT
+Compare source ratio, requested ratio, and final output ratio.
+Classify geometry handling:
+- PRESERVED FORMAT
+- CROPPED FORMAT
+- EXTENDED CANVAS
+- FULL BLEED
+- BORDERED PRESENTATION
+Stretching is an automatic failure.
+
+SECTION 6 - CLARITY INSPECTION
+Inspect whole image and critical zones at equivalent:
+- Fit view
+- 100%
+- 200%
+- 400%
+Evaluate:
+- Detail integrity, edge behavior, microcontrast, texture continuity
+- Technical softness vs intentional artistic softness
+
+SECTION 7 - PIXELATION AND UPSCALE ARTEFACT TESTS
+Check and classify severity (LOW, MODERATE, HIGH, CRITICAL):
+- Pixel stair-stepping and jagged diagonals
+- Repeated synthetic texture
+- Hallucinated detail and geometry melt
+- Pseudo-sharpness and fake micro-detail
+
+SECTION 8 - SHARPENING / NOISE / BANDING
+Check:
+- Over-sharpening halos, ringing, edge overshoot
+- Under-sharpening and mushy structure
+- Unintentional noise vs intentional grain
+- Banding/posterisation in gradients and dark fields
+Classify sharpening:
+- OPTIMAL
+- ACCEPTABLE
+- TOO STRONG
+- TOO SOFT
+
+SECTION 9 - COLOR, ICC, RGB/CMYK
+Report verified facts only:
+- ICC PROFILE EMBEDDED: YES / NO
+- Profile name
+- Actual working color space
+Rules:
+- If profile missing: COLOUR PROFILE REQUIRES PRINTER CONFIRMATION
+- Do not force arbitrary CMYK conversion
+- Printer must confirm preferred RGB/CMYK ICC workflow
+
+SECTION 10 - BIT DEPTH, TONAL RANGE, SHADOW WARNING
+Report:
+- Actual bit depth
+- Highlight and shadow clipping risks
+- Midtone separation
+- Crushed blacks / clipped whites
+Warn when deep shadows are central to artwork and recommend proofing.
+
+REPORT OUTPUT CONTRACT
+Every audit report must include:
+1) Final status (one of the five statuses)
+2) Verified technical identity block
+3) Print-size + effective-DPI validation block
+4) Aspect-ratio handling declaration
+5) Defect findings with severity
+6) Printer handoff notes
+7) Corrective actions (if any)
+8) SHA-256 checksum (when possible)
+
+DECISION STANDARD
+- APPROVED only when key checks pass with no significant correction required.
+- APPROVED WITH NOTES when printable but non-critical production notes remain.
+- CONDITIONAL APPROVAL only with explicit constraints (for example safe at A1 but not 2A0).
+- HOLD - CORRECTION REQUIRED when remediable technical defects exist.
+- REJECTED when defects are significant for requested output.
+
+===============================================================================
+END OF MASTER PREPRESS PLAN
+===============================================================================

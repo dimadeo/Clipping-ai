@@ -1,19 +1,8 @@
 # Project agents
 
-This repository has specialized Copilot agents for the clipping and production system. Use the most specific agent for the task instead of the default coding agent when the issue is in one of the pipeline domains below.
+This repository has specialized Copilot agents for the fine-art creation, upscale production, and dashboard monitoring system. Use the most specific agent for the task instead of the default coding agent when the issue is in one of the pipeline domains below.
 
 ## Agent selection guide
-
-### Viral Clip Ops
-Use when:
-- debugging the clipping pipeline
-- fixing orchestrators or workflow logic
-- investigating prompt or output issues in the social-video stack
-- updating production-video workflow behavior
-
-Best for:
-- cross-cutting fixes across clip generation and production automation
-- root-cause analysis when the issue spans multiple files in the pipeline
 
 ### Dashboard Orchestrator Monitor
 Use when:
@@ -25,17 +14,6 @@ Use when:
 Best for:
 - run-state, queue, status, and lifecycle monitoring problems
 - failures in backend-to-dashboard reporting
-
-### Clip Generation Validator
-Use when:
-- validating clip quality or viral logic
-- checking whether generated outputs match the expected contract
-- debugging failing clip-generation tests
-- reviewing subtitle, metadata, and short-form output correctness
-
-Best for:
-- content-quality and output-validation issues in the clipping pipeline
-- tests around duration, scoring, metadata, and artifact generation
 
 ### Prompt Registry & Approvals
 Use when:
@@ -50,7 +28,7 @@ Best for:
 ## Default behavior
 Use the default coding agent when:
 - the task is a broad feature request not tied to a single workflow domain
-- the work is not clearly in the clipping, orchestration, dashboard, or prompt-registry path
+- the work is not clearly in orchestration, dashboard, or prompt-registry paths
 - you need a general-purpose implementation or refactor with no workflow-specific constraints
 
 ## Working style

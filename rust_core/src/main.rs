@@ -2,6 +2,9 @@ use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::collections::HashMap;
+use std::env;
+use std::io::{self, Read};
+use std::process;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PromptTask {
@@ -53,7 +56,33 @@ pub struct RenderRecord {
     pub cached: bool,
 }
 
-pub fn validate_prompt_request(topic: &str, audience: &str, angle: &str, cta: &str) -> Result<(), String> {
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ProductionRequest {
+    pub topic: String,
+    pub audience: String,
+    pub angle: String,
+    pub cta: String,
+    pub count: u32,
+}
+
+impl Default for ProductionRequest {
+    fn default() -> Self {
+        Self {
+            topic: "AI for founders".to_string(),
+            audience: "startup founders".to_string(),
+            angle: "counterintuitive business leverage with high stop-the-scroll tension and a sharp emotional payoff".to_string(),
+            cta: "Follow for more".to_string(),
+            count: 3,
+        }
+    }
+}
+
+pub fn validate_prompt_request(
+    topic: &str,
+    audience: &str,
+    angle: &str,
+    cta: &str,
+) -> Result<(), String> {
     let values = [
         ("topic", topic.trim()),
         ("audience", audience.trim()),
@@ -67,7 +96,10 @@ pub fn validate_prompt_request(topic: &str, audience: &str, angle: &str, cta: &s
         .collect();
 
     if !missing.is_empty() {
-        return Err(format!("Missing required prompt fields: {}", missing.join(", ")));
+        return Err(format!(
+            "Missing required prompt fields: {}",
+            missing.join(", ")
+        ));
     }
 
     Ok(())
@@ -111,7 +143,10 @@ pub fn planner_node(mut state: ProductionState) -> Result<ProductionState, Strin
     Ok(state)
 }
 
-pub fn candidate_worker_node(mut state: ProductionState, task: PromptTask) -> Result<ProductionState, String> {
+pub fn candidate_worker_node(
+    mut state: ProductionState,
+    task: PromptTask,
+) -> Result<ProductionState, String> {
     let prompt = format!(
         "Create a 45-second viral short-form video in 9:16 vertical format for TikTok, Reels, and Shorts. Topic: {}. Audience: {}. Angle: {}. Niche: {}. Trigger: {}. Open with a bold stop-the-scroll hook in the first 1-2 seconds, show a fast premium visual story, deliver a surprising payoff, and end with a strong CTA: {}.",
         state.topic,
@@ -138,13 +173,20 @@ pub fn candidate_worker_node(mut state: ProductionState, task: PromptTask) -> Re
 
 pub fn rank_node(mut state: ProductionState) -> Result<ProductionState, String> {
     if state.candidates.is_empty() {
-        state.errors.push("No prompt candidates were produced.".to_string());
+        state
+            .errors
+            .push("No prompt candidates were produced.".to_string());
         state.status = "failed".to_string();
         return Ok(state);
     }
 
     let mut ranked = state.candidates.clone();
-    ranked.sort_by(|a, b| b.score.partial_cmp(&a.score).unwrap_or(std::cmp::Ordering::Equal).then_with(|| a.title.cmp(&b.title)));
+    ranked.sort_by(|a, b| {
+        b.score
+            .partial_cmp(&a.score)
+            .unwrap_or(std::cmp::Ordering::Equal)
+            .then_with(|| a.title.cmp(&b.title))
+    });
 
     let winner = ranked.first().cloned().unwrap();
     let key = create_idempotency_key(&winner.prompt, &state.topic, &state.audience, &state.angle);
@@ -185,13 +227,19 @@ pub fn render_job_record(state: &ProductionState) -> Result<RenderRecord, String
     });
 
     let mut response = HashMap::new();
-    response.insert("submitted_at".to_string(), serde_json::Value::String(Utc::now().to_rfc3339()));
-    response.insert("winner".to_string(), serde_json::json!({
-        "title": winner.title,
-        "niche": winner.niche,
-        "trigger": winner.trigger,
-        "score": winner.score
-    }));
+    response.insert(
+        "submitted_at".to_string(),
+        serde_json::Value::String(Utc::now().to_rfc3339()),
+    );
+    response.insert(
+        "winner".to_string(),
+        serde_json::json!({
+            "title": winner.title,
+            "niche": winner.niche,
+            "trigger": winner.trigger,
+            "score": winner.score
+        }),
+    );
 
     Ok(RenderRecord {
         idempotency_key: key,
@@ -201,7 +249,81 @@ pub fn render_job_record(state: &ProductionState) -> Result<RenderRecord, String
     })
 }
 
+pub fn run_production_preflight(request: ProductionRequest) -> Result<ProductionState, String> {
+    let base = ProductionState {
+        topic: request.topic,
+        audience: request.audience,
+        angle: request.angle,
+        cta: request.cta,
+        count: request.count.max(1),
+        require_approval: false,
+        render_enabled: false,
+        ..Default::default()
+    };
+
+    let planned = planner_node(base)?;
+    let mut current = planned;
+
+    for task in current.tasks.clone() {
+        current = candidate_worker_node(current, task)?;
+    }
+
+    current = rank_node(current)?;
+    Ok(current)
+}
+
+fn run_production_json_mode() -> i32 {
+    let mut input = String::new();
+    if let Err(err) = io::stdin().read_to_string(&mut input) {
+        eprintln!("failed to read stdin: {}", err);
+        return 2;
+    }
+
+    let request = if input.trim().is_empty() {
+        ProductionRequest::default()
+    } else {
+        match serde_json::from_str::<ProductionRequest>(&input) {
+            Ok(parsed) => parsed,
+            Err(err) => {
+                eprintln!("invalid request JSON: {}", err);
+                return 2;
+            }
+        }
+    };
+
+    match run_production_preflight(request) {
+        Ok(state) => {
+            let payload = serde_json::json!({
+                "status": state.status,
+                "topic": state.topic,
+                "audience": state.audience,
+                "angle": state.angle,
+                "cta": state.cta,
+                "count": state.count,
+                "winner": state.winner,
+                "ranked_candidates": state.ranked_candidates,
+                "idempotency_key": state.idempotency_key,
+                "errors": state.errors,
+            });
+            println!("{}", payload);
+            0
+        }
+        Err(err) => {
+            let payload = serde_json::json!({
+                "status": "failed",
+                "errors": [err],
+            });
+            println!("{}", payload);
+            1
+        }
+    }
+}
+
 fn main() {
+    if env::args().any(|arg| arg == "--production-json") {
+        process::exit(run_production_json_mode());
+    }
+
     let base = ProductionState {
         topic: "AI for founders".to_string(),
         audience: "startup founders".to_string(),
@@ -224,7 +346,17 @@ fn main() {
     current = approval_node(current).expect("approval should succeed");
 
     let record = render_job_record(&current).expect("render record should be created");
-    println!("status={} winner={} idempotency_key={} cached={}", current.status, current.winner.as_ref().map(|w| w.title.as_str()).unwrap_or("none"), record.idempotency_key, record.cached);
+    println!(
+        "status={} winner={} idempotency_key={} cached={}",
+        current.status,
+        current
+            .winner
+            .as_ref()
+            .map(|w| w.title.as_str())
+            .unwrap_or("none"),
+        record.idempotency_key,
+        record.cached
+    );
 }
 
 #[cfg(test)]

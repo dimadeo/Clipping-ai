@@ -1,0 +1,2256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#081014" />
+  <title>Fine Art Ops | Virtual Office</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --canvas: #081014;
+      --canvas-deep: #05090c;
+      --panel: #0d191e;
+      --panel-raised: #112128;
+      --ink: #edf7f5;
+      --muted: #91a5aa;
+      --faint: #5b7077;
+      --border: rgba(135, 190, 199, 0.18);
+      --border-strong: rgba(135, 190, 199, 0.34);
+      --electric: #30b9ff;
+      --green: #5ce6a1;
+      --amber: #ffc34d;
+      --red: #ff6878;
+      --role-control: #30b9ff;
+      --role-setup: #79b8ff;
+      --role-selection: #69dca4;
+      --role-script: #f2cc62;
+      --role-scenes: #ffae62;
+      --role-prompts: #ee8f78;
+      --role-ranking: #78d8c0;
+      --radius: 8px;
+      --mono: "IBM Plex Mono", monospace;
+      --sans: "Space Grotesk", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { min-width: 320px; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--sans);
+      background-color: var(--canvas);
+      background-image:
+        linear-gradient(rgba(122, 168, 174, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(122, 168, 174, 0.045) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(8, 16, 20, 0.16), var(--canvas-deep));
+      background-size: 36px 36px, 36px 36px, 100% 100%;
+    }
+    button, input, select { font: inherit; }
+    button { color: inherit; }
+    button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--electric); outline-offset: 3px; }
+
+    .app-shell { display: grid; grid-template-columns: 52px minmax(0, 1fr); min-height: 100vh; }
+    .app-shell.is-sidebar-collapsed { grid-template-columns: 52px minmax(0, 1fr); }
+    .sidebar {
+      position: fixed;
+      z-index: 20;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      width: min(calc(10cm + 48px), calc(100vw - 32px));
+      min-height: 100vh;
+      max-height: 100vh;
+      padding: 20px 16px 16px;
+      overflow-y: auto;
+      border-right: 1px solid var(--border);
+      background: rgba(6, 13, 17, 0.92);
+      backdrop-filter: blur(18px);
+      box-shadow: 14px 0 34px rgba(0, 0, 0, 0.28);
+      transition: width 220ms ease, padding 220ms ease;
+    }
+    .sidebar-tab { position: sticky; z-index: 2; top: 0; display: inline-flex; align-items: center; justify-content: flex-start; gap: 8px; width: 100%; min-height: 34px; padding: 7px 8px; border: 1px solid var(--border); border-radius: 6px; color: var(--muted); font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.05em; cursor: pointer; background: rgba(17, 33, 40, 0.94); text-transform: uppercase; }
+    .sidebar-tab:hover { border-color: rgba(48, 185, 255, 0.65); color: var(--electric); }
+    .sidebar-tab svg { width: 16px; height: 16px; flex: 0 0 16px; }
+    .sidebar-content { display: flex; min-height: 0; flex: 1 0 auto; flex-direction: column; }
+    .app-shell.is-sidebar-collapsed .sidebar { width: 52px; padding: 12px 8px; overflow: hidden; box-shadow: none; }
+    .app-shell.is-sidebar-collapsed .sidebar-tab { display: grid; width: 36px; height: 36px; min-height: 36px; place-items: center; padding: 0; }
+    .app-shell.is-sidebar-collapsed .sidebar-tab span, .app-shell.is-sidebar-collapsed .sidebar-content { display: none; }
+    .brand { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 5px 4px 22px; border-bottom: 1px solid var(--border); }
+    .brand-mark, .status-beacon {
+      display: grid;
+      place-items: center;
+      color: var(--electric);
+      background: rgba(48, 185, 255, 0.1);
+      border: 1px solid rgba(48, 185, 255, 0.65);
+    }
+    .brand-mark { width: 34px; height: 34px; flex: 0 0 34px; border-radius: var(--radius); }
+    .brand-mark svg { width: 18px; height: 18px; }
+    .brand-copy { min-width: 0; }
+    .eyebrow, .section-label, .metric-label, .node-kicker, .zone-label, .modal-label, .state-caption {
+      margin: 0;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      line-height: 1.4;
+      text-transform: uppercase;
+    }
+    .brand-name { margin: 2px 0 0; overflow: hidden; font-size: 17px; font-weight: 700; line-height: 1.1; text-overflow: ellipsis; white-space: nowrap; }
+    .control-stack { display: grid; gap: 10px; padding: 20px 0; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 40px;
+      padding: 10px 12px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1;
+      cursor: pointer;
+      transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease, transform 160ms ease;
+    }
+    .button:hover:not(:disabled) { transform: translateY(-1px); border-color: rgba(48, 185, 255, 0.7); }
+    .button:disabled { cursor: not-allowed; opacity: 0.55; }
+    .button svg { width: 16px; height: 16px; stroke-width: 2.25; }
+    .button-primary { border-color: rgba(48, 185, 255, 0.72); color: #031116; background: var(--electric); box-shadow: 0 0 22px rgba(48, 185, 255, 0.15); }
+    .button-primary:hover:not(:disabled) { background: #69cdfc; }
+    .button-secondary { background: rgba(17, 33, 40, 0.82); }
+    .sidebar-section { padding: 17px 4px; border-top: 1px solid var(--border); }
+    .sidebar-section > .section-label { margin-bottom: 12px; }
+    .toggle-list { display: grid; gap: 10px; }
+    .toggle-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: #c2d0d1; font-size: 12px; font-weight: 500; cursor: pointer; }
+    .switch { position: relative; display: inline-block; width: 32px; height: 18px; flex: 0 0 auto; }
+    .switch input { width: 0; height: 0; opacity: 0; }
+    .slider { position: absolute; inset: 0; border: 1px solid var(--border-strong); border-radius: 18px; background: #13242a; transition: 160ms ease; }
+    .slider::before { position: absolute; top: 3px; left: 3px; width: 10px; height: 10px; border-radius: 50%; background: var(--muted); content: ""; transition: 160ms ease; }
+    .switch input:checked + .slider { border-color: rgba(48, 185, 255, 0.75); background: rgba(48, 185, 255, 0.28); }
+    .switch input:checked + .slider::before { transform: translateX(14px); background: var(--electric); box-shadow: 0 0 8px rgba(48, 185, 255, 0.9); }
+    .run-form { display: grid; gap: 9px; }
+    .field-label { color: var(--muted); font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+    .topic-input { width: 100%; min-width: 0; padding: 10px; border: 1px solid var(--border); border-radius: 6px; color: var(--ink); font-size: 13px; background: #0b1519; }
+    .topic-input::placeholder { color: var(--faint); }
+    .run-note { margin: 0; color: var(--faint); font-size: 11px; line-height: 1.45; }
+    .integration-footer { display: grid; gap: 10px; margin-top: auto; padding: 16px 4px 4px; border-top: 1px solid var(--border); }
+    .integration-status { display: flex; align-items: center; gap: 7px; color: var(--green); font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+    .live-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: currentColor; box-shadow: 0 0 10px currentColor; }
+    .integration-list { display: flex; flex-wrap: wrap; gap: 5px; }
+    .integration-chip { padding: 4px 6px; border: 1px solid var(--border); border-radius: 4px; color: var(--muted); font-family: var(--mono); font-size: 9px; letter-spacing: 0.04em; text-transform: uppercase; }
+
+    .main-content { grid-column: 2; min-width: 0; padding: 22px clamp(16px, 3vw, 42px) 24px; }
+    .topbar { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; padding-bottom: 20px; }
+    .topbar-copy h1 { margin: 5px 0 0; font-size: 40px; letter-spacing: 0; line-height: 1; }
+    .topbar-copy p { margin: 10px 0 0; color: var(--muted); font-size: 15px; line-height: 1.45; }
+    .live-summary { display: flex; align-items: center; gap: 12px; min-width: 226px; padding: 11px 12px; border: 1px solid var(--border); border-radius: var(--radius); background: rgba(13, 25, 30, 0.82); }
+    .status-beacon { width: 28px; height: 28px; flex: 0 0 28px; border-radius: 50%; color: var(--green); background: rgba(92, 230, 161, 0.14); border-color: rgba(92, 230, 161, 0.6); }
+    .status-beacon svg { width: 14px; height: 14px; }
+    .status-beacon.is-active { color: var(--electric); background: rgba(48, 185, 255, 0.15); border-color: rgba(48, 185, 255, 0.65); }
+    .status-beacon.is-warning { color: var(--amber); background: rgba(255, 195, 77, 0.15); border-color: rgba(255, 195, 77, 0.68); }
+    .status-beacon.is-error { color: var(--red); background: rgba(255, 104, 120, 0.15); border-color: rgba(255, 104, 120, 0.7); }
+    .live-copy { min-width: 0; }
+    .live-copy strong { display: block; overflow: hidden; font-size: 12px; line-height: 1.3; text-overflow: ellipsis; white-space: nowrap; }
+    .live-copy span { display: block; margin-top: 2px; color: var(--muted); font-family: var(--mono); font-size: 10px; line-height: 1.3; }
+    .metrics-strip { display: grid; grid-template-columns: repeat(4, minmax(125px, 1fr)); border: 1px solid var(--border); border-radius: var(--radius); background: rgba(13, 25, 30, 0.72); }
+    .metric { min-width: 0; padding: 13px 15px; border-right: 1px solid var(--border); }
+    .metric:last-child { border-right: 0; }
+    .metric-value { display: block; margin-top: 5px; overflow: hidden; color: var(--ink); font-family: var(--mono); font-size: 22px; font-weight: 600; line-height: 1.1; text-overflow: ellipsis; white-space: nowrap; }
+    .office-section { margin-top: 20px; }
+    .section-heading { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 14px 24px; margin-bottom: 12px; }
+    .section-heading h2 { margin: 4px 0 0; font-size: 24px; line-height: 1.15; }
+    .legend { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px 14px; color: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .legend-title, .role-key-title { color: var(--faint); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+    .legend-item { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+    .legend-swatch { width: 16px; height: 2px; background: var(--faint); }
+    .legend-swatch.active { background: var(--electric); box-shadow: 0 0 7px var(--electric); }
+    .legend-swatch.complete { background: var(--green); }
+    .legend-swatch.error { background: var(--red); box-shadow: 0 0 7px var(--red); }
+    .role-key { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-bottom: 12px; padding: 11px 13px; border: 1px solid var(--border); border-radius: var(--radius); background: rgba(13, 25, 30, 0.64); color: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .role-key-item { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+    .role-key-swatch { width: 9px; height: 9px; border-radius: 2px; background: currentColor; box-shadow: 0 0 8px currentColor; }
+    .role-key-item[data-key-agent="orchestrator"] { color: var(--role-control); }
+    .role-key-item[data-key-agent="agent-1"] { color: var(--role-setup); }
+    .role-key-item[data-key-agent="agent-2"] { color: var(--role-selection); }
+    .role-key-item[data-key-agent="agent-3"] { color: var(--role-script); }
+    .role-key-item[data-key-agent="agent-4"] { color: var(--role-scenes); }
+    .role-key-item[data-key-agent="agent-5"] { color: var(--role-prompts); }
+    .role-key-item[data-key-agent="agent-6"] { color: var(--role-ranking); }
+    .office-scroll { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); background: rgba(5, 12, 15, 0.78); scrollbar-color: var(--border-strong) transparent; scrollbar-width: thin; }
+    .office {
+      position: relative;
+      width: 1120px;
+      min-height: 900px;
+      overflow: hidden;
+      background:
+        linear-gradient(rgba(74, 136, 144, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(74, 136, 144, 0.05) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(12, 29, 35, 0.22), rgba(4, 10, 13, 0.1));
+      background-size: 24px 24px, 24px 24px, 100% 100%;
+    }
+    .office::before { position: absolute; z-index: 0; inset: 22px; border: 1px solid rgba(135, 190, 199, 0.08); content: ""; pointer-events: none; }
+    .department-zone { position: absolute; z-index: 1; border: 1px solid rgba(135, 190, 199, 0.12); border-radius: 6px; background: rgba(12, 30, 36, 0.18); pointer-events: none; }
+    .zone-ingestion { top: 42px; left: 30px; width: 266px; height: 290px; }
+    .zone-reasoning { top: 42px; left: 318px; width: 554px; height: 290px; }
+    .zone-governance { top: 42px; left: 895px; width: 274px; height: 290px; }
+    .zone-tools { top: 385px; left: 318px; width: 264px; height: 278px; }
+    .zone-quality { top: 385px; left: 606px; width: 563px; height: 278px; }
+    .zone-label { position: absolute; top: 12px; left: 13px; color: rgba(145, 165, 170, 0.68); }
+    .workflow-lines { position: absolute; z-index: 2; inset: 0; width: 1120px; height: 900px; overflow: visible; pointer-events: none; }
+    .workflow-path { fill: none; stroke: #304249; stroke-linecap: round; stroke-width: 2.5; transition: stroke 260ms ease, filter 260ms ease; }
+    .workflow-path.is-active { stroke: var(--electric); filter: drop-shadow(0 0 4px rgba(48, 185, 255, 0.75)); stroke-dasharray: 7 7; animation: line-flow 700ms linear infinite; }
+    .workflow-path.is-complete { stroke: var(--green); }
+    .workflow-path.is-error { stroke: var(--red); stroke-dasharray: 6 5; filter: drop-shadow(0 0 4px rgba(255, 104, 120, 0.72)); animation: line-flow 700ms linear infinite; }
+    .workflow-pulse { fill: var(--electric); filter: drop-shadow(0 0 4px var(--electric)); opacity: 0; transition: fill 160ms ease, opacity 160ms ease; }
+    .workflow-pulse.is-visible { opacity: 1; }
+    .workflow-pulse.is-error { fill: var(--red); filter: drop-shadow(0 0 4px var(--red)); }
+    @keyframes line-flow { to { stroke-dashoffset: -14; } }
+    .agent-node {
+      position: absolute;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      width: 300px;
+      min-height: 210px;
+      padding: 17px 17px 15px 21px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--ink);
+      text-align: left;
+      cursor: pointer;
+      background: rgba(13, 28, 34, 0.92);
+      box-shadow: inset 0 1px rgba(255, 255, 255, 0.02), 0 9px 24px rgba(0, 0, 0, 0.2);
+      transition: border-color 180ms ease, box-shadow 180ms ease, opacity 180ms ease, filter 180ms ease, transform 180ms ease;
+      --role-color: var(--electric);
+      --role-tint: rgba(48, 185, 255, 0.12);
+    }
+    .agent-node::before { position: absolute; top: 0; bottom: 0; left: 0; width: 5px; background: var(--role-color); box-shadow: 0 0 14px var(--role-color); content: ""; }
+    .agent-node[data-agent="orchestrator"] { --role-color: var(--role-control); --role-tint: rgba(48, 185, 255, 0.12); }
+    .agent-node[data-agent="agent-1"] { --role-color: var(--role-setup); --role-tint: rgba(121, 184, 255, 0.12); }
+    .agent-node[data-agent="agent-2"] { --role-color: var(--role-selection); --role-tint: rgba(105, 220, 164, 0.12); }
+    .agent-node[data-agent="agent-3"] { --role-color: var(--role-script); --role-tint: rgba(242, 204, 98, 0.12); }
+    .agent-node[data-agent="agent-4"] { --role-color: var(--role-scenes); --role-tint: rgba(255, 174, 98, 0.12); }
+    .agent-node[data-agent="agent-5"] { --role-color: var(--role-prompts); --role-tint: rgba(238, 143, 120, 0.12); }
+    .agent-node[data-agent="agent-6"] { --role-color: var(--role-ranking); --role-tint: rgba(120, 216, 192, 0.12); }
+    .agent-node:hover { z-index: 5; border-color: var(--role-color); box-shadow: inset 0 0 0 1px var(--role-tint), 0 0 24px var(--role-tint); transform: translateY(-2px); }
+    .agent-node[data-state="thinking"], .agent-node[data-state="queued"] { border-color: rgba(48, 185, 255, 0.82); box-shadow: inset 0 0 0 1px rgba(48, 185, 255, 0.12), 0 0 22px rgba(48, 185, 255, 0.13); }
+    .agent-node[data-state="fetching"] { border-color: rgba(255, 195, 77, 0.84); box-shadow: inset 0 0 0 1px rgba(255, 195, 77, 0.12), 0 0 22px rgba(255, 195, 77, 0.12); }
+    .agent-node[data-state="complete"] { border-color: rgba(92, 230, 161, 0.56); box-shadow: inset 0 0 0 1px rgba(92, 230, 161, 0.08); }
+    .agent-node[data-state="error"] { border-color: rgba(255, 104, 120, 0.82); box-shadow: inset 0 0 0 1px rgba(255, 104, 120, 0.14), 0 0 20px rgba(255, 104, 120, 0.13); }
+    .agent-node.is-filtered { opacity: 0.14; filter: grayscale(1); pointer-events: none; }
+    .office.show-heat .agent-node[data-heat="medium"] { background: linear-gradient(135deg, rgba(13, 28, 34, 0.94), rgba(255, 195, 77, 0.12)); }
+    .office.show-heat .agent-node[data-heat="high"] { border-color: rgba(255, 195, 77, 0.66); background: linear-gradient(135deg, rgba(13, 28, 34, 0.94), rgba(255, 104, 120, 0.16)); }
+    .office.show-cost .node-metric.cost strong { color: var(--green); }
+    .office.show-cost .node-metric.cost span { color: var(--green); }
+    .node-topline { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+    .node-kicker { display: inline-flex; align-items: center; gap: 6px; color: var(--role-color); font-size: 11px; }
+    .node-kicker::before { width: 7px; height: 7px; flex: 0 0 7px; border-radius: 50%; background: currentColor; box-shadow: 0 0 7px currentColor; content: ""; }
+    .node-state { display: inline-flex; align-items: center; gap: 6px; max-width: 112px; color: var(--muted); font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.04em; line-height: 1.25; text-align: right; text-transform: uppercase; }
+    .node-state::before { width: 7px; height: 7px; flex: 0 0 7px; border-radius: 50%; background: currentColor; box-shadow: 0 0 7px currentColor; content: ""; }
+    .node-state[data-state="thinking"], .node-state[data-state="queued"] { color: var(--electric); }
+    .node-state[data-state="fetching"] { color: var(--amber); }
+    .node-state[data-state="complete"] { color: var(--green); }
+    .node-state[data-state="error"] { color: var(--red); }
+    .node-name { display: block; margin-top: 10px; color: var(--role-color); font-size: 18px; font-weight: 700; line-height: 1.15; overflow-wrap: anywhere; }
+    .node-role { display: block; min-height: 35px; margin-top: 5px; color: #c9d7d6; font-size: 13px; line-height: 1.35; overflow-wrap: anywhere; }
+    .node-task { display: -webkit-box; min-height: 54px; margin: 11px 0 11px; overflow: hidden; color: #c4d3d3; font-family: var(--mono); font-size: 12px; line-height: 1.5; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+    .node-metrics { display: none; }
+    .node-metric { min-width: 0; }
+    .node-metric span { display: block; overflow: hidden; color: var(--faint); font-family: var(--mono); font-size: 8px; letter-spacing: 0.04em; line-height: 1.2; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
+    .node-metric strong { display: block; overflow: hidden; margin-top: 2px; color: #dce9e7; font-family: var(--mono); font-size: 10px; font-weight: 500; line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; }
+    .activity-bar { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; min-height: 53px; padding: 10px 13px; border: 1px solid var(--border); border-top: 0; border-radius: 0 0 var(--radius) var(--radius); background: rgba(13, 25, 30, 0.82); }
+    .activity-event { overflow: hidden; color: #c3d1d1; font-family: var(--mono); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+    .activity-time { color: var(--faint); font-family: var(--mono); font-size: 10px; white-space: nowrap; }
+
+    .dialog { width: min(760px, calc(100vw - 28px)); max-height: min(760px, calc(100vh - 28px)); padding: 0; overflow: hidden; border: 1px solid rgba(48, 185, 255, 0.3); border-radius: var(--radius); color: var(--ink); background: #0b1519; box-shadow: 0 30px 90px rgba(0, 0, 0, 0.62); }
+    .dialog::backdrop { background: rgba(2, 7, 9, 0.75); backdrop-filter: blur(5px); }
+    .modal-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 20px 20px 15px; border-bottom: 1px solid var(--border); background: rgba(17, 33, 40, 0.72); }
+    .modal-header h2 { margin: 4px 0 0; font-size: 21px; line-height: 1.1; }
+    .icon-button { display: grid; width: 34px; height: 34px; flex: 0 0 34px; place-items: center; padding: 0; border: 1px solid var(--border); border-radius: 6px; color: var(--muted); cursor: pointer; background: transparent; }
+    .icon-button:hover { color: var(--ink); border-color: var(--border-strong); }
+    .icon-button svg { width: 17px; height: 17px; }
+    .modal-tabs { display: flex; gap: 0; padding: 0 20px; border-bottom: 1px solid var(--border); background: rgba(7, 14, 17, 0.58); }
+    .modal-tab { min-height: 42px; padding: 0 13px; border: 0; border-bottom: 2px solid transparent; color: var(--muted); font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.04em; cursor: pointer; background: transparent; text-transform: uppercase; }
+    .modal-tab[aria-selected="true"] { border-bottom-color: var(--electric); color: var(--electric); }
+    .modal-body { max-height: calc(min(760px, 100vh - 28px) - 142px); padding: 20px; overflow-y: auto; }
+    .tab-panel[hidden] { display: none; }
+    .lineage-grid, .telemetry-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .detail-block { min-width: 0; padding: 13px; border: 1px solid var(--border); border-radius: 6px; background: rgba(17, 33, 40, 0.45); }
+    .detail-block.full { grid-column: 1 / -1; }
+    .detail-block h3 { margin: 5px 0 0; font-size: 13px; line-height: 1.35; overflow-wrap: anywhere; }
+    .detail-copy { margin: 9px 0 0; color: #b8c8c8; font-family: var(--mono); font-size: 11px; line-height: 1.55; overflow-wrap: anywhere; }
+    .trace-list { display: grid; gap: 10px; }
+    .trace-entry { display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+    .trace-entry:last-child { padding-bottom: 0; border-bottom: 0; }
+    .trace-time { color: var(--electric); font-family: var(--mono); font-size: 10px; padding-top: 2px; }
+    .trace-content strong { display: block; font-size: 12px; line-height: 1.35; }
+    .trace-content p { margin: 3px 0 0; color: var(--muted); font-family: var(--mono); font-size: 10px; line-height: 1.5; overflow-wrap: anywhere; }
+    .telemetry-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .telemetry-value { display: block; margin-top: 6px; color: var(--ink); font-family: var(--mono); font-size: 18px; font-weight: 600; overflow-wrap: anywhere; }
+    .tool-table { width: 100%; margin-top: 16px; border-collapse: collapse; font-family: var(--mono); font-size: 10px; }
+    .tool-table th, .tool-table td { padding: 9px 7px; border-bottom: 1px solid var(--border); text-align: left; }
+    .tool-table th { color: var(--faint); font-weight: 600; text-transform: uppercase; }
+    .tool-table td { color: #c8d6d5; }
+    .tool-table td:last-child { color: var(--green); }
+
+    .brief-chat {
+      display: grid;
+      grid-template-rows: minmax(140px, 1fr) auto;
+      min-height: 220px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #0b1519;
+      overflow: hidden;
+    }
+    .workflow-fields { display: grid; gap: 7px; padding: 10px; border-top: 1px solid var(--border); }
+    .workflow-select { min-height: 38px; cursor: pointer; }
+    .workflow-source { display: grid; gap: 5px; }
+    .workflow-source[hidden] { display: none; }
+    #creationSettingsField { gap: 8px; }
+    #fineArtCreatorPanel { order: 1; }
+    #fineArtPromptCreatorPanel { order: 2; }
+    .creation-settings-panel { display: grid; gap: 8px; padding: 9px; border: 1px solid var(--border); border-radius: 6px; background: rgba(13, 25, 30, 0.58); }
+    .workflow-step-label {
+      display: inline-flex;
+      width: fit-content;
+      margin: 0;
+      padding: 3px 7px;
+      border: 1px solid rgba(48, 185, 255, 0.35);
+      border-radius: 999px;
+      color: var(--electric);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: rgba(48, 185, 255, 0.08);
+    }
+    .creation-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 7px; }
+    .prompt-creator-refresh { min-height: 28px; padding: 6px 8px; font-size: 10px; }
+    .prompt-creator-command { min-height: 192px; resize: vertical; font-family: var(--mono); font-size: 11px; line-height: 1.45; white-space: pre; }
+    .prompt-creator-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+    .prompt-creator-action { min-height: 30px; padding: 7px 9px; font-size: 10px; }
+    .prompt-creator-quality { margin: 0; padding: 6px 8px; border: 1px solid var(--border); border-radius: 5px; font-family: var(--mono); font-size: 10px; line-height: 1.45; }
+    .prompt-creator-quality[data-state="approved"] { color: var(--green); border-color: rgba(92, 230, 161, 0.55); background: rgba(92, 230, 161, 0.08); }
+    .prompt-creator-quality[data-state="pending"] { color: var(--amber); border-color: rgba(255, 195, 77, 0.45); background: rgba(255, 195, 77, 0.08); }
+    .prompt-creator-quality[data-state="rejected"] { color: var(--red); border-color: rgba(255, 104, 120, 0.5); background: rgba(255, 104, 120, 0.08); }
+    .prompt-delivery-output { min-height: 176px; resize: vertical; font-family: var(--mono); font-size: 11px; line-height: 1.45; white-space: pre; }
+    .creation-prompt-override { min-height: 152px; resize: vertical; font-family: var(--mono); font-size: 11px; line-height: 1.45; white-space: pre; }
+    .creation-grid-two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+    .creation-dial-row { display: grid; grid-template-columns: minmax(0, 1fr) 68px; gap: 6px; align-items: center; }
+    .creation-dial-row .topic-input[type="number"] { padding: 7px 8px; }
+    .creation-range { width: 100%; accent-color: var(--electric); }
+    .creation-checklist { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+    .creation-check { display: inline-flex; align-items: center; gap: 6px; min-height: 30px; padding: 6px 8px; border: 1px solid var(--border); border-radius: 5px; color: #bfd0cf; font-size: 11px; background: #081014; }
+    .creation-check input { accent-color: var(--electric); }
+    .workflow-hint { margin: 0; color: var(--faint); font-family: var(--mono); font-size: 10px; line-height: 1.45; }
+    .run-validation { margin: 0; padding: 7px 8px; border: 1px solid var(--border); border-radius: 5px; font-family: var(--mono); font-size: 10px; line-height: 1.45; }
+    .run-validation[data-state="ready"] { color: var(--green); border-color: rgba(92, 230, 161, 0.55); background: rgba(92, 230, 161, 0.08); }
+    .run-validation[data-state="blocked"] { color: var(--red); border-color: rgba(255, 104, 120, 0.5); background: rgba(255, 104, 120, 0.08); }
+    .run-validation[data-state="pending"] { color: var(--amber); border-color: rgba(255, 195, 77, 0.45); background: rgba(255, 195, 77, 0.08); }
+    .brief-messages { display: grid; align-content: start; gap: 10px; padding: 12px; max-height: 220px; overflow-y: auto; }
+    .chat-message { max-width: 94%; padding: 9px 10px; border: 1px solid var(--border); border-radius: 6px; color: #c8d6d5; font-size: 11px; line-height: 1.45; }
+    .chat-message.system { justify-self: start; background: rgba(17, 33, 40, 0.72); }
+    .chat-message.user { justify-self: end; border-color: rgba(48, 185, 255, 0.44); background: rgba(48, 185, 255, 0.12); }
+    .brief-compose { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 7px; padding: 10px; border-top: 1px solid var(--border); }
+    .brief-compose .topic-input { min-height: 38px; }
+    .brief-send { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 38px; padding: 0 11px; white-space: nowrap; }
+    .brief-send span { font-size: 11px; font-weight: 600; }
+    .brief-send svg { width: 14px; height: 14px; }
+    .brief-tools { display: flex; align-items: center; gap: 6px; padding: 0 10px 10px; border-top: 1px solid var(--border); }
+    .brief-tool { width: 30px; height: 30px; flex: 0 0 30px; border-radius: 5px; }
+    .brief-tool svg { width: 15px; height: 15px; }
+    .brief-tool.is-selected { color: var(--electric); border-color: rgba(48, 185, 255, 0.65); background: rgba(48, 185, 255, 0.1); }
+    .link-compose { display: grid; grid-template-columns: minmax(0, 1fr) 30px; gap: 6px; padding: 0 10px 10px; border-top: 1px solid var(--border); }
+    .link-compose[hidden] { display: none; }
+    .link-input { min-width: 0; height: 30px; padding: 6px 8px; border: 1px solid var(--border); border-radius: 5px; color: var(--ink); font-family: var(--mono); font-size: 10px; background: #081014; }
+    .attachment-list { display: flex; flex-wrap: wrap; gap: 5px; padding: 9px 10px 0; }
+    .attachment-list:empty { display: none; }
+    .attachment-chip { display: inline-flex; align-items: center; max-width: 100%; gap: 5px; min-height: 25px; padding: 4px 5px 4px 7px; border: 1px solid var(--border); border-radius: 4px; color: #bfd0cf; font-family: var(--mono); font-size: 9px; line-height: 1.1; background: rgba(17, 33, 40, 0.72); }
+    .attachment-chip svg { width: 12px; height: 12px; flex: 0 0 12px; color: var(--electric); }
+    .attachment-chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .attachment-chip button { display: grid; width: 16px; height: 16px; flex: 0 0 16px; place-items: center; padding: 0; border: 0; color: var(--muted); cursor: pointer; background: transparent; }
+    .attachment-chip button:hover { color: var(--red); }
+    .attachment-chip button svg { width: 11px; height: 11px; color: currentColor; }
+    .attachment-chip.link svg { color: var(--green); }
+    .attachment-uploading { color: var(--amber); }
+    .human-zone { display: grid; gap: 12px; }
+    .human-zone > .section-label { margin-bottom: 0; }
+    .review-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .review-title { margin: 0; color: #c7d6d5; font-size: 12px; font-weight: 700; }
+    .review-state { display: inline-flex; align-items: center; gap: 5px; padding: 4px 6px; border: 1px solid var(--border); border-radius: 4px; color: var(--muted); font-family: var(--mono); font-size: 9px; font-weight: 600; letter-spacing: 0.04em; line-height: 1; text-transform: uppercase; white-space: nowrap; }
+    .review-state::before { width: 6px; height: 6px; border-radius: 50%; background: currentColor; box-shadow: 0 0 7px currentColor; content: ""; }
+    .review-state[data-state="awaiting_approval"] { color: var(--amber); border-color: rgba(255, 195, 77, 0.55); }
+    .review-state[data-state="completed"] { color: var(--green); }
+    .review-state[data-state="error"] { color: var(--red); border-color: rgba(255, 104, 120, 0.55); }
+    .review-group { padding-top: 11px; border-top: 1px solid var(--border); }
+    .review-group-heading { display: flex; align-items: center; gap: 7px; margin: 0 0 8px; color: var(--muted); font-family: var(--mono); font-size: 9px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; }
+    .review-group-heading svg { width: 13px; height: 13px; color: var(--electric); }
+    .review-copy { margin: 0; color: #c0d1d0; font-size: 11px; line-height: 1.45; overflow-wrap: anywhere; }
+    .review-copy.muted { color: var(--faint); }
+    .creation-preview { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 9px; align-items: start; }
+    .creation-thumbnail { display: grid; width: 48px; height: 48px; place-items: center; overflow: hidden; border: 1px solid var(--border); border-radius: 5px; color: var(--electric); background: rgba(48, 185, 255, 0.08); }
+    .creation-thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+    .creation-thumbnail svg { width: 20px; height: 20px; }
+    .creation-thumbnail-button { padding: 0; cursor: zoom-in; }
+    .creation-thumbnail-button:hover { border-color: var(--electric); box-shadow: 0 0 14px rgba(48, 185, 255, 0.24); }
+    .creation-thumbnail-button.is-empty { cursor: help; }
+    .app-shell:not(.is-sidebar-collapsed) .creation-preview { grid-template-columns: 1fr; }
+    .app-shell:not(.is-sidebar-collapsed) .creation-thumbnail.has-image { width: min(15cm, 100%); height: min(12cm, calc(100vh - 135px)); min-height: 300px; margin: 0 auto; }
+    .app-shell:not(.is-sidebar-collapsed) .creation-thumbnail.has-image img { object-fit: contain; }
+    .creation-empty { padding: 5px; color: var(--faint); font-family: var(--mono); font-size: 8px; font-weight: 600; line-height: 1.25; text-align: center; text-transform: uppercase; }
+    .review-kicker { display: block; overflow: hidden; color: var(--faint); font-family: var(--mono); font-size: 9px; line-height: 1.25; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
+    .review-name { display: block; margin-top: 3px; color: #d4e0df; font-size: 11px; font-weight: 700; line-height: 1.3; overflow-wrap: anywhere; }
+    .review-detail { margin: 7px 0 0; color: var(--muted); font-family: var(--mono); font-size: 10px; line-height: 1.45; overflow-wrap: anywhere; }
+    .print-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; margin-top: 8px; }
+    .print-fact { min-width: 0; padding-right: 5px; border-right: 1px solid var(--border); }
+    .print-fact:last-child { border-right: 0; }
+    .print-fact span { display: block; overflow: hidden; color: var(--faint); font-family: var(--mono); font-size: 8px; letter-spacing: 0.04em; line-height: 1.2; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
+    .print-fact strong { display: block; overflow: hidden; margin-top: 3px; color: #cce0de; font-family: var(--mono); font-size: 10px; font-weight: 600; line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; }
+    .grade-critical { color: var(--red) !important; }
+    .grade-caveats { color: var(--amber) !important; }
+    .grade-ok { color: var(--green) !important; }
+    .review-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+    .review-actions[hidden] { display: none; }
+    .review-actions .button { min-width: 0; padding: 9px 8px; font-size: 11px; }
+    .button-danger { border-color: rgba(255, 104, 120, 0.55); color: #ffd9df; background: rgba(255, 104, 120, 0.08); }
+    .button-danger:hover:not(:disabled) { border-color: var(--red); background: rgba(255, 104, 120, 0.15); }
+    .warning-list { display: grid; gap: 6px; }
+    .warning-list:empty { display: none; }
+    .warning-item { padding: 7px 8px; border-left: 2px solid var(--amber); color: #d1d9d4; font-family: var(--mono); font-size: 9px; line-height: 1.45; background: rgba(255, 195, 77, 0.06); overflow-wrap: anywhere; }
+    .warning-item[data-severity="error"] { border-left-color: var(--red); background: rgba(255, 104, 120, 0.07); }
+    .warning-scope { display: block; margin-bottom: 2px; color: var(--amber); font-size: 8px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
+    .warning-item[data-severity="error"] .warning-scope { color: var(--red); }
+    .review-result { width: 100%; justify-content: space-between; }
+    .review-result[disabled] { color: var(--faint); }
+    .result-summary { display: grid; gap: 12px; }
+    .result-output-link { width: 100%; text-decoration: none; }
+    .image-approval-dialog { width: min(calc(15cm + 48px), calc(100vw - 32px)); }
+    .image-approval-body { display: grid; gap: 12px; }
+    .image-approval-frame { display: grid; width: min(15cm, 100%); height: min(12cm, calc(100vh - 190px)); min-height: 260px; place-items: center; margin: 0 auto; overflow: hidden; border: 1px solid var(--border-strong); border-radius: 6px; background: #05090c; }
+    .image-approval-frame img { display: block; width: 100%; height: 100%; object-fit: contain; }
+    .image-approval-frame video { display: block; width: 100%; height: 100%; object-fit: contain; }
+    .image-approval-empty { padding: 24px; color: var(--muted); font-family: var(--mono); font-size: 12px; line-height: 1.5; text-align: center; }
+    .agent-node.orchestrator { width: 360px; min-height: 230px; border-color: rgba(48, 185, 255, 0.65); background: linear-gradient(135deg, rgba(16, 43, 53, 0.98), rgba(13, 28, 34, 0.96)); box-shadow: inset 0 0 0 1px rgba(48, 185, 255, 0.12), 0 0 28px rgba(48, 185, 255, 0.16); }
+    .agent-node.peer-agent { width: 300px; min-height: 210px; }
+    .decision-badge { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; color: var(--amber); font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+    .decision-badge::before { width: 5px; height: 5px; border-radius: 50%; background: currentColor; box-shadow: 0 0 6px currentColor; content: ""; }
+    .department-zone.hub { top: 318px; left: 354px; width: 412px; height: 292px; border-color: rgba(48, 185, 255, .22); }
+    .department-zone.peer-ring { top: 34px; left: 20px; width: 1080px; height: 832px; }
+    .hub-label { color: rgba(48, 185, 255, .72); }
+
+    .office-scroll {
+      min-height: 460px;
+      max-height: calc(100vh - 215px);
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+    .office {
+      width: 100%;
+      min-width: 0;
+      min-height: 0;
+      padding: 18px;
+      overflow: hidden;
+    }
+    .office::before { inset: 12px; }
+    .department-zone, .workflow-lines { display: none; }
+    .vertical-workflow-lines { position: absolute; z-index: 2; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+    .vertical-workflow-lines .workflow-path { stroke: #527078; stroke-width: 3; opacity: 0.9; filter: drop-shadow(0 0 2px rgba(82, 112, 120, 0.42)); }
+    .vertical-workflow-lines .workflow-path.is-dispatch { stroke: rgba(48, 185, 255, 0.58); stroke-dasharray: 4 7; }
+    .vertical-workflow-lines .workflow-path.is-active { stroke: var(--electric); stroke-width: 3.5; }
+    .vertical-workflow-lines .workflow-path.is-complete { stroke: var(--green); opacity: 0.95; }
+    .vertical-workflow-lines .workflow-path.is-error { stroke: var(--red); }
+    .vertical-workflow-lines .workflow-path.is-monitoring { stroke-dasharray: 4 10; animation: line-flow 2.1s linear infinite; }
+    .vertical-workflow-lines .workflow-pulse.is-monitoring { fill: #8fc9d2; filter: drop-shadow(0 0 5px rgba(143, 201, 210, 0.75)); opacity: 0.58; }
+    .vertical-workflow-lines .workflow-pulse.is-monitoring.is-complete { fill: var(--green); filter: drop-shadow(0 0 5px rgba(92, 230, 161, 0.75)); }
+    .vertical-workflow-lines .workflow-path.is-dispatch.is-active { stroke: var(--electric); stroke-dasharray: 7 7; opacity: 1; }
+    .vertical-workflow-lines .workflow-pulse { r: 5px; }
+    #agentNodes { position: relative; z-index: 3; display: grid; gap: 14px; }
+    .workflow-lane {
+      display: block;
+      min-height: 0;
+      align-items: stretch;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(9, 20, 25, 0.5);
+    }
+    .lane-heading { display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 16px; min-width: 0; padding: 3px 3px 10px; border-right: 0; border-bottom: 1px solid var(--border); }
+    .lane-label { margin: 0; color: var(--lane-color); font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.08em; line-height: 1.35; text-transform: uppercase; }
+    .lane-count { margin: 8px 0 0; color: var(--muted); font-family: var(--mono); font-size: 10px; line-height: 1.45; }
+    .workflow-track {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      column-gap: 3cm;
+      row-gap: 10cm;
+      padding-top: 14px;
+    }
+    .workflow-step { display: block; min-width: 0; }
+    .agent-node, .agent-node.orchestrator, .agent-node.peer-agent {
+      position: relative;
+      display: flex;
+      width: 100%;
+      height: 238px;
+      min-height: 238px;
+      flex: 0 0 auto;
+      padding: 17px 17px 15px 21px;
+      border-color: var(--role-color);
+      background: rgba(13, 28, 34, 0.94);
+      box-shadow: inset 0 0 0 1px var(--role-tint), 0 8px 18px rgba(0, 0, 0, 0.2);
+    }
+    .agent-node.orchestrator { background: linear-gradient(135deg, rgba(16, 43, 53, 0.98), rgba(13, 28, 34, 0.96)); }
+    .node-topline { gap: 6px; }
+    .node-kicker { max-width: 135px; overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+    .node-state { max-width: 100px; font-size: 10px; }
+    .node-name { min-height: 33px; margin-top: 12px; color: #c7d6d5; font-family: var(--mono); font-size: 12px; font-weight: 600; line-height: 1.4; }
+    .node-role { display: -webkit-box; min-height: 50px; margin-top: 4px; overflow: hidden; color: var(--role-color); font-size: 18px; font-weight: 700; line-height: 1.3; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+    .node-task { min-height: 42px; margin: 10px 0 0; color: #b9cbca; font-size: 12px; line-height: 1.5; -webkit-line-clamp: 2; }
+    .node-source { display: block; margin-top: auto; overflow: hidden; color: var(--faint); font-family: var(--mono); font-size: 10px; line-height: 1.3; text-overflow: ellipsis; white-space: nowrap; }
+    .decision-badge, .node-metrics { display: none; }
+    .workflow-connector { display: none; }
+    .role-key-item { color: var(--key-color); }
+
+    @media (max-width: 980px) {
+      .app-shell { grid-template-columns: 1fr; }
+      .app-shell.is-sidebar-collapsed { grid-template-columns: 1fr; }
+      .sidebar { position: relative; width: 100%; min-height: auto; max-height: none; overflow: visible; border-right: 0; border-bottom: 1px solid var(--border); }
+      .app-shell.is-sidebar-collapsed .sidebar { width: 100%; padding: 8px 12px; }
+      .app-shell.is-sidebar-collapsed .sidebar-tab { width: 100%; height: 34px; min-height: 34px; display: inline-flex; justify-content: flex-start; padding: 7px 8px; }
+      .app-shell.is-sidebar-collapsed .sidebar-tab span { display: inline; }
+      .brand { padding-bottom: 15px; }
+      .sidebar-controls { display: grid; grid-template-columns: minmax(230px, 1fr) minmax(230px, 1fr); gap: 0 24px; }
+      .integration-footer { margin-top: 0; }
+      .main-content { padding-top: 18px; }
+    }
+    @media (max-width: 660px) {
+      .sidebar-controls { display: block; }
+      .topbar { align-items: stretch; flex-direction: column; gap: 15px; }
+      .live-summary { min-width: 0; }
+      .metrics-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .metric:nth-child(2) { border-right: 0; }
+      .metric:nth-child(-n + 2) { border-bottom: 1px solid var(--border); }
+      .section-heading { align-items: flex-start; flex-direction: column; }
+      .legend, .role-key { justify-content: flex-start; }
+      .activity-bar { grid-template-columns: auto minmax(0, 1fr); }
+      .activity-time { display: none; }
+      .lineage-grid, .telemetry-grid { grid-template-columns: 1fr; }
+      .detail-block.full { grid-column: auto; }
+      .modal-tabs { overflow-x: auto; padding: 0 8px; }
+      .modal-tab { padding: 0 11px; white-space: nowrap; }
+      .office { padding: 12px; }
+      .workflow-lane { padding: 11px; }
+    }
+    @media (max-width: 1180px) {
+      .workflow-track { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 660px) {
+      .office-scroll { min-height: 440px; max-height: 70vh; }
+      .workflow-track { grid-template-columns: 1fr; }
+      .agent-node, .agent-node.orchestrator, .agent-node.peer-agent { height: 228px; min-height: 228px; }
+      .node-role { font-size: 17px; }
+      .creation-grid-two { grid-template-columns: 1fr; }
+      .creation-checklist { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; } }
+  </style>
+</head>
+<body>
+  <div class="app-shell" id="appShell">
+    <aside class="sidebar" id="sidebar">
+      <button class="sidebar-tab" id="sidebarToggle" type="button" aria-controls="sidebarContent" aria-expanded="true" title="Close control desk"><i data-lucide="panel-left-open"></i><span id="sidebarToggleLabel">Close control desk</span></button>
+      <div class="sidebar-content" id="sidebarContent">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"><i data-lucide="network"></i></div>
+        <div class="brand-copy"><p class="eyebrow">Operations console</p><p class="brand-name">Fine Art Ops</p></div>
+      </div>
+      <div class="sidebar-controls">
+        <section class="control-stack" aria-label="Workflow controls">
+          <button class="button button-primary" id="simulateBtn" type="button"><i data-lucide="play"></i><span>Simulate live workflow</span></button>
+          <button class="button button-secondary" id="resetBtn" type="button"><i data-lucide="rotate-ccw"></i><span>Reset office</span></button>
+        </section>
+        <section class="sidebar-section" aria-labelledby="viewControlsLabel">
+          <p class="section-label" id="viewControlsLabel">View controls</p>
+          <div class="toggle-list">
+            <label class="toggle-row" for="activeOnly"><span>Active only</span><span class="switch"><input id="activeOnly" type="checkbox" /><span class="slider"></span></span></label>
+          </div>
+        </section>
+        <section class="sidebar-section" aria-labelledby="runLabel">
+          <p class="section-label" id="runLabel">Queue workflow run</p>
+          <div class="brief-chat" aria-label="Workflow briefing chat">
+            <div class="brief-messages" id="briefMessages">
+              <div class="chat-message system">Choose one workflow, complete each step in order, then queue a validated run.</div>
+            </div>
+            <div class="workflow-fields" aria-label="Workflow selection">
+              <label class="field-label" for="workflowMode">System workflow</label>
+              <select class="topic-input workflow-select" id="workflowMode" aria-describedby="workflowHint">
+                <option value="fine_art_creation">Fine Art Creation</option>
+                <option value="production">Upscale</option>
+                <option value="prepress">Digital Art Print Auditor</option>
+              </select>
+              <div class="workflow-source" id="creationSettingsField">
+                <div class="creation-settings-panel" id="fineArtPromptCreatorPanel">
+                  <p class="workflow-step-label">Step 2. Build the prompt creator delivery</p>
+                  <div class="creation-panel-head">
+                    <label class="field-label" for="promptCreatorCommand">Fine Art Prompt Creator</label>
+                    <button class="button button-secondary prompt-creator-refresh" id="refreshPromptCreatorBtn" type="button">Use creator values</button>
+                  </div>
+                  <textarea class="topic-input prompt-creator-command" id="promptCreatorCommand" aria-label="Fine Art Prompt Creator command"></textarea>
+                  <p class="workflow-hint">Template based on your ART DNA command. Edit freely before queuing Fine Art Creation.</p>
+                  <div class="prompt-creator-actions" aria-label="Prompt creator delivery controls">
+                    <button class="button button-secondary prompt-creator-action" id="generatePromptDeliveryBtn" type="button">Generate delivery</button>
+                    <button class="button button-secondary prompt-creator-action" id="copyPromptDeliveryBtn" type="button" disabled>Copy delivery</button>
+                    <button class="button button-secondary prompt-creator-action" id="pastePromptDeliveryBtn" type="button" disabled>Paste into Fine Art Creator</button>
+                  </div>
+                  <p class="prompt-creator-quality" id="promptDeliveryQuality" data-state="pending">Quality approval pending.</p>
+                  <textarea class="topic-input prompt-delivery-output" id="promptDeliveryOutput" aria-label="Prompt creator delivery output" readonly></textarea>
+                </div>
+                <div class="creation-settings-panel" id="fineArtCreatorPanel">
+                  <p class="workflow-step-label">Step 1. Define the fine art creator inputs</p>
+                  <p class="field-label">Fine Art Creator</p>
+                  <label class="field-label" for="creationSubjectInput">Create Art DNA #[AUTO] Subject / starting idea</label>
+                  <input class="topic-input" id="creationSubjectInput" aria-label="Creation subject" placeholder="FULL CREATIVE FREEDOM" value="FULL CREATIVE FREEDOM" maxlength="220" />
+                  <div class="creation-grid-two">
+                    <div>
+                      <label class="field-label" for="creationRatio">Ratio</label>
+                      <input class="topic-input" id="creationRatio" aria-label="Creation ratio" value="4:5" maxlength="20" />
+                    </div>
+                    <div>
+                      <label class="field-label" for="creationEnvironment">Intended environment</label>
+                      <select class="topic-input workflow-select" id="creationEnvironment" aria-label="Creation environment">
+                        <option value="gallery print">gallery print</option>
+                        <option value="luxury interior">luxury interior</option>
+                        <option value="museum-scale print">museum-scale print</option>
+                        <option value="digital display">digital display</option>
+                        <option value="collection">collection</option>
+                        <option value="other">other</option>
+                      </select>
+                    </div>
+                  </div>
+                  <label class="field-label" for="creativeFreedomRange">Creative freedom (0-100)</label>
+                  <div class="creation-dial-row">
+                    <input class="creation-range" id="creativeFreedomRange" type="range" min="0" max="100" value="100" />
+                    <input class="topic-input" id="creativeFreedomValue" type="number" min="0" max="100" value="100" aria-label="Creative freedom value" />
+                  </div>
+                  <label class="field-label" for="originalityPriorityRange">Originality priority (0-100)</label>
+                  <div class="creation-dial-row">
+                    <input class="creation-range" id="originalityPriorityRange" type="range" min="0" max="100" value="100" />
+                    <input class="topic-input" id="originalityPriorityValue" type="number" min="0" max="100" value="100" aria-label="Originality priority value" />
+                  </div>
+                  <label class="field-label" for="similarityToleranceRange">Similarity tolerance (0-100)</label>
+                  <div class="creation-dial-row">
+                    <input class="creation-range" id="similarityToleranceRange" type="range" min="0" max="100" value="1" />
+                    <input class="topic-input" id="similarityToleranceValue" type="number" min="0" max="100" value="1" aria-label="Similarity tolerance value" />
+                  </div>
+                  <label class="field-label" for="commercialClicheToleranceRange">Commercial cliche tolerance (0-100)</label>
+                  <div class="creation-dial-row">
+                    <input class="creation-range" id="commercialClicheToleranceRange" type="range" min="0" max="100" value="0" />
+                    <input class="topic-input" id="commercialClicheToleranceValue" type="number" min="0" max="100" value="0" aria-label="Commercial cliche tolerance value" />
+                  </div>
+                  <label class="field-label" for="predictabilityToleranceRange">Predictability tolerance (0-100)</label>
+                  <div class="creation-dial-row">
+                    <input class="creation-range" id="predictabilityToleranceRange" type="range" min="0" max="100" value="0" />
+                    <input class="topic-input" id="predictabilityToleranceValue" type="number" min="0" max="100" value="0" aria-label="Predictability tolerance value" />
+                  </div>
+                  <label class="field-label" for="artisticAmbitionRange">Artistic ambition (0-100)</label>
+                  <div class="creation-dial-row">
+                    <input class="creation-range" id="artisticAmbitionRange" type="range" min="0" max="100" value="100" />
+                    <input class="topic-input" id="artisticAmbitionValue" type="number" min="0" max="100" value="100" aria-label="Artistic ambition value" />
+                  </div>
+                  <div class="creation-grid-two">
+                    <div>
+                      <label class="field-label" for="creationSizeFamily">Sizes format</label>
+                      <select class="topic-input workflow-select" id="creationSizeFamily" aria-label="Creation size family">
+                        <option value="a_series">A-series</option>
+                        <option value="square_1_1">1:1</option>
+                      </select>
+                    </div>
+                    <div id="creationASeriesField">
+                      <label class="field-label" for="creationASeriesSize">A-series size</label>
+                      <select class="topic-input workflow-select" id="creationASeriesSize" aria-label="A-series size">
+                        <option value="A4">A4</option>
+                        <option value="A3">A3</option>
+                        <option value="A2">A2</option>
+                        <option value="A1" selected>A1</option>
+                        <option value="A0">A0</option>
+                        <option value="2A0">2A0</option>
+                      </select>
+                    </div>
+                    <div id="creationSquareField" hidden>
+                      <label class="field-label" for="creationSquareSizeCm">1:1 size</label>
+                      <select class="topic-input workflow-select" id="creationSquareSizeCm" aria-label="Square size in centimeters">
+                        <option value="30">30cm</option>
+                        <option value="50">50cm</option>
+                        <option value="80">80cm</option>
+                        <option value="100" selected>100cm</option>
+                        <option value="120">120cm</option>
+                        <option value="150">150cm</option>
+                      </select>
+                    </div>
+                  </div>
+                  <label class="field-label">Orientation options</label>
+                  <div class="creation-checklist" aria-label="Creation orientation options">
+                    <label class="creation-check" for="creationOrientationPortrait"><input id="creationOrientationPortrait" type="checkbox" checked /><span>portrait</span></label>
+                    <label class="creation-check" for="creationOrientationLandscape"><input id="creationOrientationLandscape" type="checkbox" /><span>landscape</span></label>
+                    <label class="creation-check" for="creationOrientationVertical"><input id="creationOrientationVertical" type="checkbox" /><span>vertical</span></label>
+                  </div>
+                  <label class="toggle-row" for="fineArtRenderEnabled"><span>Render image output</span><span class="switch"><input id="fineArtRenderEnabled" type="checkbox" /><span class="slider"></span></span></label>
+                  <p class="workflow-hint">Leave this off for planning-only runs. Turn it on only when this brief is approved and ready for rendering.</p>
+                  <label class="field-label" for="creationPromptOverrideInput">Step 3. Optional approved prompt delivery override</label>
+                  <textarea class="topic-input creation-prompt-override" id="creationPromptOverrideInput" aria-label="Optional approved prompt delivery override" placeholder="Paste an approved Prompt Creator delivery here to control the workflow."></textarea>
+                  <p class="workflow-hint">When this field is filled, the Fine Art Creator uses this approved delivery prompt as the direct generation input.</p>
+                </div>
+              </div>
+              <div class="workflow-source" id="productionSettingsField" hidden>
+                <p class="workflow-step-label" id="productionStepLabel">Step 2. Select source image and upscale target</p>
+                <label class="field-label" for="productionSourceAttachmentId">Source image</label>
+                <select class="topic-input workflow-select" id="productionSourceAttachmentId" aria-label="Production source image attachment">
+                  <option value="">Choose attached image...</option>
+                </select>
+                <label class="field-label" for="productionTargetFormat">Target format</label>
+                <select class="topic-input workflow-select" id="productionTargetFormat" aria-label="Production target format">
+                  <option value="2A0">2A0</option>
+                  <option value="A0">A0</option>
+                  <option value="A1">A1</option>
+                  <option value="A2">A2</option>
+                  <option value="A3">A3</option>
+                  <option value="A4">A4</option>
+                  <option value="1:1 MAX">1:1 MAX</option>
+                </select>
+                <label class="field-label" for="productionOrientation">Orientation</label>
+                <select class="topic-input workflow-select" id="productionOrientation" aria-label="Production orientation">
+                  <option value="auto">Auto</option>
+                  <option value="portrait">Portrait</option>
+                  <option value="landscape">Landscape</option>
+                  <option value="square">Square</option>
+                </select>
+                <label class="field-label" for="productionAspectMode">Aspect mode</label>
+                <select class="topic-input workflow-select" id="productionAspectMode" aria-label="Production aspect mode">
+                  <option value="preserve">Preserve</option>
+                  <option value="crop">Crop</option>
+                  <option value="extend">Extend</option>
+                  <option value="full_bleed">Full bleed</option>
+                </select>
+                <p class="workflow-hint">Attach at least one image. If multiple images are attached, choose the exact source image before queueing.</p>
+              </div>
+              <div class="workflow-source" id="prepressSettingsField" hidden>
+                <div class="creation-settings-panel">
+                  <p class="workflow-step-label" id="prepressStepLabel">Step 1. Configure digital art print auditor mode</p>
+                  <label class="field-label" for="prepressMode">Audit mode</label>
+                  <select class="topic-input workflow-select" id="prepressMode" aria-label="Prepress mode">
+                    <option value="plan">Plan</option>
+                    <option value="dry_run">Dry run</option>
+                    <option value="run">Run</option>
+                  </select>
+                  <label class="toggle-row" id="prepressConfirmRow" for="prepressConfirmExternalActions" hidden><span>Confirm external actions for run mode</span><span class="switch"><input id="prepressConfirmExternalActions" type="checkbox" /><span class="slider"></span></span></label>
+                  <div id="prepressOverrideField" hidden>
+                    <label class="field-label" for="prepressQualityGateOverride">Quality gate override reason</label>
+                    <textarea class="topic-input" id="prepressQualityGateOverride" aria-label="Prepress quality gate override reason" placeholder="Required only if you must bypass a quality gate in run mode."></textarea>
+                  </div>
+                  <p class="workflow-hint">Plan mode is safest by default. Run and dry run require deliberate confirmation before queueing.</p>
+                </div>
+              </div>
+              <p class="workflow-hint" id="workflowHint">Create an original fine-art concept and upscale-ready master image prompt.</p>
+              <p class="run-validation" id="runValidationMessage" data-state="pending">Complete required fields to enable queue.</p>
+            </div>
+            <p class="workflow-step-label" id="attachmentStepLabel">Step 4. Attach context (optional)</p>
+            <div class="attachment-list" id="attachmentList" aria-live="polite"></div>
+            <div class="link-compose" id="linkCompose" hidden>
+              <input class="link-input" id="linkInput" type="url" aria-label="Reference link" placeholder="https://reference.example" maxlength="2048" />
+              <button class="icon-button brief-tool" id="addLinkBtn" type="button" aria-label="Add reference link" title="Add reference link"><i data-lucide="plus"></i></button>
+            </div>
+            <label class="field-label" for="topicInput" id="topicInputLabel">Step 5. Optional run label</label>
+            <div class="brief-compose">
+              <input class="topic-input" id="topicInput" aria-label="Workflow brief" placeholder="Brief..." maxlength="240" />
+              <button class="button button-primary brief-send" id="queueRunBtn" type="button" aria-label="Queue run"><span>Queue run</span><i data-lucide="arrow-up"></i></button>
+            </div>
+            <div class="brief-tools" aria-label="Attach briefing context">
+              <input id="photoInput" type="file" accept="image/jpeg,image/png,image/gif,image/webp,image/bmp" multiple hidden />
+              <input id="fileInput" type="file" multiple hidden />
+              <button class="icon-button brief-tool" id="addPhotoBtn" type="button" aria-label="Add photos" title="Add photos"><i data-lucide="image-plus"></i></button>
+              <button class="icon-button brief-tool" id="addFileBtn" type="button" aria-label="Add files" title="Add files"><i data-lucide="paperclip"></i></button>
+              <button class="icon-button brief-tool" id="showLinkBtn" type="button" aria-label="Add a link" title="Add a link"><i data-lucide="link-2"></i></button>
+            </div>
+          </div>
+          <p class="run-note">Attachments apply to the next queued run and are cleared after queueing.</p>
+        </section>
+        <section class="sidebar-section human-zone" aria-labelledby="humanReviewLabel">
+          <div class="review-header"><div><p class="section-label" id="humanReviewLabel">Human interaction</p><p class="review-title">Server-driven review &amp; delivery status</p></div><span class="review-state" id="reviewState" data-state="idle">No review</span></div>
+          <div class="toggle-list" aria-label="Manual review options">
+            <label class="toggle-row" for="approvalRequired"><span>Manual approval pause (server-managed)</span><span class="switch"><input id="approvalRequired" type="checkbox" disabled /><span class="slider"></span></span></label>
+            <label class="toggle-row" for="renderAfterApproval"><span>Render after approval (server-managed)</span><span class="switch"><input id="renderAfterApproval" type="checkbox" disabled /><span class="slider"></span></span></label>
+          </div>
+          <section class="review-group" aria-labelledby="creationReviewLabel">
+            <p class="review-group-heading" id="creationReviewLabel"><i data-lucide="image"></i>Creation review</p>
+            <div id="creationReview"><p class="review-copy muted">No creation is ready for review.</p></div>
+          </section>
+          <section class="review-group" aria-labelledby="printReviewLabel">
+            <p class="review-group-heading" id="printReviewLabel"><i data-lucide="scan-search"></i>Print Quality Auditor</p>
+            <div id="printReview"><p class="review-copy muted">No Upscale batch has been reported yet.</p></div>
+          </section>
+          <div class="review-actions" id="reviewActions" hidden>
+            <button class="button button-primary" id="approveBtn" type="button"><i data-lucide="check"></i><span>Approve</span></button>
+            <button class="button button-danger" id="rejectBtn" type="button"><i data-lucide="x"></i><span>Reject</span></button>
+          </div>
+          <section class="review-group" aria-labelledby="warningLabel">
+            <p class="review-group-heading" id="warningLabel"><i data-lucide="triangle-alert"></i>System warnings</p>
+            <div class="warning-list" id="warningList"><p class="review-copy muted">No current system warnings.</p></div>
+          </section>
+          <button class="button button-secondary review-result" id="viewFinalResultBtn" type="button" disabled><span>View final result</span><i data-lucide="external-link"></i></button>
+        </section>
+      </div>
+      <footer class="integration-footer">
+        <div class="integration-status" id="integrationStatus"><span class="live-dot"></span><span id="integrationStatusLabel">Workflow: fine art creation</span></div>
+        <div class="integration-list" aria-label="Default workflow components"><span class="integration-chip">Queue worker</span><span class="integration-chip">Template jobs</span><span class="integration-chip">Fixed ranking</span><span class="integration-chip">Render: off</span></div>
+      </footer>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-copy"><p class="eyebrow">System agent map</p><h1>Orchestration Control Room</h1><p>All system roles are arranged horizontally by workflow. Job titles stay visible while aggregate run status overlays the map.</p></div>
+        <div class="live-summary" aria-live="polite"><div class="status-beacon" id="statusBeacon"><i data-lucide="radio"></i></div><div class="live-copy"><strong id="statusMessage">Connecting to orchestrator</strong><span id="statusCaption">STATUS: CHECKING</span></div></div>
+      </header>
+      <section class="metrics-strip" aria-label="Operational metrics">
+        <div class="metric"><p class="metric-label">Queue depth</p><strong class="metric-value" id="queueDepth">0</strong></div>
+        <div class="metric"><p class="metric-label">Runs total</p><strong class="metric-value" id="runsTotal">0</strong></div>
+        <div class="metric"><p class="metric-label">Success rate</p><strong class="metric-value" id="successRate">--</strong></div>
+        <div class="metric"><p class="metric-label">Last duration</p><strong class="metric-value" id="lastDuration">--</strong></div>
+      </section>
+      <section class="office-section" aria-labelledby="officeHeading">
+        <div class="section-heading"><div><p class="section-label">Workflow floor</p><h2 id="officeHeading">All system agents</h2></div><div class="legend" aria-label="Run state legend"><span class="legend-title">Run state</span><span class="legend-item"><span class="legend-swatch"></span>Idle</span><span class="legend-item"><span class="legend-swatch active"></span>Active</span><span class="legend-item"><span class="legend-swatch complete"></span>Complete</span><span class="legend-item"><span class="legend-swatch error"></span>Error</span></div></div>
+        <div class="role-key" id="roleKey" aria-label="Workflow color key"></div>
+        <div class="office-scroll"><div class="office" id="office"><svg class="vertical-workflow-lines" id="workflowLines" aria-hidden="true"></svg><div id="agentNodes"></div></div></div>
+        <div class="activity-bar" aria-live="polite"><span class="state-caption">Activity feed</span><span class="activity-event" id="activityEvent">Office ready. Select a workstation to inspect its trace.</span><span class="activity-time" id="activityTime">--:--:--</span></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog class="dialog" id="agentModal" aria-labelledby="modalTitle">
+    <div class="modal-header"><div><p class="modal-label" id="modalRole">Job details</p><h2 id="modalTitle">Workflow job</h2></div><button class="icon-button" id="closeModalBtn" type="button" aria-label="Close job details"><i data-lucide="x"></i></button></div>
+    <div class="modal-tabs" role="tablist" aria-label="Job details"><button class="modal-tab" type="button" role="tab" id="traceTab" aria-controls="tracePanel" aria-selected="true">What it does</button><button class="modal-tab" type="button" role="tab" id="lineageTab" aria-controls="lineagePanel" aria-selected="false">Workflow path</button><button class="modal-tab" type="button" role="tab" id="telemetryTab" aria-controls="telemetryPanel" aria-selected="false">Run details</button></div>
+    <div class="modal-body">
+      <section class="tab-panel" id="tracePanel" role="tabpanel" aria-labelledby="traceTab"><div class="trace-list" id="traceList"></div></section>
+      <section class="tab-panel" id="lineagePanel" role="tabpanel" aria-labelledby="lineageTab" hidden><div class="lineage-grid" id="lineageGrid"></div></section>
+      <section class="tab-panel" id="telemetryPanel" role="tabpanel" aria-labelledby="telemetryTab" hidden><div class="telemetry-grid" id="telemetryGrid"></div><table class="tool-table"><thead><tr><th>Component</th><th>Scope</th><th>Network</th><th>State</th></tr></thead><tbody id="toolTableBody"></tbody></table></section>
+    </div>
+  </dialog>
+
+  <dialog class="dialog" id="resultModal" aria-labelledby="resultModalTitle">
+    <div class="modal-header"><div><p class="modal-label">Final result</p><h2 id="resultModalTitle">Current delivery</h2></div><button class="icon-button" id="closeResultBtn" type="button" aria-label="Close final result"><i data-lucide="x"></i></button></div>
+    <div class="modal-body"><div class="result-summary" id="resultModalBody"></div></div>
+  </dialog>
+
+  <dialog class="dialog image-approval-dialog" id="imageApprovalModal" aria-labelledby="imageApprovalTitle">
+    <div class="modal-header"><div><p class="modal-label">Human approval preview</p><h2 id="imageApprovalTitle">Creation image</h2></div><button class="icon-button" id="closeImageApprovalBtn" type="button" aria-label="Close image approval preview"><i data-lucide="x"></i></button></div>
+    <div class="modal-body"><div class="image-approval-body" id="imageApprovalBody"></div></div>
+  </dialog>
+
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script>
+    const agents = [
+      { id: "intake", position: "top:122px;left:48px", dept: "Ingestion", name: "Intake Gateway", role: "Run request coordinator", task: "Awaiting a source brief from queue.", tokens: "420", latency: "82ms", cost: "$0.002", heat: "low", lineage: "Dashboard request -> queue admission -> pipeline configuration", prompt: "Validate a fine-art creation request, normalize its fields, and safely enqueue work for the orchestrator.", input: '{"subject":"FULL CREATIVE FREEDOM","ratio":"4:5","render":false}', output: '{"accepted":true,"queue_depth":1}', tools: [["queue.put", "12", "4ms", "healthy"], ["payload validator", "12", "18ms", "healthy"]] },
+      { id: "planner", position: "top:108px;left:348px", dept: "Reasoning", name: "Research Planner", role: "Audience and angle analyst", task: "Standing by for fine-art context.", tokens: "1.8k", latency: "290ms", cost: "$0.012", heat: "medium", lineage: "Intake Gateway -> fine-art normalization -> planning brief", prompt: "Extract the intended environment, conceptual pressure, and strongest art direction before candidate generation.", input: '{"subject":"FULL CREATIVE FREEDOM","intended_environment":"gallery print"}', output: '{"direction":"high-concept","rarity":"near-zero template overlap"}', tools: [["brief parser", "7", "61ms", "healthy"], ["direction matcher", "7", "229ms", "healthy"]] },
+      { id: "strategy", position: "top:108px;left:636px", dept: "Reasoning", name: "Viral Strategist", role: "Hook and concept strategy engine", task: "No active concept brief assigned.", tokens: "2.4k", latency: "430ms", cost: "$0.018", heat: "medium", lineage: "Research Planner -> audience brief -> viral candidate strategy", prompt: "Create high-signal short-form hooks and select a production-ready angle for the requested audience.", input: '{"angle":"counterintuitive business leverage","platforms":["TikTok","Reels","Shorts"]}', output: '{"hook":"Your AI advantage is not the model.","score":9.4}', tools: [["hook scorer", "5", "138ms", "healthy"], ["platform rules", "5", "47ms", "healthy"]] },
+      { id: "registry", position: "top:122px;left:924px", dept: "Governance", name: "Prompt Registry", role: "Approval and version gate", task: "Monitoring approved prompt lineage.", tokens: "680", latency: "126ms", cost: "$0.004", heat: "low", lineage: "Viral Strategist -> scored candidate -> approved prompt version", prompt: "Enforce approval policy, preserve version lineage, and expose only approved prompts to production.", input: '{"candidate_score":9.4,"registry":"viral_master_prod_prompt"}', output: '{"approved":true,"version":12,"status":"production"}', tools: [["prompt registry", "8", "74ms", "healthy"], ["approval policy", "8", "39ms", "healthy"]] },
+      { id: "production", position: "top:418px;left:336px", dept: "Tool execution", name: "Production Orchestrator", role: "Task fan-out and render dispatch", task: "No render actions in progress.", tokens: "3.2k", latency: "910ms", cost: "$0.029", heat: "high", lineage: "Prompt Registry -> approved release -> deterministic production graph", prompt: "Fan out candidate tasks, preserve idempotency, and dispatch approved work across production tools.", input: '{"approved_version":12,"render_enabled":false,"idempotency_key":"..."}', output: '{"tasks":3,"status":"planned","render":"skipped"}', tools: [["LangGraph", "4", "181ms", "healthy"], ["idempotency store", "4", "22ms", "healthy"], ["render dispatch", "2", "707ms", "ready"]] },
+      { id: "validator", position: "top:418px;left:636px", dept: "Quality control", name: "Output Validator", role: "Contract and output quality check", task: "Waiting for rendered output package.", tokens: "980", latency: "512ms", cost: "$0.009", heat: "medium", lineage: "Production Orchestrator -> artifact report -> quality decision", prompt: "Check artifact quality, metadata integrity, and scoring against the output contract.", input: '{"artifacts":3,"target_platforms":["TikTok","Reels","Shorts"]}', output: '{"valid":true,"issues":[],"quality_score":0.94}', tools: [["artifact inspector", "3", "206ms", "healthy"], ["metadata validator", "3", "74ms", "healthy"], ["quality checker", "3", "232ms", "healthy"]] },
+      { id: "upscale", position: "top:418px;left:924px", dept: "Quality control", name: "Upscale Station", role: "Finishing and delivery preparation", task: "Standing by for approved media assets.", tokens: "360", latency: "1.2s", cost: "$0.015", heat: "high", lineage: "Output Validator -> approved media -> upscale and delivery package", prompt: "Prepare approved media for final quality review and downstream delivery without altering approval state.", input: '{"quality_score":0.94,"delivery_format":"9:16"}', output: '{"package":"ready","delivery_checks":"passed"}', tools: [["upscale pipeline", "2", "884ms", "healthy"], ["prepress audit", "2", "284ms", "healthy"]] }
+    ];
+
+    agents.splice(0, agents.length,
+      { id: "orchestrator", position: "top:348px;left:380px", dept: "Local control", name: "00. Orchestrator", role: "Run queue and child-process controller", task: "Queues a brief, starts the local runner, and reports the run-wide state.", tokens: "5.7k", latency: "740ms", cost: "$0.046", heat: "high", lineage: "Dashboard brief -> queue worker -> local child process", prompt: "Build and launch the local workflow command, then publish the global lifecycle state.", input: '{"brief":"...","render":false,"production":false}', output: '{"status":"queued|running|completed"}', tools: [["queue worker", "local", "n/a", "ready"], ["child-process launcher", "local", "n/a", "ready"]] },
+      { id: "agent-1", position: "top:96px;left:40px", dept: "Local run setup", name: "01. Run Configuration Builder", role: "Safe defaults and command builder", task: "Applies local defaults and assembles the command that starts the run.", tokens: "1.2k", latency: "188ms", cost: "$0.008", heat: "low", lineage: "Orchestrator -> normalized run options -> child command", prompt: "Create a safe local command from the submitted brief and run settings.", input: '{"topic":"...","count":3,"render":false}', output: '["python","viral_master_agent.py","--topic",...]', tools: [["command builder", "local", "n/a", "ready"]] },
+      { id: "agent-2", position: "top:94px;left:410px", dept: "Local selection", name: "02. Niche and Trigger Selector", role: "Configured input selector", task: "Selects the configured niche and trigger values used by the workflow.", tokens: "1.4k", latency: "263ms", cost: "$0.010", heat: "medium", lineage: "Run inputs -> configured defaults -> candidate context", prompt: "Choose local niche and trigger defaults for the current workflow input.", input: '{"topic":"...","audience":"..."}', output: '{"niche":"...","trigger":"..."}', tools: [["niche selector", "local", "n/a", "ready"]] },
+      { id: "agent-3", position: "top:96px;left:780px", dept: "Local script", name: "03. Script Template Builder", role: "Short-form script assembler", task: "Fills the short-form script template with the selected local context.", tokens: "1.1k", latency: "315ms", cost: "$0.009", heat: "medium", lineage: "Selected context -> script template -> script payload", prompt: "Build the short-form script payload from the selected niche and trigger.", input: '{"niche":"...","trigger":"..."}', output: '{"hook":"...","body":"...","cta":"..."}', tools: [["script template", "local", "n/a", "ready"]] },
+      { id: "agent-4", position: "top:638px;left:40px", dept: "Local scenes", name: "04. Scene Map Builder", role: "Hook, body, and outro structure", task: "Creates the local scene map that converts the script into visual beats.", tokens: "1.5k", latency: "482ms", cost: "$0.013", heat: "high", lineage: "Script payload -> scene template -> visual beat map", prompt: "Create deterministic hook, body, and outro scene data from the script payload.", input: '{"script":"..."}', output: '{"hook":{},"body":{},"outro":{}}', tools: [["scene mapper", "local", "n/a", "ready"]] },
+      { id: "agent-5", position: "top:638px;left:410px", dept: "Local prompts", name: "05. Prompt Batch Builder", role: "Configured prompt formatter", task: "Formats prompt entries for the requested number of candidates.", tokens: "1.3k", latency: "354ms", cost: "$0.011", heat: "medium", lineage: "Script and scenes -> prompt template -> prompt batch", prompt: "Format a local batch of prompt entries using the current script and scene map.", input: '{"count":3,"script":"..."}', output: '[{"prompt":"..."},{"prompt":"..."}]', tools: [["prompt formatter", "local", "n/a", "ready"]] },
+      { id: "agent-6", position: "top:638px;left:780px", dept: "Local ranking", name: "06. Candidate Generator and Ranker", role: "Preset candidate and fixed-score ranker", task: "Builds configured candidates and orders them with fixed local scores.", tokens: "1.6k", latency: "606ms", cost: "$0.015", heat: "high", lineage: "Prompt batch -> preset candidates -> fixed-score ordering", prompt: "Generate configured candidates and return their deterministic fixed-score ordering.", input: '{"prompts":["..."]}', output: '{"candidates":[...],"ranking":[...]}', tools: [["candidate generator", "local", "n/a", "ready"]] }
+    );
+
+    const workflowLanes = [
+      { id: "control", label: "Runtime control", color: "#30b9ff", tint: "rgba(48, 185, 255, 0.12)" },
+      { id: "viral", label: "Art DNA strategy", color: "#69dca4", tint: "rgba(105, 220, 164, 0.12)" },
+      { id: "production", label: "Upscale & governance", color: "#ffae62", tint: "rgba(255, 174, 98, 0.12)" },
+      { id: "creative", label: "Creative & finishing", color: "#ee8f78", tint: "rgba(238, 143, 120, 0.12)" },
+      { id: "operations", label: "Project operations", color: "#78d8c0", tint: "rgba(120, 216, 192, 0.12)" }
+    ];
+
+    const createAgent = ([id, lane, name, role, task, source, lineage]) => ({
+      id, lane, name, role, task, source, lineage,
+      prompt: task,
+      input: "Upstream workflow context",
+      output: "Downstream workflow context",
+      tools: [[source, "system", "local", "available"]]
+    });
+
+    const systemAgentRows = [
+      ["orchestrator", "control", "Dashboard Orchestrator", "Workflow Runtime Director", "Queues each request, launches the right workflow runner, and publishes global run state.", "dashboard_server.py", "Dashboard brief -> queue worker -> local child process"],
+      ["run-configuration", "control", "Run Configuration Builder", "Payload Contract & Command Builder", "Validates inputs and builds safe workflow commands from the current dashboard state.", "dashboard_server.py", "Dashboard brief -> normalized options -> child command"],
+      ["supervisor", "control", "Supervisor Orchestrator", "Tool Invocation Supervisor", "Coordinates optional tool-calling loops and checkpoint-aware orchestration actions.", "supervisor_orchestrator.py", "Supervisor request -> tool loop -> final response"],
+      ["viral-master", "viral", "Fine Art Creation Master", "End-to-End Creation Flow Controller", "Coordinates idea framing, structural drafting, prompt synthesis, and candidate review for creation runs.", "viral_master_agent.py", "Run configuration -> fine-art creation flow -> ranked prompt output"],
+      ["niche-selector", "viral", "Subject & Tension Selector", "Concept Seed Selector", "Chooses the conceptual seed and emotional tension profile for each generation run.", "viral_master_agent.py", "Run inputs -> concept seed -> structure context"],
+      ["prompt-engineer", "viral", "Fine Art Prompt Engineer", "ART DNA Prompt Architect", "Builds high-specificity prompt structure with composition, material, and originality constraints.", "viral_master_prompt_engineer.py", "Fine-art brief -> prompt strategy -> generation template"],
+      ["fine-art-prompt-creator", "viral", "Fine Art Prompt Creator", "Master Directive Composer", "Builds and refines the ART DNA master command block from the dashboard creator controls.", "fine_art_creation_agent.py", "Creation controls -> ART DNA command -> prompt constraints"],
+      ["script-builder", "viral", "Structure Draft Builder", "Concept Structure Composer", "Converts concept seed into a structured draft with hierarchy and visual intent.", "viral_master_agent.py", "Selected context -> structure draft -> composition map"],
+      ["scene-map", "viral", "Composition Genome Builder", "Spatial Choreography Mapper", "Transforms draft structure into focal flow, negative-space logic, and depth choreography.", "viral_master_agent.py", "Structure draft -> composition genome -> prompt batch"],
+      ["prompt-batch", "viral", "Prompt Variation Builder", "Candidate Prompt Expander", "Creates candidate prompt variants while preserving ART DNA constraints and non-repetition.", "viral_master_agent.py", "Composition genome -> prompt candidates -> scoring"],
+      ["candidate-ranker", "viral", "Candidate Ranker", "Originality & Cohesion Evaluator", "Ranks prompt candidates by originality, clarity, and fine-art coherence before release.", "viral_master_agent.py", "Prompt batch -> candidates -> ranked shortlist"],
+      ["prompt-registry", "production", "Prompt Registry", "Approval, Version & Governance Gate", "Tracks approved prompt lineage and promotes verified prompt sets for upscale operations.", "prompt_registry.py", "Ranked prompt -> approved version -> upscale plan"],
+      ["production-planner", "production", "Upscale Planner", "Upscale Task Planner", "Builds deterministic upscale and handoff tasks from approved creation outputs.", "production_orchestrator.py", "Approved prompt -> task fan-out -> candidate workers"],
+      ["candidate-worker", "production", "Candidate Worker", "Parallel Upscale Evaluator", "Executes assigned candidate tasks in parallel and reports structured results.", "production_orchestrator.py", "Planned tasks -> worker results -> upscale ranker"],
+      ["production-ranker", "production", "Upscale Ranker", "Upscale Candidate Selector", "Selects the strongest upscale candidate based on quality and delivery constraints.", "production_orchestrator.py", "Worker results -> ranked winner -> approval gate"],
+      ["approval-gate", "production", "Approval Gate", "Human Release Decision Gate", "Pauses mutation and external actions until explicit human approval is provided.", "production_orchestrator.py", "Ranked winner -> approval -> release or finish"],
+      ["release", "production", "Release Manager", "Upscale Release Publisher", "Publishes approved upscale state and prepares downstream execution metadata.", "production_orchestrator.py", "Approval -> upscale release -> render dispatch"],
+      ["render", "production", "Render Dispatcher", "Idempotent Render Executor", "Dispatches approved render actions exactly once and protects retries with stable keys.", "production_orchestrator.py", "Release -> render job -> completion"],
+      ["finish", "production", "Finish Service", "Workflow Completion Finalizer", "Finalizes workflow state, delivery metadata, and completion status projections.", "production_orchestrator.py", "Release or render -> completed delivery state"],
+      ["midjourney", "creative", "Midjourney Renderer", "Image Render Execution Agent", "Submits and tracks renderer jobs for the selected master image prompt.", "midjourney.py", "Visual prompt -> renderer job -> generated media"],
+      ["upscale", "creative", "Upscale Station", "Upscale & Finishing Agent", "Prepares approved assets for high-resolution finishing and print-target delivery outputs.", "upscaled/upscale_pipeline.py", "Approved media -> upscaled file -> print-audit input"],
+      ["print-auditor", "creative", "Print Quality Auditor", "Digital Art Print Auditor", "Audits final deliveries for print-readiness, quality risks, and handoff confidence.", "upscaled/Print Quality Auditor/auditor_server.py", "Upscaled delivery -> audit -> release-ready package"],
+      ["dashboard-monitor", "operations", "Dashboard Orchestrator Monitor", "Run-State & Queue Health Monitor", "Monitors queue depth, worker state, and lifecycle transitions across all workflows.", "AGENTS.md", "Run state -> operational monitoring -> dashboard diagnosis"],
+      ["prompt-registry-approvals", "operations", "Prompt Registry & Approvals", "Governance Policy & Promotion Monitor", "Verifies approval policies, registry integrity, and promotion consistency.", "AGENTS.md", "Registry candidate -> approval review -> governed promotion"]
+    ];
+
+    agents.splice(0, agents.length, ...systemAgentRows.map(createAgent));
+
+    const laneById = Object.fromEntries(workflowLanes.map((lane) => [lane.id, lane]));
+    const agentById = Object.fromEntries(agents.map((agent) => [agent.id, agent]));
+    const workflowOrder = agents.map((agent) => agent.id);
+    const peerIds = workflowOrder.filter((id) => id !== "orchestrator");
+    const workflowRoutes = workflowLanes.flatMap((lane) => {
+      const laneAgents = agents.filter((agent) => agent.lane === lane.id);
+      const routes = laneAgents.slice(1).map((agent, index) => ({
+        id: `route-${laneAgents[index].id}-${agent.id}`,
+        from: laneAgents[index].id,
+        to: agent.id,
+        type: "handoff",
+      }));
+      if (lane.id !== "control" && laneAgents.length) {
+        routes.unshift({ id: `route-orchestrator-${laneAgents[0].id}`, from: "orchestrator", to: laneAgents[0].id, type: "dispatch" });
+      }
+      return routes;
+    });
+    const routeOrder = workflowRoutes.map((route) => route.id);
+    const routeByTarget = Object.fromEntries(workflowRoutes.map((route) => [route.to, route.id]));
+    const workflowAgentIds = {
+      fine_art_creation: ["orchestrator", "run-configuration", "viral-master", "niche-selector", "prompt-engineer", "fine-art-prompt-creator", "script-builder", "scene-map", "prompt-batch", "candidate-ranker"],
+      production: ["orchestrator", "upscale", "print-auditor"],
+      prepress: ["orchestrator", "upscale", "print-auditor"],
+    };
+    const workflowLabels = {
+      fine_art_creation: "Fine Art Creation",
+      production: "Upscale",
+      prepress: "Digital Art Print Auditor",
+    };
+    const activeStates = new Set(["thinking", "fetching", "queued", "error"]);
+    const officeState = Object.fromEntries(workflowOrder.map((id) => [id, "idle"]));
+    const lineState = Object.fromEntries(routeOrder.map((route) => [route, "idle"]));
+    const nodesContainer = document.getElementById("agentNodes");
+    const office = document.getElementById("office");
+    const linesLayer = document.getElementById("workflowLines");
+    const modal = document.getElementById("agentModal");
+    const resultModal = document.getElementById("resultModal");
+    const imageApprovalModal = document.getElementById("imageApprovalModal");
+    const apiBase = "/api/v1";
+    let simulationId = 0;
+    let demoMode = false;
+    let lastServerStatus = "idle";
+    let lastServerWorkflow = "fine_art_creation";
+    let stagedAttachments = [];
+    let stagedLinks = [];
+    let latestStatusData = {};
+    let approvedPromptDelivery = "";
+    let submittingRun = false;
+    const uiCapabilities = {
+      targetFormats: ["2A0", "A0", "A1", "A2", "A3", "A4", "1:1 MAX"],
+      orientationValues: ["auto", "portrait", "landscape", "square"],
+      aspectModeValues: ["preserve", "crop", "extend", "full_bleed"],
+      creationSizeFamilies: ["a_series", "square_1_1"],
+      creationASeriesSizes: ["A4", "A3", "A2", "A1", "A0", "2A0"],
+      creationSquareSizesCm: [30, 50, 80, 100, 120, 150],
+      creationOrientationValues: ["portrait", "landscape", "vertical"],
+    };
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" })[character]);
+    }
+
+    function refreshIcons() {
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function formatBytes(value) {
+      const bytes = Number(value || 0);
+      if (!bytes) return "0 B";
+      if (bytes < 1024 * 1024) return `${Math.ceil(bytes / 1024)} KB`;
+      return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+    }
+
+    function safeResultUrl(value) {
+      if (!value) return "";
+      try {
+        const url = new URL(value, window.location.origin);
+        return ["http:", "https:"].includes(url.protocol) ? url.href : "";
+      } catch {
+        return "";
+      }
+    }
+
+    function previewMediaKind(preview) {
+      const explicit = String(preview?.kind || "").toLowerCase();
+      if (["image", "video"].includes(explicit)) return explicit;
+      const previewUrl = safeResultUrl(preview?.url);
+      if (!previewUrl) return "unknown";
+      try {
+        const pathname = new URL(previewUrl).pathname.toLowerCase();
+        if (/\.(mp4|mov|webm|m4v)$/.test(pathname)) return "video";
+        if (/\.(png|jpe?g|gif|webp|bmp|svg|avif)$/.test(pathname)) return "image";
+      } catch {
+        return "unknown";
+      }
+      return "image";
+    }
+
+    function previewUnavailableReason(review, creation) {
+      if (creation?.render_url || creation?.preview) return "";
+      const warnings = Array.isArray(review?.warnings) ? review.warnings : [];
+      const renderWarning = warnings.find((warning) => {
+        const scope = String(warning?.scope || "").toLowerCase();
+        const message = String(warning?.message || "").toLowerCase();
+        return scope.includes("renderer") || message.includes("render failed") || message.includes("render action failed");
+      });
+      return renderWarning?.message || "";
+    }
+
+    function renderAttachmentTray() {
+      const list = document.getElementById("attachmentList");
+      const attachments = stagedAttachments.map((attachment, index) => `<span class="attachment-chip"><i data-lucide="${attachment.kind === "image" ? "image" : "paperclip"}"></i><span title="${escapeHtml(attachment.name)}">${escapeHtml(attachment.name)} (${formatBytes(attachment.size)})</span><button type="button" data-remove-attachment="${index}" aria-label="Remove ${escapeHtml(attachment.name)}" title="Remove attachment"><i data-lucide="x"></i></button></span>`);
+      const links = stagedLinks.map((link, index) => `<span class="attachment-chip link"><i data-lucide="link-2"></i><span title="${escapeHtml(link.url)}">${escapeHtml(link.label)}</span><button type="button" data-remove-link="${index}" aria-label="Remove ${escapeHtml(link.label)}" title="Remove link"><i data-lucide="x"></i></button></span>`);
+      list.innerHTML = [...attachments, ...links].join("");
+      list.hidden = !attachments.length && !links.length;
+      list.querySelectorAll("[data-remove-attachment]").forEach((button) => button.addEventListener("click", () => {
+        stagedAttachments.splice(Number(button.dataset.removeAttachment), 1);
+        renderAttachmentTray();
+        renderHumanReview(latestStatusData);
+      }));
+      list.querySelectorAll("[data-remove-link]").forEach((button) => button.addEventListener("click", () => {
+        stagedLinks.splice(Number(button.dataset.removeLink), 1);
+        renderAttachmentTray();
+      }));
+      refreshProductionSourceOptions();
+      updateRunReadiness();
+      refreshIcons();
+    }
+
+    function readFileData(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.addEventListener("load", () => resolve(reader.result));
+        reader.addEventListener("error", () => reject(reader.error || new Error("Unable to read attachment.")));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function uploadFiles(files) {
+      const selected = Array.from(files || []).slice(0, Math.max(0, 6 - stagedAttachments.length));
+      if (!selected.length) return;
+      const controls = ["addPhotoBtn", "addFileBtn"].map((id) => document.getElementById(id));
+      controls.forEach((control) => { control.disabled = true; });
+      try {
+        for (const file of selected) {
+          if (file.size > 8 * 1024 * 1024) {
+            setActivity(`${file.name} is larger than the 8 MB attachment limit.`);
+            continue;
+          }
+          setActivity(`Adding ${file.name} to the orchestration context.`);
+          const data = await readFileData(file);
+          const response = await fetch(`${apiBase}/attachments`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name: file.name, content_type: file.type, data }),
+          });
+          const result = await response.json().catch(() => ({}));
+          if (!response.ok) throw new Error(result.error || `Unable to upload ${file.name}.`);
+          stagedAttachments.push(result.attachment);
+        }
+        renderAttachmentTray();
+        renderHumanReview(latestStatusData);
+        setActivity(`${stagedAttachments.length} file${stagedAttachments.length === 1 ? "" : "s"} attached to the next run.`);
+      } catch (error) {
+        setActivity(error.message || "The attachment could not be added.");
+      } finally {
+        controls.forEach((control) => { control.disabled = false; });
+      }
+    }
+
+    function showLinkComposer() {
+      const composer = document.getElementById("linkCompose");
+      composer.hidden = !composer.hidden;
+      document.getElementById("showLinkBtn").classList.toggle("is-selected", !composer.hidden);
+      if (!composer.hidden) document.getElementById("linkInput").focus();
+    }
+
+    function addLink() {
+      const input = document.getElementById("linkInput");
+      const raw = input.value.trim();
+      if (!raw) return;
+      try {
+        const url = new URL(raw);
+        if (!["http:", "https:"].includes(url.protocol)) throw new Error("Only http and https links can be attached.");
+        if (stagedLinks.length >= 6) throw new Error("You can attach up to six links.");
+        stagedLinks.push({ url: url.href, label: url.hostname });
+        input.value = "";
+        renderAttachmentTray();
+        updateRunReadiness();
+        setActivity(`${url.hostname} attached to the orchestration context.`);
+      } catch (error) {
+        setActivity(error.message || "Enter a valid reference link.");
+      }
+    }
+
+    function clampPercent(value, fallback) {
+      const parsed = Number.parseInt(String(value), 10);
+      if (Number.isNaN(parsed)) return fallback;
+      return Math.max(0, Math.min(100, parsed));
+    }
+
+    function bindCreationDial(rangeId, valueId, fallback) {
+      const range = document.getElementById(rangeId);
+      const value = document.getElementById(valueId);
+      if (!range || !value) return;
+
+      const syncFromRange = () => {
+        const normalized = clampPercent(range.value, fallback);
+        range.value = String(normalized);
+        value.value = String(normalized);
+      };
+      const syncFromValue = () => {
+        const normalized = clampPercent(value.value, fallback);
+        value.value = String(normalized);
+        range.value = String(normalized);
+      };
+
+      range.addEventListener("input", syncFromRange);
+      value.addEventListener("input", syncFromValue);
+      value.addEventListener("blur", syncFromValue);
+      syncFromRange();
+    }
+
+    function creationDialValue(rangeId, fallback) {
+      const field = document.getElementById(rangeId);
+      return clampPercent(field ? field.value : fallback, fallback);
+    }
+
+    function selectedCreationOrientations() {
+      const options = [
+        ["creationOrientationPortrait", "portrait"],
+        ["creationOrientationLandscape", "landscape"],
+        ["creationOrientationVertical", "vertical"],
+      ];
+      const selected = options
+        .filter(([id]) => document.getElementById(id)?.checked)
+        .map(([, value]) => value);
+      return selected.length ? selected : ["portrait"];
+    }
+
+    function readCreationContext() {
+      const creationSubject = (document.getElementById("creationSubjectInput")?.value || "").trim() || "FULL CREATIVE FREEDOM";
+      const creationRatio = (document.getElementById("creationRatio")?.value || "").trim() || "4:5";
+      const creationEnvironment = document.getElementById("creationEnvironment")?.value || "gallery print";
+      const creationSizeFamily = document.getElementById("creationSizeFamily")?.value || "a_series";
+      const creationASeriesSize = document.getElementById("creationASeriesSize")?.value || "A1";
+      const creationSquareSizeCm = Number.parseInt(document.getElementById("creationSquareSizeCm")?.value || "100", 10);
+      const creationOrientations = selectedCreationOrientations();
+      return {
+        creationSubject,
+        creationRatio,
+        creationEnvironment,
+        creationSizeFamily,
+        creationASeriesSize,
+        creationSquareSizeCm: Number.isFinite(creationSquareSizeCm) ? creationSquareSizeCm : 100,
+        creationOrientations,
+        creativeFreedom: creationDialValue("creativeFreedomRange", 100),
+        originalityPriority: creationDialValue("originalityPriorityRange", 100),
+        similarityTolerance: creationDialValue("similarityToleranceRange", 1),
+        commercialClicheTolerance: creationDialValue("commercialClicheToleranceRange", 0),
+        predictabilityTolerance: creationDialValue("predictabilityToleranceRange", 0),
+        artisticAmbition: creationDialValue("artisticAmbitionRange", 100),
+      };
+    }
+
+    function buildPromptCreatorCommand(context) {
+      const formatTarget = context.creationSizeFamily === "a_series"
+        ? context.creationASeriesSize
+        : `1:1 ${context.creationSquareSizeCm}cm`;
+      return [
+        "# ART DNA - GENERATIVE MASTER DIRECTIVE",
+        "You are an autonomous Fine Art Director and cross-disciplinary visual intelligence.",
+        "Create original, collectible-quality digital fine art with a unique ART DNA per work.",
+        "Do not imitate artists. Do not repeat stock aesthetics. Mutate the underlying visual genetics.",
+        "",
+        "# CORE RULES",
+        "Start from IDEA -> VISUAL SYSTEM -> ART DNA -> MATERIAL WORLD -> COMPOSITION -> TECHNIQUE.",
+        "Prioritize conceptual clarity, compositional intelligence, material invention, and anti-cliche restraint.",
+        "Reject predictable concepts, decorative excess, and generic AI aesthetics.",
+        "",
+        "# REQUIRED OUTPUT FORMAT",
+        "Return only:",
+        "ARTWORK TITLE",
+        "CORE CONCEPT (2-4 sentences)",
+        "MASTER IMAGE PROMPT (production-ready, concrete visual instructions)",
+        "NEGATIVE / EXCLUSION DIRECTIVE",
+        "ART DNA FINGERPRINT",
+        "",
+        "## EXECUTION COMMAND",
+        "CREATE ART DNA #[AUTO]",
+        "",
+        `Subject or starting idea: ${context.creationSubject}`,
+        `Format / ratio: ${context.creationRatio}`,
+        `Intended environment: ${context.creationEnvironment}`,
+        `Creative freedom: ${context.creativeFreedom}/100`,
+        `Originality priority: ${context.originalityPriority}/100`,
+        `Similarity tolerance to previous works: ${context.similarityTolerance}/100`,
+        `Commercial cliche tolerance: ${context.commercialClicheTolerance}/100`,
+        `Predictability tolerance: ${context.predictabilityTolerance}/100`,
+        `Artistic ambition: ${context.artisticAmbition}/100`,
+        `Preferred format target: ${formatTarget}`,
+        `Preferred orientations: ${context.creationOrientations.join(", ")}`,
+        "",
+        "Now create something that has never needed to exist before, but after seeing it, feels as though it always should have.",
+      ].join("\n");
+    }
+
+    function buildPromptDeliveryOutput(context, commandText) {
+      const formatTarget = context.creationSizeFamily === "a_series"
+        ? context.creationASeriesSize
+        : `1:1 ${context.creationSquareSizeCm}cm`;
+      const normalizedCommand = String(commandText || "").trim();
+      return [
+        "ARTWORK TITLE",
+        "Pressure Memory Reliquary",
+        "",
+        "CORE CONCEPT",
+        `A structural world emerges where ${context.creationSubject.toLowerCase()} is treated as an engineered memory event rather than an illustration. The composition stages density against deliberate silence so attention travels from abrasion-rich foreground evidence into a restrained monumental field. Light and material behavior are used as narrative logic, not decoration, preserving unresolved traces of a prior intervention that is never fully explained.`,
+        "",
+        "MASTER IMAGE PROMPT",
+        `Create a museum-grade digital fine artwork. Subject universe: ${context.creationSubject}. Use ratio ${context.creationRatio} for ${context.creationEnvironment}. Composition: asymmetrical architecture with a dense lower-left anchor and a broad upper-right negative-space release; one dominant focal structure, secondary micro-discoveries, and an intentional visual exit corridor. Perspective: oblique near-human viewpoint with disciplined depth compression. Foreground: tactile abrasion, edge chipping, nonuniform oxidation, and hand-worked irregularity; middle ground: primary engineered mass with controlled tension lines; background: atmospheric recession with sparse evidence of prior activity. Material language: pressure-aged ceramic-metal hybrids, translucent mineral seams, and matte-to-specular transitions. Light behavior: directional glancing light with constrained volumetrics and coherent shadow geometry. Color system: restrained desaturated neutrals with one rare accent channel. Signature anomaly: a single optical seam that bends perceived depth while preserving material plausibility. Keep visual rhythm deliberate, preserve restraint, and avoid decorative clutter. Output target ${formatTarget}, orientation preference ${context.creationOrientations.join(", ")}.`,
+        "",
+        "NEGATIVE / EXCLUSION DIRECTIVE",
+        "No artist-style imitation. No centered hero object default. No neon spectacle, portals, galaxies, random floating debris, pseudo-symbolic ornament, generic fantasy haze, over-symmetry, or gratuitous detail without conceptual function.",
+        "",
+        "ART DNA FINGERPRINT",
+        `subject=${context.creationSubject} | ratio=${context.creationRatio} | environment=${context.creationEnvironment} | focus=asymmetrical structural memory field | anomaly=depth-bending optical seam | restraint=high`,
+        "",
+        "SOURCE COMMAND",
+        normalizedCommand,
+      ].join("\n");
+    }
+
+    function evaluatePromptDeliveryQuality(text) {
+      const value = String(text || "").trim();
+      const checks = [
+        /ARTWORK TITLE/.test(value),
+        /CORE CONCEPT/.test(value),
+        /MASTER IMAGE PROMPT/.test(value),
+        /NEGATIVE\s*\/\s*EXCLUSION DIRECTIVE/.test(value),
+        /ART DNA FINGERPRINT/.test(value),
+      ];
+      return checks.every(Boolean);
+    }
+
+    function setPromptDeliveryQuality(state, message) {
+      const quality = document.getElementById("promptDeliveryQuality");
+      if (!quality) return;
+      quality.dataset.state = state;
+      quality.textContent = message;
+    }
+
+    function updatePromptDeliveryButtons() {
+      const output = (document.getElementById("promptDeliveryOutput")?.value || "").trim();
+      const hasOutput = Boolean(output);
+      const isApproved = evaluatePromptDeliveryQuality(output);
+      const copyBtn = document.getElementById("copyPromptDeliveryBtn");
+      const pasteBtn = document.getElementById("pastePromptDeliveryBtn");
+      if (copyBtn) copyBtn.disabled = !hasOutput;
+      if (pasteBtn) pasteBtn.disabled = !isApproved;
+      if (!hasOutput) {
+        setPromptDeliveryQuality("pending", "Quality approval pending.");
+        approvedPromptDelivery = "";
+        return;
+      }
+      if (!isApproved) {
+        setPromptDeliveryQuality("rejected", "Quality approval rejected: required output sections are missing.");
+        approvedPromptDelivery = "";
+        return;
+      }
+      setPromptDeliveryQuality("approved", "Quality approval passed. Ready to copy or paste into Fine Art Creator.");
+      approvedPromptDelivery = output;
+    }
+
+    function generatePromptDelivery() {
+      const context = readCreationContext();
+      const commandField = document.getElementById("promptCreatorCommand");
+      const outputField = document.getElementById("promptDeliveryOutput");
+      if (!commandField || !outputField) return;
+      const commandText = (commandField.value || "").trim() || buildPromptCreatorCommand(context);
+      outputField.value = buildPromptDeliveryOutput(context, commandText);
+      updatePromptDeliveryButtons();
+      updateRunReadiness();
+      setActivity("Prompt Creator delivery generated and quality-reviewed.");
+    }
+
+    async function copyPromptDelivery() {
+      const output = (document.getElementById("promptDeliveryOutput")?.value || "").trim();
+      if (!output) {
+        setActivity("Generate a delivery before copying.");
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(output);
+        setActivity("Prompt Creator delivery copied to clipboard.");
+      } catch {
+        setActivity("Clipboard copy failed. Select and copy the delivery manually.");
+      }
+    }
+
+    function pastePromptDeliveryIntoFineArtCreator() {
+      const output = (document.getElementById("promptDeliveryOutput")?.value || "").trim();
+      if (!evaluatePromptDeliveryQuality(output)) {
+        setActivity("Prompt delivery is not approved yet. Generate a complete delivery first.");
+        return;
+      }
+      const target = document.getElementById("creationPromptOverrideInput");
+      if (!target) return;
+      target.value = output;
+      target.focus();
+      updateRunReadiness();
+      setActivity("Approved Prompt Creator delivery pasted into Fine Art Creator control input.");
+    }
+
+    function refreshPromptCreatorCommand() {
+      const field = document.getElementById("promptCreatorCommand");
+      if (!field) return;
+      field.value = buildPromptCreatorCommand(readCreationContext());
+      updatePromptDeliveryButtons();
+      updateRunReadiness();
+    }
+
+    function syncCreationSizeControls() {
+      const sizeFamily = document.getElementById("creationSizeFamily")?.value || "a_series";
+      const aSeriesField = document.getElementById("creationASeriesField");
+      const squareField = document.getElementById("creationSquareField");
+      if (aSeriesField) aSeriesField.hidden = sizeFamily !== "a_series";
+      if (squareField) squareField.hidden = sizeFamily !== "square_1_1";
+    }
+
+    function syncReviewOptions() {
+      const approvalRequired = document.getElementById("approvalRequired");
+      const renderAfterApproval = document.getElementById("renderAfterApproval");
+      if (approvalRequired) {
+        approvalRequired.checked = false;
+        approvalRequired.disabled = true;
+      }
+      if (renderAfterApproval) {
+        renderAfterApproval.checked = false;
+        renderAfterApproval.disabled = true;
+      }
+    }
+
+    function syncPrepressControls() {
+      const mode = document.getElementById("prepressMode")?.value || "plan";
+      const confirmRow = document.getElementById("prepressConfirmRow");
+      const confirmToggle = document.getElementById("prepressConfirmExternalActions");
+      const overrideField = document.getElementById("prepressOverrideField");
+      const overrideReason = document.getElementById("prepressQualityGateOverride");
+      const isRun = mode === "run";
+      if (confirmRow) confirmRow.hidden = !isRun;
+      if (overrideField) overrideField.hidden = !isRun;
+      if (!isRun && confirmToggle) confirmToggle.checked = false;
+      if (!isRun && overrideReason) overrideReason.value = "";
+    }
+
+    function syncWorkflowControls() {
+      const workflow = document.getElementById("workflowMode").value;
+      const creationSettingsField = document.getElementById("creationSettingsField");
+      const productionSettingsField = document.getElementById("productionSettingsField");
+      const prepressSettingsField = document.getElementById("prepressSettingsField");
+      const hint = document.getElementById("workflowHint");
+      const topicInput = document.getElementById("topicInput");
+      const topicInputLabel = document.getElementById("topicInputLabel");
+      const attachmentStepLabel = document.getElementById("attachmentStepLabel");
+      const productionStepLabel = document.getElementById("productionStepLabel");
+      const prepressStepLabel = document.getElementById("prepressStepLabel");
+      creationSettingsField.hidden = workflow !== "fine_art_creation";
+      productionSettingsField.hidden = workflow !== "production";
+      prepressSettingsField.hidden = workflow !== "prepress";
+      hint.textContent = {
+        fine_art_creation: "Create an original fine-art concept and upscale-ready master image prompt.",
+        production: "Upscale one attached image into 300 DPI print-ready fine-art masters.",
+        prepress: "Run the local Digital Art Print Auditor plan against prepared Upscale input without paid rendering. Run and dry run need explicit confirmation.",
+      }[workflow];
+      if (workflow === "fine_art_creation") {
+        topicInputLabel.textContent = "Step 5. Optional run label";
+        attachmentStepLabel.textContent = "Step 4. Attach context (optional)";
+        topicInput.placeholder = "Optional run label (subject is set above)...";
+      } else if (workflow === "production") {
+        topicInputLabel.textContent = "Step 3. Optional batch label";
+        attachmentStepLabel.textContent = "Step 1. Attach source image (required)";
+        topicInput.placeholder = "Optional batch label...";
+      } else {
+        topicInputLabel.textContent = "Step 3. Optional audit label";
+        attachmentStepLabel.textContent = "Step 2. Attach references (optional)";
+        topicInput.placeholder = "Optional audit label...";
+      }
+      if (productionStepLabel) {
+        productionStepLabel.textContent = "Step 2. Select source image and upscale target";
+      }
+      if (prepressStepLabel) {
+        prepressStepLabel.textContent = "Step 1. Configure digital art print auditor mode";
+      }
+      syncReviewOptions();
+      syncProductionOptions();
+      syncCreationSizeControls();
+      syncPrepressControls();
+      refreshProductionSourceOptions();
+      updateRunReadiness();
+    }
+
+    function syncProductionOptions() {
+      const target = document.getElementById("productionTargetFormat");
+      const orientation = document.getElementById("productionOrientation");
+      if (!target || !orientation) return;
+      const squareOption = orientation.querySelector('option[value="square"]');
+      const squareEnabled = target.value === "1:1 MAX";
+      if (squareOption) squareOption.disabled = !squareEnabled;
+      if (!squareEnabled && orientation.value === "square") {
+        orientation.value = "auto";
+      }
+      updateRunReadiness();
+    }
+
+    function refreshProductionSourceOptions() {
+      const source = document.getElementById("productionSourceAttachmentId");
+      if (!source) return;
+      const imageAttachments = stagedAttachments.filter((attachment) => attachment.kind === "image");
+      const current = source.value;
+      const options = ['<option value="">Choose attached image...</option>'];
+      imageAttachments.forEach((attachment) => {
+        const name = `${attachment.name} (${formatBytes(attachment.size)})`;
+        options.push(`<option value="${escapeHtml(String(attachment.id))}">${escapeHtml(name)}</option>`);
+      });
+      source.innerHTML = options.join("");
+      if (current && imageAttachments.some((attachment) => String(attachment.id) === current)) {
+        source.value = current;
+      } else if (imageAttachments.length === 1) {
+        source.value = String(imageAttachments[0].id);
+      } else {
+        source.value = "";
+      }
+      updateRunReadiness();
+    }
+
+    function setRunValidationMessage(state, message) {
+      const box = document.getElementById("runValidationMessage");
+      if (!box) return;
+      box.dataset.state = state;
+      box.textContent = message;
+    }
+
+    function getRunValidationState(workflow) {
+      if (latestStatusData?.approval_pending) {
+        return { ok: false, state: "blocked", message: "Resolve the pending approval before queueing another run." };
+      }
+
+      if (workflow === "fine_art_creation") {
+        const creationContext = readCreationContext();
+        if (!creationContext.creationSubject) {
+          return { ok: false, state: "blocked", message: "Enter a subject or starting idea before queueing Fine Art Creation." };
+        }
+        if (creationContext.creationSubject.length > 220) {
+          return { ok: false, state: "blocked", message: "Subject must be 220 characters or fewer." };
+        }
+        if (!/^\d{1,2}:\d{1,2}$/.test(creationContext.creationRatio)) {
+          return { ok: false, state: "blocked", message: "Ratio must use W:H format, for example 4:5 or 9:16." };
+        }
+        const commandField = document.getElementById("promptCreatorCommand");
+        const command = (commandField?.value || "").trim() || buildPromptCreatorCommand(creationContext);
+        if (command.length > 20000) {
+          return { ok: false, state: "blocked", message: "Fine Art Prompt Creator command must be 20,000 characters or fewer." };
+        }
+        const override = (document.getElementById("creationPromptOverrideInput")?.value || "").trim();
+        if (override && !evaluatePromptDeliveryQuality(override)) {
+          return { ok: false, state: "blocked", message: "Prompt override must be a complete approved Prompt Creator delivery." };
+        }
+        return { ok: true, state: "ready", message: "Fine Art Creation is ready to queue." };
+      }
+
+      if (workflow === "production") {
+        const target = document.getElementById("productionTargetFormat")?.value || "A1";
+        const orientation = document.getElementById("productionOrientation")?.value || "auto";
+        if (orientation === "square" && target !== "1:1 MAX") {
+          return { ok: false, state: "blocked", message: "Square orientation is available only with target format 1:1 MAX." };
+        }
+        const imageAttachments = stagedAttachments.filter((attachment) => attachment.kind === "image");
+        if (!imageAttachments.length) {
+          return { ok: false, state: "blocked", message: "Attach at least one image before starting Upscale." };
+        }
+        const sourceId = document.getElementById("productionSourceAttachmentId")?.value || "";
+        if (imageAttachments.length > 1 && !sourceId) {
+          return { ok: false, state: "blocked", message: "Choose the source image for Upscale when multiple images are attached." };
+        }
+        if (sourceId && !imageAttachments.some((attachment) => String(attachment.id) === sourceId)) {
+          return { ok: false, state: "blocked", message: "Selected source image is no longer available. Re-select it before queueing." };
+        }
+        return { ok: true, state: "ready", message: "Upscale is ready to queue." };
+      }
+
+      if (workflow === "prepress") {
+        const mode = document.getElementById("prepressMode")?.value || "plan";
+        const confirm = Boolean(document.getElementById("prepressConfirmExternalActions")?.checked);
+        const overrideReason = (document.getElementById("prepressQualityGateOverride")?.value || "").trim();
+        const grade = String(latestStatusData?.review?.print?.selected?.grade || "").toLowerCase();
+        if (mode === "run" && !confirm) {
+          return { ok: false, state: "blocked", message: "Enable external-action confirmation before queueing Digital Art Print Auditor run mode." };
+        }
+        if (mode === "run" && ["critical", "caveats"].includes(grade) && !overrideReason) {
+          return { ok: false, state: "blocked", message: "Current print grade requires a quality gate override reason before run mode can be queued." };
+        }
+        if (overrideReason.length > 600) {
+          return { ok: false, state: "blocked", message: "Quality gate override reason must be 600 characters or fewer." };
+        }
+        const modeLabel = mode === "dry_run" ? "dry run" : mode;
+        return { ok: true, state: "ready", message: `Digital Art Print Auditor ${modeLabel} mode is ready to queue.` };
+      }
+
+      return { ok: true, state: "pending", message: "Select a workflow to begin." };
+    }
+
+    function updateRunReadiness() {
+      const button = document.getElementById("queueRunBtn");
+      if (!button) return;
+      if (submittingRun) {
+        button.disabled = true;
+        setRunValidationMessage("pending", "Submitting run to orchestrator...");
+        return;
+      }
+      const workflow = document.getElementById("workflowMode")?.value || "fine_art_creation";
+      const validation = getRunValidationState(workflow);
+      button.disabled = !validation.ok;
+      setRunValidationMessage(validation.state, validation.message);
+    }
+
+    function replaceSelectOptions(select, values, labels = {}) {
+      if (!select || !Array.isArray(values) || !values.length) return;
+      const current = select.value;
+      select.innerHTML = values.map((value) => {
+        const raw = String(value);
+        const text = labels[raw] || raw;
+        return `<option value="${escapeHtml(raw)}">${escapeHtml(text)}</option>`;
+      }).join("");
+      if (values.map((item) => String(item)).includes(current)) {
+        select.value = current;
+      }
+    }
+
+    async function loadApiManifest() {
+      try {
+        const response = await fetch(`${apiBase}/routes`, { cache: "no-store" });
+        if (!response.ok) return;
+        const manifest = await response.json();
+        const targetFormats = Array.isArray(manifest.upscale_target_formats)
+          ? manifest.upscale_target_formats.map((value) => String(value))
+          : uiCapabilities.targetFormats;
+        const orientationValues = Array.isArray(manifest.upscale_orientation_values)
+          ? manifest.upscale_orientation_values.map((value) => String(value))
+          : uiCapabilities.orientationValues;
+        const aspectModeValues = Array.isArray(manifest.upscale_aspect_mode_values)
+          ? manifest.upscale_aspect_mode_values.map((value) => String(value))
+          : uiCapabilities.aspectModeValues;
+        const creationSizeFamilies = Array.isArray(manifest.creation_size_families)
+          ? manifest.creation_size_families.map((value) => String(value))
+          : uiCapabilities.creationSizeFamilies;
+        const creationASeriesSizes = Array.isArray(manifest.creation_a_series_sizes)
+          ? manifest.creation_a_series_sizes.map((value) => String(value))
+          : uiCapabilities.creationASeriesSizes;
+        const creationSquareSizesCm = Array.isArray(manifest.creation_square_sizes_cm)
+          ? manifest.creation_square_sizes_cm.map((value) => Number(value)).filter((value) => Number.isFinite(value))
+          : uiCapabilities.creationSquareSizesCm;
+        const creationOrientationValues = Array.isArray(manifest.creation_orientation_values)
+          ? manifest.creation_orientation_values.map((value) => String(value))
+          : uiCapabilities.creationOrientationValues;
+        uiCapabilities.targetFormats = targetFormats;
+        uiCapabilities.orientationValues = orientationValues;
+        uiCapabilities.aspectModeValues = aspectModeValues;
+        uiCapabilities.creationSizeFamilies = creationSizeFamilies;
+        uiCapabilities.creationASeriesSizes = creationASeriesSizes;
+        uiCapabilities.creationSquareSizesCm = creationSquareSizesCm;
+        uiCapabilities.creationOrientationValues = creationOrientationValues;
+
+        replaceSelectOptions(document.getElementById("productionTargetFormat"), targetFormats);
+        replaceSelectOptions(document.getElementById("productionOrientation"), orientationValues, {
+          auto: "Auto",
+          portrait: "Portrait",
+          landscape: "Landscape",
+          square: "Square",
+        });
+        replaceSelectOptions(document.getElementById("productionAspectMode"), aspectModeValues, {
+          preserve: "Preserve",
+          crop: "Crop",
+          extend: "Extend",
+          full_bleed: "Full bleed",
+        });
+        replaceSelectOptions(document.getElementById("creationSizeFamily"), creationSizeFamilies, {
+          a_series: "A-series",
+          square_1_1: "1:1",
+        });
+        replaceSelectOptions(document.getElementById("creationASeriesSize"), creationASeriesSizes);
+        replaceSelectOptions(
+          document.getElementById("creationSquareSizeCm"),
+          creationSquareSizesCm.map((value) => String(value)),
+          Object.fromEntries(creationSquareSizesCm.map((value) => [String(value), `${value}cm`]))
+        );
+        const orientationCheckboxes = {
+          portrait: document.getElementById("creationOrientationPortrait"),
+          landscape: document.getElementById("creationOrientationLandscape"),
+          vertical: document.getElementById("creationOrientationVertical"),
+        };
+        Object.entries(orientationCheckboxes).forEach(([value, input]) => {
+          if (!input) return;
+          input.parentElement.hidden = !creationOrientationValues.includes(value);
+        });
+        if (!creationOrientationValues.includes("portrait")) {
+          const portraitInput = document.getElementById("creationOrientationPortrait");
+          if (portraitInput) portraitInput.checked = false;
+        }
+        syncCreationSizeControls();
+        syncProductionOptions();
+        refreshProductionSourceOptions();
+        updateRunReadiness();
+      } catch {
+        return;
+      }
+    }
+
+    function toggleSidebar() {
+      const appShell = document.getElementById("appShell");
+      const collapsed = appShell.classList.toggle("is-sidebar-collapsed");
+      const toggle = document.getElementById("sidebarToggle");
+      toggle.setAttribute("aria-expanded", String(!collapsed));
+      toggle.title = collapsed ? "Open control desk" : "Close control desk";
+      document.getElementById("sidebarToggleLabel").textContent = collapsed ? "Open control desk" : "Close control desk";
+      window.setTimeout(() => {
+        window.requestAnimationFrame(renderWorkflowLines);
+        if (!collapsed && document.getElementById("openImageApprovalBtn")) {
+          document.getElementById("creationReview").scrollIntoView({ block: "center", behavior: "smooth" });
+        }
+      }, 240);
+    }
+
+    function renderHumanReview(data) {
+      latestStatusData = data || {};
+      const review = latestStatusData.review || {};
+      const creation = review.creation || {};
+      const print = review.print || {};
+      const pending = latestStatusData.approval_pending;
+      const reviewState = document.getElementById("reviewState");
+      const state = pending ? "awaiting_approval" : (latestStatusData.status || "idle");
+      reviewState.dataset.state = state;
+      reviewState.textContent = pending ? "Decision needed" : state.replaceAll("_", " ");
+
+      const stagedPreview = stagedAttachments.find((attachment) => attachment.kind === "image");
+      const renderedPreview = creation.render_url ? { url: creation.render_url, name: "Rendered output" } : null;
+      const preview = creation.preview || renderedPreview;
+      const creationAvailable = creation.available || Boolean(preview);
+      const previewUrl = safeResultUrl(preview?.url);
+      const mediaKind = previewMediaKind(preview);
+      const missingPreviewReason = !previewUrl ? previewUnavailableReason(review, creation) : "";
+      const thumbnail = previewUrl
+        ? mediaKind === "video"
+          ? `<button class="creation-thumbnail creation-thumbnail-button has-image" id="openImageApprovalBtn" type="button" aria-label="Open creation image approval preview" title="Open image approval preview"><span class="creation-empty">Open rendered output</span></button>`
+          : `<button class="creation-thumbnail creation-thumbnail-button has-image" id="openImageApprovalBtn" type="button" aria-label="Open creation image approval preview" title="Open image approval preview"><img src="${escapeHtml(previewUrl)}" alt="Creation reference preview" /></button>`
+        : '<button class="creation-thumbnail creation-thumbnail-button is-empty" id="openImageApprovalBtn" type="button" aria-label="Open creation image approval preview" title="Why no image is available"><span class="creation-empty">No visual asset</span></button>';
+      const creationTitle = creation.available ? creation.title : (preview?.name || "No creation selected");
+      const creationDetail = creation.hook
+        || creation.visual
+        || (preview
+          ? mediaKind === "video"
+            ? "Rendered output is available for review."
+            : "Rendered output is available for review."
+          : missingPreviewReason
+            ? `No rendered image is available yet. ${missingPreviewReason}`
+            : "No rendered image is available yet.");
+      document.getElementById("creationReview").innerHTML = creationAvailable ? `
+        <div class="creation-preview">${thumbnail}<div><span class="review-kicker">${creation.score ? `Score ${escapeHtml(creation.score)}` : preview ? "Rendered output" : "Selected creation"}</span><strong class="review-name">${escapeHtml(creationTitle)}</strong><p class="review-detail">${escapeHtml(creationDetail)}</p></div></div>
+        ${creation.render_url ? `<p class="review-detail">Renderer output is available in the final result.</p>` : ""}` : stagedPreview
+          ? `<p class="review-copy muted">No creation review is available yet. Next queued run has a staged image: ${escapeHtml(stagedPreview.name)}.</p>`
+          : '<p class="review-copy muted">No creation is ready for review.</p>';
+      const imagePreviewButton = document.getElementById("openImageApprovalBtn");
+      if (imagePreviewButton) imagePreviewButton.addEventListener("click", () => openImageApproval(preview, creationTitle, missingPreviewReason));
+
+      const selected = print.selected;
+      if (print.available) {
+        const grade = selected?.grade || "pending";
+        const gradeClass = grade === "critical" ? "grade-critical" : grade === "caveats" ? "grade-caveats" : grade === "ok" ? "grade-ok" : "";
+        const flag = selected?.quality_flags?.[0] || selected?.error || "No quality flags reported.";
+        document.getElementById("printReview").innerHTML = `
+          <span class="review-kicker">${escapeHtml(`${print.done || 0}/${print.total || 0} images reviewed`)}</span><strong class="review-name">${escapeHtml(selected?.name || "Awaiting selected delivery")}</strong>
+          <div class="print-facts"><span class="print-fact"><span>PPI</span><strong>${escapeHtml(selected?.ppi || print.print_ppi || "--")}</strong></span><span class="print-fact"><span>Size</span><strong>${escapeHtml(selected?.print_size_cm || print.print_size || "--")}</strong></span><span class="print-fact"><span>Grade</span><strong class="${gradeClass}">${escapeHtml(grade)}</strong></span></div>
+          <p class="review-detail">${escapeHtml(flag)}</p>`;
+      } else {
+        document.getElementById("printReview").innerHTML = '<p class="review-copy muted">No Upscale batch has been reported yet.</p>';
+      }
+
+      const warnings = Array.isArray(review.warnings) ? review.warnings : [];
+      document.getElementById("warningList").innerHTML = warnings.length ? warnings.map((warning) => `<div class="warning-item" data-severity="${warning.severity === "error" ? "error" : "warning"}"><span class="warning-scope">${escapeHtml(warning.scope)}</span>${escapeHtml(warning.message)}</div>`).join("") : '<p class="review-copy muted">No current system warnings.</p>';
+      document.getElementById("reviewActions").hidden = !pending;
+      document.getElementById("approveBtn").disabled = !pending;
+      document.getElementById("rejectBtn").disabled = !pending;
+      document.getElementById("viewFinalResultBtn").disabled = !latestStatusData.final_result?.available;
+      refreshIcons();
+    }
+
+    function openImageApproval(preview, title, missingReason = "") {
+      const imageUrl = safeResultUrl(preview?.url);
+      const mediaKind = previewMediaKind(preview);
+      document.getElementById("imageApprovalTitle").textContent = title || "Creation image";
+      document.getElementById("imageApprovalBody").innerHTML = imageUrl ? `
+        <div class="image-approval-frame">${mediaKind === "video"
+          ? `<video id="imageApprovalVideo" src="${escapeHtml(imageUrl)}" controls preload="metadata" playsinline></video>`
+          : `<img id="imageApprovalImage" src="${escapeHtml(imageUrl)}" alt="${escapeHtml(title || "Creation image")}" />`
+        }</div>
+        <p class="review-copy">${escapeHtml(preview.name || "Creation reference")}</p>
+        ${latestStatusData.approval_pending ? '<div class="review-actions"><button class="button button-primary" id="imageApproveBtn" type="button"><i data-lucide="check"></i><span>Approve</span></button><button class="button button-danger" id="imageRejectBtn" type="button"><i data-lucide="x"></i><span>Reject</span></button></div>' : ""}` : `<div class="image-approval-frame"><p class="image-approval-empty">No image asset is attached or rendered for this review.</p></div>${missingReason ? `<p class="review-copy">${escapeHtml(missingReason)}</p>` : ""}`;
+      const previewImage = document.getElementById("imageApprovalImage");
+      if (previewImage) {
+        previewImage.addEventListener("error", () => {
+          const frame = previewImage.closest(".image-approval-frame");
+          if (!frame) return;
+          frame.innerHTML = '<p class="image-approval-empty">This image is unavailable right now. Upload it again or select another asset.</p>';
+        }, { once: true });
+      }
+      const previewVideo = document.getElementById("imageApprovalVideo");
+      if (previewVideo) {
+        previewVideo.addEventListener("error", () => {
+          const frame = previewVideo.closest(".image-approval-frame");
+          if (!frame) return;
+          frame.innerHTML = '<p class="image-approval-empty">This rendered output is unavailable right now. Re-run generation or select another asset.</p>';
+        }, { once: true });
+      }
+      document.getElementById("imageApproveBtn")?.addEventListener("click", async () => { await submitApproval("approve"); imageApprovalModal.close(); });
+      document.getElementById("imageRejectBtn")?.addEventListener("click", async () => { await submitApproval("reject"); imageApprovalModal.close(); });
+      refreshIcons();
+      if (!imageApprovalModal.open) imageApprovalModal.showModal();
+    }
+
+    function openFinalResult() {
+      const review = latestStatusData.review || {};
+      const creation = review.creation || {};
+      const print = review.print || {};
+      const result = latestStatusData.final_result || {};
+      const outputUrl = safeResultUrl(result.url);
+      const title = result.title || creation.title || print.selected?.name || "No result available";
+      document.getElementById("resultModalTitle").textContent = title;
+      document.getElementById("resultModalBody").innerHTML = `
+        <article class="detail-block"><p class="modal-label">Workflow status</p><h3>${escapeHtml(latestStatusData.status || "idle")}</h3><p class="detail-copy">${escapeHtml(latestStatusData.message || "No completed workflow is available.")}</p></article>
+        <article class="detail-block"><p class="modal-label">Creation</p><h3>${escapeHtml(creation.title || "Not available")}</h3><p class="detail-copy">${escapeHtml(creation.hook || creation.visual || creation.prompt || "No creation detail is available.")}</p></article>
+        <article class="detail-block"><p class="modal-label">Print Quality Auditor</p><h3>${escapeHtml(print.selected?.final || print.selected?.name || "Not available")}</h3><p class="detail-copy">${escapeHtml(print.selected?.grade ? `Grade: ${print.selected.grade}` : "No print audit is available.")}</p></article>
+        ${outputUrl ? `<a class="button button-primary result-output-link" href="${escapeHtml(outputUrl)}" target="_blank" rel="noopener noreferrer"><span>Open final output</span><i data-lucide="arrow-up-right"></i></a>` : ""}`;
+      refreshIcons();
+      if (!resultModal.open) resultModal.showModal();
+    }
+
+    async function submitApproval(decision) {
+      const buttons = [document.getElementById("approveBtn"), document.getElementById("rejectBtn")];
+      buttons.forEach((button) => { button.disabled = true; });
+      try {
+        const response = await fetch(`${apiBase}/approvals`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ decision }) });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(result.error || "Unable to apply the human decision.");
+        setActivity(decision === "approve" ? "Approval recorded. The queued workflow is continuing." : "Rejection recorded. The queued workflow has stopped.");
+        renderHumanReview(result.state);
+        await fetchStatus();
+      } catch (error) {
+        setActivity(error.message || "The human decision could not be applied.");
+      } finally {
+        buttons.forEach((button) => { button.disabled = !latestStatusData.approval_pending; });
+      }
+    }
+
+    function stateLabel(state) { return state === "fetching" ? "Fetching tool" : state; }
+
+    function renderRoleKey() {
+      document.getElementById("roleKey").innerHTML = `<span class="role-key-title">Workflow</span>${workflowLanes.map((lane) => `<span class="role-key-item" style="--key-color:${lane.color}"><span class="role-key-swatch"></span>${lane.label}</span>`).join("")}`;
+    }
+
+    function renderNodes() {
+      nodesContainer.innerHTML = workflowLanes.map((lane) => {
+        const laneAgents = agents.filter((agent) => agent.lane === lane.id);
+        return `<section class="workflow-lane" style="--lane-color:${lane.color}" aria-label="${lane.label}">
+          <header class="lane-heading"><div><p class="lane-label">${lane.label}</p><p class="lane-count">${laneAgents.length} agents</p></div><p class="lane-count">Vertical workflow</p></header>
+          <div class="workflow-track">${laneAgents.map((agent, index) => {
+            return `<div class="workflow-step"><button class="agent-node ${agent.id === "orchestrator" ? "orchestrator" : "peer-agent"}" data-agent="${agent.id}" data-state="idle" style="--role-color:${lane.color};--role-tint:${lane.tint}" type="button" aria-haspopup="dialog" aria-label="${agent.name}: ${agent.role}">
+              <span class="node-topline"><span class="node-kicker">${lane.label}</span><span class="node-state" data-state="idle">Idle</span></span>
+              <span class="node-name">${agent.name}</span><span class="node-role">${agent.role}</span><span class="node-task">${agent.task}</span><span class="node-source">${agent.source}</span>
+            </button></div>`;
+          }).join("")}</div>
+        </section>`;
+      }).join("");
+      workflowOrder.forEach((id) => document.querySelector(`[data-agent="${id}"]`).addEventListener("click", () => openAgentModal(id)));
+      window.requestAnimationFrame(renderWorkflowLines);
+    }
+
+    function updateNode(id, state) {
+      officeState[id] = state;
+      const node = document.querySelector(`[data-agent="${id}"]`);
+      const label = node.querySelector(".node-state");
+      node.dataset.state = state;
+      label.dataset.state = state;
+      label.textContent = stateLabel(state);
+      applyFilters();
+    }
+
+    function updateRoute(route, state) {
+      lineState[route] = state;
+      const path = linesLayer.querySelector(`[data-route="${route}"]`);
+      const pulse = linesLayer.querySelector(`[data-pulse="${route}"]`);
+      if (!path || !pulse) return;
+      path.classList.remove("is-active", "is-complete", "is-error", "is-monitoring");
+      pulse.classList.remove("is-visible", "is-error", "is-monitoring", "is-complete");
+      if (state === "idle") { path.classList.add("is-monitoring"); pulse.classList.add("is-visible", "is-monitoring"); }
+      if (state === "active") { path.classList.add("is-active"); pulse.classList.add("is-visible"); }
+      if (state === "complete") { path.classList.add("is-complete", "is-monitoring"); pulse.classList.add("is-visible", "is-monitoring", "is-complete"); }
+      if (state === "error") { path.classList.add("is-error"); pulse.classList.add("is-visible", "is-error"); }
+    }
+
+    function routePath(fromNode, toNode, officeRect) {
+      const from = fromNode.getBoundingClientRect();
+      const to = toNode.getBoundingClientRect();
+      const source = { x: from.left - officeRect.left + from.width / 2, y: from.top - officeRect.top + from.height / 2 };
+      const target = { x: to.left - officeRect.left + to.width / 2, y: to.top - officeRect.top + to.height / 2 };
+      if (to.top >= from.bottom - 8) {
+        const startY = from.bottom - officeRect.top;
+        const endY = to.top - officeRect.top;
+        const bend = Math.max(24, (endY - startY) * 0.38);
+        return `M ${source.x} ${startY} C ${source.x} ${startY + bend} ${target.x} ${endY - bend} ${target.x} ${endY}`;
+      }
+      if (to.left >= from.right - 8) {
+        const startX = from.right - officeRect.left;
+        const endX = to.left - officeRect.left;
+        const bend = Math.max(22, (endX - startX) * 0.4);
+        return `M ${startX} ${source.y} C ${startX + bend} ${source.y} ${endX - bend} ${target.y} ${endX} ${target.y}`;
+      }
+      const startX = from.left - officeRect.left;
+      const endX = to.right - officeRect.left;
+      const bend = Math.max(22, (startX - endX) * 0.4);
+      return `M ${startX} ${source.y} C ${startX - bend} ${source.y} ${endX + bend} ${target.y} ${endX} ${target.y}`;
+    }
+
+    function renderWorkflowLines() {
+      const officeRect = office.getBoundingClientRect();
+      const width = Math.max(1, Math.round(office.clientWidth));
+      const height = Math.max(1, Math.round(office.scrollHeight));
+      linesLayer.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      linesLayer.setAttribute("width", String(width));
+      linesLayer.setAttribute("height", String(height));
+      linesLayer.innerHTML = workflowRoutes.map((route) => {
+        const fromNode = document.querySelector(`[data-agent="${route.from}"]`);
+        const toNode = document.querySelector(`[data-agent="${route.to}"]`);
+        if (!fromNode || !toNode) return "";
+        return `<path class="workflow-path ${route.type === "dispatch" ? "is-dispatch" : ""}" data-route="${route.id}" d="${routePath(fromNode, toNode, officeRect)}" /><circle class="workflow-pulse" data-pulse="${route.id}" r="4.5" />`;
+      }).join("");
+      routeOrder.forEach((route) => updateRoute(route, lineState[route] || "idle"));
+    }
+
+    function animateWorkflowPulses(timestamp) {
+      routeOrder.forEach((route, index) => {
+        const state = lineState[route];
+        if (!["active", "error", "idle", "complete"].includes(state)) return;
+        const path = linesLayer.querySelector(`[data-route="${route}"]`);
+        const pulse = linesLayer.querySelector(`[data-pulse="${route}"]`);
+        if (!path || !pulse) return;
+        const duration = state === "active" ? 1150 : state === "error" ? 900 : 4200;
+        const progress = (timestamp / duration + index * 0.14 + (state === "error" ? 0.55 : 0)) % 1;
+        const point = path.getPointAtLength(path.getTotalLength() * progress);
+        pulse.setAttribute("cx", point.x.toFixed(2));
+        pulse.setAttribute("cy", point.y.toFixed(2));
+      });
+      window.requestAnimationFrame(animateWorkflowPulses);
+    }
+
+    function applyFilters() {
+      const activeOnly = document.getElementById("activeOnly").checked;
+      workflowOrder.forEach((id) => document.querySelector(`[data-agent="${id}"]`).classList.toggle("is-filtered", activeOnly && !activeStates.has(officeState[id])));
+    }
+
+    function setActivity(message) {
+      document.getElementById("activityEvent").textContent = message;
+      document.getElementById("activityTime").textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+    }
+
+    function resetOffice() {
+      simulationId += 1;
+      demoMode = false;
+      workflowOrder.forEach((id) => updateNode(id, "idle"));
+      routeOrder.forEach((route) => updateRoute(route, "idle"));
+      setActivity("Office reset. Monitoring the live orchestrator status.");
+      applyServerVisualState(lastServerStatus);
+    }
+
+    function runSimulation() {
+      simulationId += 1;
+      const runId = simulationId;
+      demoMode = true;
+      workflowOrder.forEach((id) => updateNode(id, "idle"));
+      routeOrder.forEach((route) => updateRoute(route, "idle"));
+      setActivity("Preview started. Walking the complete system-agent map.");
+      runPreviewStep(runId, 0);
+    }
+
+    function runPreviewStep(runId, index) {
+      if (runId !== simulationId || index >= workflowOrder.length) return;
+      const id = workflowOrder[index];
+      const agent = agentById[id];
+      const route = routeByTarget[id];
+      if (route) updateRoute(route, "active");
+      updateNode(id, "thinking");
+      setActivity(`${agent.name}: ${agent.role}.`);
+      window.setTimeout(() => {
+        if (runId !== simulationId) return;
+        updateNode(id, "complete");
+        if (route) updateRoute(route, "complete");
+        if (index + 1 < workflowOrder.length) runPreviewStep(runId, index + 1);
+        else setActivity("System-agent preview complete.");
+      }, 260);
+    }
+
+    function setStatusSummary(status, message, workflow = lastServerWorkflow) {
+      const normalized = status || "idle";
+      const beacon = document.getElementById("statusBeacon");
+      beacon.className = "status-beacon";
+      if (["running", "queued"].includes(normalized)) beacon.classList.add("is-active");
+      if (["retrying", "awaiting_approval", "rejected"].includes(normalized)) beacon.classList.add("is-warning");
+      if (normalized === "error") beacon.classList.add("is-error");
+      document.getElementById("statusMessage").textContent = message || "Dashboard ready";
+      document.getElementById("statusCaption").textContent = `STATUS: ${normalized.toUpperCase()}`;
+      document.getElementById("integrationStatus").style.color = normalized === "error" ? "var(--red)" : ["retrying", "awaiting_approval", "rejected"].includes(normalized) ? "var(--amber)" : "var(--green)";
+      document.getElementById("integrationStatusLabel").textContent = `Workflow: ${(workflowLabels[workflow] || workflow).toLowerCase()}`;
+    }
+
+    function applyServerVisualState(status, workflow = lastServerWorkflow) {
+      if (demoMode) return;
+      const activeIds = workflowAgentIds[workflow] || workflowAgentIds.fine_art_creation;
+      const activeSet = new Set(activeIds);
+      const activeRoutes = workflowRoutes.filter((route) => activeSet.has(route.from) && activeSet.has(route.to)).map((route) => route.id);
+      workflowOrder.forEach((id) => updateNode(id, "idle"));
+      routeOrder.forEach((route) => updateRoute(route, "idle"));
+      if (status === "running") {
+        updateNode("orchestrator", "thinking");
+        activeIds.filter((id) => id !== "orchestrator").forEach((id) => updateNode(id, "queued"));
+        activeRoutes.forEach((route) => updateRoute(route, "active"));
+      } else if (status === "queued") {
+        updateNode("orchestrator", "queued");
+      } else if (status === "retrying") {
+        updateNode("orchestrator", "fetching");
+        activeIds.filter((id) => id !== "orchestrator").forEach((id) => updateNode(id, "queued"));
+        activeRoutes.forEach((route) => updateRoute(route, "active"));
+      } else if (status === "awaiting_approval") {
+        activeIds.filter((id) => id !== "approval-gate").forEach((id) => updateNode(id, "complete"));
+        updateNode("approval-gate", "fetching");
+      } else if (status === "rejected") {
+        activeIds.forEach((id) => updateNode(id, "complete"));
+        updateNode("approval-gate", "fetching");
+      } else if (status === "completed") {
+        activeIds.forEach((id) => updateNode(id, "complete"));
+        activeRoutes.forEach((route) => updateRoute(route, "complete"));
+      } else if (status === "error") {
+        activeIds.forEach((id) => updateNode(id, "error"));
+        activeRoutes.forEach((route) => updateRoute(route, "error"));
+      }
+    }
+
+    function updateMetrics(data) {
+      const metrics = data.metrics || {};
+      const completed = Number(metrics.runs_completed || 0);
+      const failed = Number(metrics.runs_failed || 0);
+      const total = Number(metrics.runs_total || completed + failed);
+      document.getElementById("queueDepth").textContent = data.queue_depth ?? 0;
+      document.getElementById("runsTotal").textContent = total;
+      document.getElementById("successRate").textContent = total ? `${Math.round((completed / total) * 100)}%` : "--";
+      document.getElementById("lastDuration").textContent = metrics.last_duration_seconds ? `${metrics.last_duration_seconds}s` : "--";
+    }
+
+    async function fetchStatus() {
+      try {
+        const response = await fetch(`${apiBase}/status`, { cache: "no-store" });
+        if (!response.ok) throw new Error(`Status request failed: ${response.status}`);
+        const data = await response.json();
+        lastServerStatus = data.status || "idle";
+        lastServerWorkflow = data.workflow || "fine_art_creation";
+        updateMetrics(data);
+        setStatusSummary(lastServerStatus, data.message, lastServerWorkflow);
+        applyServerVisualState(lastServerStatus, lastServerWorkflow);
+        renderHumanReview(data);
+        updateRunReadiness();
+      } catch (error) {
+        lastServerWorkflow = "fine_art_creation";
+        setStatusSummary("error", "Status connection unavailable");
+        renderHumanReview({ status: "error", review: { warnings: [{ scope: "Dashboard", severity: "error", message: "Status connection unavailable." }] } });
+        updateRunReadiness();
+      }
+    }
+
+    async function queueLiveRun() {
+      const button = document.getElementById("queueRunBtn");
+      const workflow = document.getElementById("workflowMode").value;
+      const validation = getRunValidationState(workflow);
+      if (!validation.ok) {
+        setRunValidationMessage(validation.state, validation.message);
+        setActivity(validation.message);
+        updateRunReadiness();
+        return;
+      }
+      const topic = document.getElementById("topicInput").value.trim();
+      const targetFormat = document.getElementById("productionTargetFormat").value;
+      const orientation = document.getElementById("productionOrientation").value;
+      const aspectMode = document.getElementById("productionAspectMode").value;
+      const sourceAttachmentId = (document.getElementById("productionSourceAttachmentId")?.value || "").trim();
+      const prepressMode = document.getElementById("prepressMode")?.value || "plan";
+      const prepressConfirmExternalActions = Boolean(document.getElementById("prepressConfirmExternalActions")?.checked);
+      const prepressQualityGateOverride = (document.getElementById("prepressQualityGateOverride")?.value || "").trim();
+      const creationContext = readCreationContext();
+      const creationSubject = creationContext.creationSubject;
+      const creationRatio = creationContext.creationRatio;
+      const creationEnvironment = creationContext.creationEnvironment;
+      const creationSizeFamily = creationContext.creationSizeFamily;
+      const creationASeriesSize = creationContext.creationASeriesSize;
+      const creationSquareSizeCm = creationContext.creationSquareSizeCm;
+      const creationOrientations = creationContext.creationOrientations;
+      const promptCreatorCommandField = document.getElementById("promptCreatorCommand");
+      const promptCreatorCommand = ((promptCreatorCommandField?.value || "").trim() || buildPromptCreatorCommand(creationContext));
+      const promptOverride = (document.getElementById("creationPromptOverrideInput")?.value || "").trim();
+      const runTopic = topic || (workflow === "fine_art_creation" ? creationSubject : workflow === "production" ? "Upscale" : "Digital Art Print Auditor");
+      submittingRun = true;
+      button.disabled = true;
+      updateRunReadiness();
+      demoMode = false;
+      const render = workflow === "fine_art_creation" && Boolean(document.getElementById("fineArtRenderEnabled")?.checked);
+      setActivity("Submitting your brief to the Orchestrator queue.");
+      try {
+        const body = {
+          topic: runTopic,
+          workflow,
+          prepress_mode: prepressMode,
+          render,
+          max_retries: 2,
+          retry_delay_seconds: 15,
+          require_approval: false,
+          attachments: stagedAttachments,
+          links: stagedLinks,
+        };
+        if (workflow === "fine_art_creation") {
+          body.subject = creationSubject;
+          body.ratio = creationRatio;
+          body.intended_environment = creationEnvironment;
+          body.prompt_creator_command = promptCreatorCommand;
+          body.creation_prompt_override = promptOverride;
+          body.art_dna_mode = "AUTO";
+          body.creative_freedom = creationDialValue("creativeFreedomRange", 100);
+          body.originality_priority = creationDialValue("originalityPriorityRange", 100);
+          body.similarity_tolerance = creationDialValue("similarityToleranceRange", 1);
+          body.commercial_cliche_tolerance = creationDialValue("commercialClicheToleranceRange", 0);
+          body.predictability_tolerance = creationDialValue("predictabilityToleranceRange", 0);
+          body.artistic_ambition = creationDialValue("artisticAmbitionRange", 100);
+          body.creation_size_family = creationSizeFamily;
+          body.creation_orientations = creationOrientations;
+          if (creationSizeFamily === "a_series") {
+            body.creation_a_series_size = creationASeriesSize;
+          } else {
+            body.creation_square_size_cm = Number.isFinite(creationSquareSizeCm) ? creationSquareSizeCm : 100;
+          }
+        }
+        if (workflow === "production") {
+          body.target_format = targetFormat;
+          body.orientation = orientation;
+          body.aspect_mode = aspectMode;
+          body.target_dpi = 300;
+          if (sourceAttachmentId) body.source_attachment_id = sourceAttachmentId;
+        }
+        if (workflow === "prepress") {
+          body.confirm_external_actions = prepressConfirmExternalActions;
+          if (prepressQualityGateOverride) body.quality_gate_override_reason = prepressQualityGateOverride;
+        }
+        const response = await fetch(`${apiBase}/runs`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(result.error || `Queue request failed: ${response.status}`);
+        const contextCount = stagedAttachments.length + stagedLinks.length;
+        const upscaleNote = workflow === "production"
+          ? ` Target: ${escapeHtml(targetFormat)} ${escapeHtml(orientation)} (${escapeHtml(aspectMode)}).`
+          : "";
+        const fineArtFormatLabel = creationSizeFamily === "a_series" ? creationASeriesSize : `1:1 ${creationSquareSizeCm}cm`;
+        const fineArtNote = workflow === "fine_art_creation"
+          ? ` Subject: ${escapeHtml(creationSubject)}. Ratio ${escapeHtml(creationRatio)}, ${escapeHtml(creationEnvironment)}, ${escapeHtml(fineArtFormatLabel)} (${escapeHtml(creationOrientations.join(", "))}).`
+          : "";
+        const prepressNote = workflow === "prepress"
+          ? ` Mode: ${escapeHtml(prepressMode.replace("_", " "))}.`
+          : "";
+        document.getElementById("briefMessages").insertAdjacentHTML("beforeend", `<div class="chat-message user">${escapeHtml(runTopic)}</div><div class="chat-message system">${escapeHtml(workflowLabels[workflow])} queued${contextCount ? ` with ${contextCount} attached reference${contextCount === 1 ? "" : "s"}` : ""}.${upscaleNote}${fineArtNote}${prepressNote}</div>`);
+        document.getElementById("topicInput").value = "";
+        stagedAttachments = [];
+        stagedLinks = [];
+        renderAttachmentTray();
+        lastServerWorkflow = result.workflow || workflow;
+        updateNode("orchestrator", "queued");
+        setActivity(`${workflowLabels[lastServerWorkflow]} queued. Orchestrator has ${result.queue_depth || 1} active queue item.`);
+        await fetchStatus();
+      } catch (error) {
+        updateNode("orchestrator", "error");
+        const failure = error?.message || "The live run could not be queued. Check the dashboard server.";
+        setActivity(failure);
+        setRunValidationMessage("blocked", failure);
+      } finally {
+        submittingRun = false;
+        updateRunReadiness();
+      }
+    }
+
+    function selectTab(name) {
+      ["trace", "lineage", "telemetry"].forEach((tab) => {
+        const selected = tab === name;
+        document.getElementById(`${tab}Tab`).setAttribute("aria-selected", String(selected));
+        document.getElementById(`${tab}Panel`).hidden = !selected;
+      });
+    }
+
+    function openAgentModal(id) {
+      const agent = agentById[id];
+      document.getElementById("modalRole").textContent = `${laneById[agent.lane].label} / ${stateLabel(officeState[id])}`;
+      document.getElementById("modalTitle").textContent = agent.name;
+      document.getElementById("traceList").innerHTML = [["Input", "Receives", agent.input], ["Effective job", agent.role, agent.task], ["Output", "Returns", agent.output]].map(([label, title, content]) => `<article class="trace-entry"><span class="trace-time">${label}</span><div class="trace-content"><strong>${escapeHtml(title)}</strong><p>${escapeHtml(content)}</p></div></article>`).join("");
+      document.getElementById("lineageGrid").innerHTML = `<article class="detail-block"><p class="modal-label">Job description</p><h3>${escapeHtml(agent.role)}</h3><p class="detail-copy">${escapeHtml(agent.prompt)}</p></article><article class="detail-block"><p class="modal-label">Workflow path</p><h3>${escapeHtml(agent.source)}</h3><p class="detail-copy">${escapeHtml(agent.lineage)}</p></article><article class="detail-block full"><p class="modal-label">Current state</p><h3>${escapeHtml(stateLabel(officeState[id]))}</h3><p class="detail-copy">Queue depth and run lifecycle are live. Individual role status is an aggregate workflow visualization.</p></article>`;
+      document.getElementById("telemetryGrid").innerHTML = `<article class="detail-block"><p class="modal-label">Execution</p><strong class="telemetry-value">Local</strong></article><article class="detail-block"><p class="modal-label">Current state</p><strong class="telemetry-value">${escapeHtml(stateLabel(officeState[id]))}</strong></article><article class="detail-block"><p class="modal-label">Run mode</p><strong class="telemetry-value">Default</strong></article>`;
+      document.getElementById("toolTableBody").innerHTML = agent.tools.map(([tool, calls, latency, status]) => `<tr><td>${escapeHtml(tool)}</td><td>${calls}</td><td>${latency}</td><td>${status}</td></tr>`).join("");
+      selectTab("trace");
+      modal.showModal();
+    }
+
+    [
+      ["creativeFreedomRange", "creativeFreedomValue", 100],
+      ["originalityPriorityRange", "originalityPriorityValue", 100],
+      ["similarityToleranceRange", "similarityToleranceValue", 1],
+      ["commercialClicheToleranceRange", "commercialClicheToleranceValue", 0],
+      ["predictabilityToleranceRange", "predictabilityToleranceValue", 0],
+      ["artisticAmbitionRange", "artisticAmbitionValue", 100],
+    ].forEach(([rangeId, valueId, fallback]) => bindCreationDial(rangeId, valueId, fallback));
+
+    refreshPromptCreatorCommand();
+    updatePromptDeliveryButtons();
+    updateRunReadiness();
+
+    renderRoleKey();
+    renderNodes();
+    renderAttachmentTray();
+    loadApiManifest().finally(() => syncWorkflowControls());
+    const redrawWorkflowLines = () => window.requestAnimationFrame(renderWorkflowLines);
+    const workflowResizeObserver = new ResizeObserver(redrawWorkflowLines);
+    workflowResizeObserver.observe(office);
+    window.addEventListener("resize", redrawWorkflowLines);
+    if (document.fonts) document.fonts.ready.then(redrawWorkflowLines);
+    document.getElementById("sidebarToggle").addEventListener("click", toggleSidebar);
+    document.getElementById("simulateBtn").addEventListener("click", runSimulation);
+    document.getElementById("resetBtn").addEventListener("click", resetOffice);
+    document.getElementById("queueRunBtn").addEventListener("click", queueLiveRun);
+    document.getElementById("refreshPromptCreatorBtn").addEventListener("click", refreshPromptCreatorCommand);
+    document.getElementById("generatePromptDeliveryBtn").addEventListener("click", generatePromptDelivery);
+    document.getElementById("copyPromptDeliveryBtn").addEventListener("click", copyPromptDelivery);
+    document.getElementById("pastePromptDeliveryBtn").addEventListener("click", pastePromptDeliveryIntoFineArtCreator);
+    document.getElementById("promptDeliveryOutput").addEventListener("input", () => {
+      updatePromptDeliveryButtons();
+      updateRunReadiness();
+    });
+    document.getElementById("creationPromptOverrideInput").addEventListener("input", () => {
+      const value = (document.getElementById("creationPromptOverrideInput")?.value || "").trim();
+      if (!value) {
+        setPromptDeliveryQuality("pending", "Quality approval pending.");
+        updateRunReadiness();
+        return;
+      }
+      if (evaluatePromptDeliveryQuality(value)) {
+        setPromptDeliveryQuality("approved", "Quality approval passed. Fine Art Creator control input is valid.");
+      } else {
+        setPromptDeliveryQuality("rejected", "Fine Art Creator control input is not a complete approved delivery.");
+      }
+      updateRunReadiness();
+    });
+    document.getElementById("addPhotoBtn").addEventListener("click", () => document.getElementById("photoInput").click());
+    document.getElementById("addFileBtn").addEventListener("click", () => document.getElementById("fileInput").click());
+    document.getElementById("showLinkBtn").addEventListener("click", showLinkComposer);
+    document.getElementById("addLinkBtn").addEventListener("click", addLink);
+    document.getElementById("linkInput").addEventListener("keydown", (event) => { if (event.key === "Enter") { event.preventDefault(); addLink(); } });
+    ["photoInput", "fileInput"].forEach((id) => document.getElementById(id).addEventListener("change", async (event) => { await uploadFiles(event.target.files); event.target.value = ""; }));
+    document.getElementById("workflowMode").addEventListener("change", syncWorkflowControls);
+    document.getElementById("creationSizeFamily").addEventListener("change", () => {
+      syncCreationSizeControls();
+      updateRunReadiness();
+    });
+    document.getElementById("productionTargetFormat").addEventListener("change", syncProductionOptions);
+    document.getElementById("productionOrientation").addEventListener("change", updateRunReadiness);
+    document.getElementById("productionAspectMode").addEventListener("change", updateRunReadiness);
+    document.getElementById("productionSourceAttachmentId").addEventListener("change", updateRunReadiness);
+    document.getElementById("prepressMode").addEventListener("change", () => {
+      syncPrepressControls();
+      updateRunReadiness();
+    });
+    document.getElementById("prepressConfirmExternalActions").addEventListener("change", updateRunReadiness);
+    document.getElementById("prepressQualityGateOverride").addEventListener("input", updateRunReadiness);
+    document.getElementById("fineArtRenderEnabled").addEventListener("change", updateRunReadiness);
+    document.getElementById("approvalRequired").addEventListener("change", syncReviewOptions);
+    [
+      "creationSubjectInput",
+      "creationRatio",
+      "creationEnvironment",
+      "creationASeriesSize",
+      "creationSquareSizeCm",
+      "creativeFreedomRange",
+      "creativeFreedomValue",
+      "originalityPriorityRange",
+      "originalityPriorityValue",
+      "similarityToleranceRange",
+      "similarityToleranceValue",
+      "commercialClicheToleranceRange",
+      "commercialClicheToleranceValue",
+      "predictabilityToleranceRange",
+      "predictabilityToleranceValue",
+      "artisticAmbitionRange",
+      "artisticAmbitionValue",
+      "promptCreatorCommand",
+      "creationOrientationPortrait",
+      "creationOrientationLandscape",
+      "creationOrientationVertical",
+    ].forEach((id) => {
+      const field = document.getElementById(id);
+      if (!field) return;
+      const eventName = ["creationOrientationPortrait", "creationOrientationLandscape", "creationOrientationVertical"].includes(id) ? "change" : "input";
+      field.addEventListener(eventName, updateRunReadiness);
+    });
+    document.getElementById("approveBtn").addEventListener("click", () => submitApproval("approve"));
+    document.getElementById("rejectBtn").addEventListener("click", () => submitApproval("reject"));
+    document.getElementById("viewFinalResultBtn").addEventListener("click", openFinalResult);
+    ["activeOnly"].forEach((id) => document.getElementById(id).addEventListener("change", applyFilters));
+    document.getElementById("closeModalBtn").addEventListener("click", () => modal.close());
+    document.getElementById("closeResultBtn").addEventListener("click", () => resultModal.close());
+    document.getElementById("closeImageApprovalBtn").addEventListener("click", () => imageApprovalModal.close());
+    ["trace", "lineage", "telemetry"].forEach((tab) => document.getElementById(`${tab}Tab`).addEventListener("click", () => selectTab(tab)));
+    refreshIcons();
+    applyFilters();
+    fetchStatus();
+    window.setInterval(fetchStatus, 3000);
+    window.requestAnimationFrame(animateWorkflowPulses);
+  </script>
+</body>
+</html>

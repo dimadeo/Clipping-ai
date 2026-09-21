@@ -33,6 +33,46 @@
   }
   const tone = s => s >= 9 ? "pass" : s >= 7 ? "warn" : "fail";
   const verdict = s => s >= 9 ? "Production ready" : s >= 7 ? "Acceptable with caveats" : "Critical failure";
+  const MASTER_FINE_ART_AUDITOR_DIRECTIVE = [
+    "MASTER FINE ART PRINT AUDITOR", 
+    "Role: independent fine art / giclee quality-control and printer handoff system.",
+    "Function: inspect, measure, verify, calculate, test, classify, report.",
+    "Never create, enhance, upscale, retouch, beautify or modify artwork.",
+    "",
+    "INDEPENDENCE PRINCIPLE",
+    "Do not trust file names, metadata tags, prior claims, prior approvals, or previous AI reports.",
+    "Approve only when checks pass on measured evidence.",
+    "",
+    "ABSOLUTE TRUTH RULE",
+    "Never fabricate technical facts. Do not claim 300 DPI, 16-bit, Adobe RGB, or print ready unless verified.",
+    "Preferred labels: Fine Art / Giclee Print Ready or Professional Fine Art Master when justified.",
+    "",
+    "FINAL STATUS (exactly one)",
+    "APPROVED",
+    "APPROVED WITH NOTES",
+    "CONDITIONAL APPROVAL",
+    "HOLD - CORRECTION REQUIRED",
+    "REJECTED",
+    "",
+    "SUPPORTED PRODUCTION RANGE",
+    "2A0, A0, A1, A2, A3, A4, and 1:1 custom square in portrait or landscape.",
+    "Use 300-DPI matrix checks and independent effective-DPI calculation.",
+    "",
+    "MANDATORY AUDITS",
+    "1) File identity: filename, extension, bytes, width, height, total pixels, megapixels, ratio, orientation, bit depth, channels, alpha, ICC/profile, color space, DPI tag, compression, audit date, SHA-256 where possible.",
+    "2) File integrity: decode/read validity, channel integrity, metadata sanity, profile consistency, transparency sanity.",
+    "3) True DPI: compute effective DPI from pixels and physical inches for each axis; compare to requested DPI.",
+    "4) Print-size validation: requested size, max recommended 300-DPI size, and max recommended 240-DPI size when relevant.",
+    "5) Aspect-ratio audit: detect preserve, crop, extend, full bleed, bordered presentation; stretching is automatic failure.",
+    "6) Clarity inspection: fit view + 100% + 200% + 400% equivalent; separate artistic softness from technical defects.",
+    "7) Pixelation + upscaling artefacts + sharpening + noise/grain + banding/gradient checks.",
+    "8) Color/ICC audit: embedded ICC yes/no + profile name; no guessing; printer confirmation required when ICC missing.",
+    "9) RGB/CMYK rule: report actual color space; do not force arbitrary CMYK conversion.",
+    "10) Bit-depth + tonal-range + shadow-risk warning with practical print implications.",
+    "",
+    "OUTPUT REQUIREMENT",
+    "Return factual, printer-ready guidance based on measured data and visible evidence.",
+  ].join("\n");
 
   function histQuantile(hist, q, from = 1) {
     let tot = 0; for (let i = from; i < hist.length; i++) tot += hist[i];
@@ -237,21 +277,47 @@
       },
       tiers: t
     };
-    return `You are a senior prepress engineer and print quality auditor with 20+ years in commercial lithography, wide-format and textile printing. The image attached is a downsized preview of artwork about to go to a high-end print shop. Its measured preflight data follows (computed on the full-resolution file by the page; trust these numbers for resolution, ink and line widths, and use the image for what numbers cannot see: whether dark areas are drop shadows, glows or painted tone; whether fine features are type, rules or texture; blending that will flatten badly; halos; which elements are likely live type that should be vector).
+    return `${MASTER_FINE_ART_AUDITOR_DIRECTIVE}
 
-Scoring framework, 1.0–10.0: 9.0–10.0 production ready; 7.0–8.9 acceptable with caveats; 1.0–6.9 critical failure. Tier A small format 300–600 PPI, min line 0.25 pt. Tier B standard 300 PPI, min 0.5 pt. Tier C large format 100–150 PPI at true size, min 1 pt. Tier C is the actual job.
+Context:
+- You are auditing a production master for professional fine-art printing.
+- Use measured preflight data as authoritative for calculations and use the provided image previews for visual defects and intent-sensitive interpretation.
+- Tier C is the requested print job; Tier A/B checks are secondary compatibility checks.
 
 MEASURED DATA
 ${JSON.stringify(facts)}
 
-Reply with ONLY a JSON object, no prose around it, in this shape:
-{"verdict": "one sentence overall call for the actual job",
- "adjustments": [{"tier": "A"|"B"|"C", "score": number 1.0-10.0, "reason": "why the visual evidence moves the measured score, or confirms it"}],
- "shadows": "2-4 sentences: what the shadows/glows/blends are, banding and halo risk over light and dark substrates, black build",
- "legibility": "2-4 sentences: type and fine detail seen, contrast under lighting, ink saturation under text, choke risk",
- "observations": ["up to 5 specific things you can see that the measurements could not know"],
- "actions": [{"area": "short area name", "step": "exact instruction naming the application menu path or setting"}]}
-Give exactly three adjustments (A, B, C). Keep actions to at most 6, the most consequential first, and do not repeat generic advice already implied by the measured data unless you make it specific to this artwork.`;
+Reply with ONLY a JSON object and no wrapper prose. Use this schema:
+{
+  "final_status": "APPROVED|APPROVED WITH NOTES|CONDITIONAL APPROVAL|HOLD - CORRECTION REQUIRED|REJECTED",
+  "verdict": "one concise overall prepress call",
+  "identity_audit": {
+    "icc_embedded": "YES|NO",
+    "icc_profile_name": "verified profile name or 'none'",
+    "color_space": "reported actual working space",
+    "bit_depth": "reported actual bit depth",
+    "alpha": "YES|NO",
+    "dpi_tag": "tag value or 'none'"
+  },
+  "print_size_validation": {
+    "requested": "requested physical size",
+    "effective_dpi": "width dpi x height dpi",
+    "max_recommended_300dpi": "physical size at 300 dpi",
+    "max_recommended_240dpi": "physical size at 240 dpi"
+  },
+  "adjustments": [{"tier": "A|B|C", "score": 1.0, "reason": "why visual evidence modifies or confirms measured score"}],
+  "shadows": "2-4 sentences on shadows, blend behavior, clipping, and print risks",
+  "legibility": "2-4 sentences on linework/text clarity, contrast, and choke risk",
+  "observations": ["up to 5 visual findings that metrics alone cannot prove"],
+  "actions": [{"area": "short area name", "step": "exact corrective or verification step"}],
+  "printer_handoff_notes": ["up to 6 production notes for the print studio"]
+}
+
+Constraints:
+- Give exactly three adjustments, one for each tier A, B, C.
+- Keep actions to at most 6 and make them specific.
+- Never claim facts that are not verified by measured data or visible evidence.
+- If evidence is missing for a claim, state uncertainty and downgrade status accordingly.`;
   }
 
   window.PQA = Object.assign(window.PQA || {}, { grade, buildPrompt, SUBSTRATES, LIGHTS, tone, verdict });
